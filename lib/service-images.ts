@@ -1,35 +1,34 @@
-/** Default HD fabrication photos when a service has no CMS imageUrl.
- *  Free stock metalwork stills (Unsplash/Pexels) — not visiting-card crops.
+/** Service card / page images — subject-matched files in public/gallery/services.
+ *  *-v2.jpg names bust Next.js image cache after replacements.
  */
 export const SERVICE_IMAGE_BY_SLUG: Record<string, string> = {
-  // Decorative / security metalwork
-  grill: "/gallery/services/grill.jpg",
-  gate: "/gallery/services/gate.jpg",
-  railing: "/gallery/services/railing.jpg",
-  "compound-wall": "/gallery/services/fence.jpg",
-  "main-door": "/gallery/services/main-door.jpg",
+  grill: "/gallery/services/grill-v2.jpg",
+  gate: "/gallery/services/gate-v2.jpg",
+  railing: "/gallery/services/railing-v2.jpg",
+  "compound-wall": "/gallery/services/fence-v2.jpg",
+  "main-door": "/gallery/services/main-door-v2.jpg",
 
-  // Structures & roofing
-  staircase: "/gallery/services/staircase.jpg",
-  roofing: "/gallery/services/roof.jpg",
-  "cement-sheet": "/gallery/services/cement.jpg",
-  "parking-shed": "/gallery/services/parking.jpg",
-  "kerala-set": "/gallery/services/canopy.jpg",
-  industrial: "/gallery/services/industrial.jpg",
-  "rolling-shutter": "/gallery/services/shutter.jpg",
+  staircase: "/gallery/services/staircase-v2.jpg",
+  roofing: "/gallery/services/roof-v2.jpg",
+  "cement-sheet": "/gallery/services/cement-v2.jpg",
+  "parking-shed": "/gallery/services/parking-v2.jpg",
+  "kerala-set": "/gallery/services/canopy-v2.jpg",
+  industrial: "/gallery/services/industrial-v2.jpg",
+  "rolling-shutter": "/gallery/services/shutter-v2.jpg",
 
-  // Material / general fabrication
-  stainless: "/gallery/services/stainless.jpg",
-  general: "/gallery/services/general.jpg",
+  stainless: "/gallery/services/stainless-v2.jpg",
+  general: "/gallery/services/general-v2.jpg",
 };
 
-export const DEFAULT_SERVICE_IMAGE = "/gallery/services/weld.jpg";
+export const DEFAULT_SERVICE_IMAGE = "/gallery/services/weld-v2.jpg";
 
 export function resolveServiceImage(
   slug: string,
   imageUrl?: string | null
 ): string {
+  const mapped = SERVICE_IMAGE_BY_SLUG[slug];
+  if (mapped) return mapped;
   const custom = imageUrl?.trim();
   if (custom) return custom;
-  return SERVICE_IMAGE_BY_SLUG[slug] ?? DEFAULT_SERVICE_IMAGE;
+  return DEFAULT_SERVICE_IMAGE;
 }

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { DM_Sans, Oswald } from "next/font/google";
 import "./globals.css";
-import { site } from "@/lib/site";
+import { getSiteUrl, site } from "@/lib/site";
 
 const dmSans = DM_Sans({
   variable: "--font-dm-sans",
@@ -16,7 +16,7 @@ const oswald = Oswald({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://starfabrication.local"),
+  metadataBase: new URL(getSiteUrl()),
   title: {
     default: `${site.name} | Metal Fabrication in ${site.location}`,
     template: `%s | ${site.name}`,

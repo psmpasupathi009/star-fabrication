@@ -5,6 +5,7 @@ export async function sendMail(options: {
   subject: string;
   text: string;
   html?: string;
+  replyTo?: string;
 }) {
   const host = process.env.EMAIL_HOST;
   const user = process.env.EMAIL_USER;
@@ -31,5 +32,6 @@ export async function sendMail(options: {
     subject: options.subject,
     text: options.text,
     html: options.html ?? options.text.replace(/\n/g, "<br/>"),
+    replyTo: options.replyTo,
   });
 }

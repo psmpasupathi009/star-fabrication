@@ -6,6 +6,10 @@ function sanitize(value: string, max: number) {
   return value.trim().slice(0, max);
 }
 
+function isValidEmail(email: string) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) && email.length <= 120;
+}
+
 export async function POST(request: NextRequest) {
   try {
     const ip = clientIp(request);
@@ -28,12 +32,15 @@ export async function POST(request: NextRequest) {
     const body = (await request.json()) as {
       name?: string;
       phone?: string;
+      email?: string;
       service?: string;
       message?: string;
     };
 
     const name = sanitize(body.name ?? "", 120);
     const phone = sanitize(body.phone ?? "", 40);
+    const emailRaw = sanitize(body.email ?? "", 120);
+    const email = emailRaw && isValidEmail(emailRaw) ? emailRaw : "";
     const service = sanitize(body.service ?? "", 120);
     const message = sanitize(body.message ?? "", 2000);
 
@@ -44,22 +51,48 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    if (emailRaw && !email) {
+      return NextResponse.json({ error: "Enter a valid email address" }, { status: 400 });
+    }
+
     const text = [
       "New quote request from Star Fabrication website",
       "",
       `Name: ${name}`,
       `Phone: ${phone}`,
+      email ? `Email: ${email}` : null,
       `Service: ${service || "—"}`,
       "",
       "Message:",
       message,
-    ].join("\n");
+    ]
+      .filter((line) => line !== null)
+      .join("\n");
 
     await sendMail({
       to: adminEmail,
       subject: `Quote request — ${name} (${service || "General"})`,
       text,
+      replyTo: email || undefined,
     });
+
+    if (email) {
+      try {
+        await sendMail({
+          to: email,
+          subject: "We received your quote request — Star Fabrication",
+          text: [
+            `Hi ${name},`,
+            ``,
+            `Thanks for contacting Star Fabrication. We received your request about ${service || "fabrication work"} and will get back to you soon on ${phone}${email ? ` or ${email}` : ""}.`,
+            ``,
+            `— Star Fabrication, Mevani`,
+          ].join("\n"),
+        });
+      } catch (err) {
+        console.error("Auto-reply failed:", err);
+      }
+    }
 
     return NextResponse.json({
       message: "Thanks — your message was sent. We’ll get back to you soon.",

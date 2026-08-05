@@ -1,13 +1,14 @@
 "use client";
 
 import { FormEvent, useState } from "react";
-import { MessageCircle, Phone, Send } from "lucide-react";
+import { Clock, MapPin, MessageCircle, Phone, Send } from "lucide-react";
 import { SectionHeading } from "@/app/components/section-heading";
 import { Button } from "@/app/components/ui/button";
 import { Input } from "@/app/components/ui/input";
 import { Label } from "@/app/components/ui/label";
 import { Textarea } from "@/app/components/ui/textarea";
 import type { ContactPerson, ServiceData, SiteData } from "@/lib/content";
+import { formatHoursLines } from "@/lib/hours";
 import { buildQuoteMessage, telHref, whatsappUrl } from "@/lib/site";
 
 type ContactProps = {
@@ -19,12 +20,18 @@ type ContactProps = {
 export function Contact({ site, contacts, services }: ContactProps) {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
   const [service, setService] = useState(services[0]?.title ?? "General Fabrication");
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
   const primary = contacts[0];
+  const waPhone = site.whatsappPhone || primary?.phone;
+  const hoursLines = formatHoursLines(site.hours);
+  const mapsLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+    site.address + (site.pincode ? ` ${site.pincode}` : "")
+  )}`;
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
@@ -35,7 +42,7 @@ export function Contact({ site, contacts, services }: ContactProps) {
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, phone, service, message }),
+        body: JSON.stringify({ name, phone, email: email || undefined, service, message }),
       });
       const data = (await res.json()) as { message?: string; error?: string };
       if (!res.ok) {
@@ -45,6 +52,7 @@ export function Contact({ site, contacts, services }: ContactProps) {
       setSuccess(data.message || "Message sent.");
       setName("");
       setPhone("");
+      setEmail("");
       setMessage("");
       setService(services[0]?.title ?? "General Fabrication");
     } catch {
@@ -55,8 +63,8 @@ export function Contact({ site, contacts, services }: ContactProps) {
   }
 
   function openWhatsApp() {
-    const text = buildQuoteMessage({ name, phone, service, message });
-    window.open(whatsappUrl(text, primary?.phone), "_blank", "noopener,noreferrer");
+    const text = buildQuoteMessage({ name, phone, email, service, message });
+    window.open(whatsappUrl(text, waPhone), "_blank", "noopener,noreferrer");
   }
 
   return (
@@ -88,10 +96,50 @@ export function Contact({ site, contacts, services }: ContactProps) {
                 </span>
               </a>
             ))}
-            <p className="px-1 text-[13px] text-muted sm:text-sm">
-              Location: {site.location}
-              {site.locationTamil ? ` (${site.locationTamil})` : ""}
-            </p>
+
+            <div className="space-y-3 rounded-2xl bg-white p-4 ring-1 ring-black/5 sm:p-5">
+              <div className="flex items-start gap-3">
+                <MapPin className="mt-0.5 size-4 shrink-0 text-gold-dim" />
+                <div>
+                  <p className="text-[15px] font-medium text-foreground">{site.address}</p>
+                  {site.pincode ? (
+                    <p className="mt-0.5 text-sm text-muted">PIN {site.pincode}</p>
+                  ) : null}
+                  {site.addressTamil ? (
+                    <p className="mt-1 text-sm text-muted">{site.addressTamil}</p>
+                  ) : null}
+                  <a
+                    href={mapsLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-2 inline-block text-sm font-medium text-gold-dim hover:underline"
+                  >
+                    Open in Google Maps
+                  </a>
+                </div>
+              </div>
+              <div className="flex items-start gap-3 border-t border-black/5 pt-3">
+                <Clock className="mt-0.5 size-4 shrink-0 text-gold-dim" />
+                <ul className="space-y-0.5 text-sm text-muted">
+                  {hoursLines.map((line) => (
+                    <li key={line}>{line}</li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+
+            {site.mapEmbedUrl ? (
+              <div className="overflow-hidden rounded-2xl ring-1 ring-black/5">
+                <iframe
+                  title={`${site.name} location map`}
+                  src={site.mapEmbedUrl}
+                  className="aspect-4/3 w-full border-0 bg-elevated"
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  allowFullScreen
+                />
+              </div>
+            ) : null}
           </div>
 
           <div className="order-1 lg:order-2 lg:col-span-3">
@@ -125,6 +173,18 @@ export function Contact({ site, contacts, services }: ContactProps) {
                     placeholder="Your phone number"
                   />
                 </div>
+              </div>
+              <div>
+                <Label htmlFor="email">Email (optional)</Label>
+                <Input
+                  id="email"
+                  name="email"
+                  type="email"
+                  autoComplete="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="For a confirmation reply"
+                />
               </div>
               <div>
                 <Label htmlFor="service">Service</Label>
@@ -171,6 +231,13 @@ export function Contact({ site, contacts, services }: ContactProps) {
                   WhatsApp
                 </Button>
               </div>
+              <p className="text-[12px] text-muted">
+                By submitting, you agree to our{" "}
+                <a href="/privacy" className="underline hover:text-foreground">
+                  Privacy Policy
+                </a>
+                .
+              </p>
             </form>
           </div>
         </div>

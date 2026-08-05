@@ -63,9 +63,12 @@ export function AdminDashboardClient({ email }: { email: string }) {
     tagline: "",
     subtitle: "",
     imageUrl: "",
+    videoUrl: "",
     ctaPrimary: "",
     ctaSecondary: "",
   });
+  const [heroFile, setHeroFile] = useState<File | null>(null);
+  const [heroVideoFile, setHeroVideoFile] = useState<File | null>(null);
 
   // About
   const [about, setAbout] = useState({
@@ -90,6 +93,16 @@ export function AdminDashboardClient({ email }: { email: string }) {
     location: "",
     locationTamil: "",
     description: "",
+    address: "",
+    addressTamil: "",
+    pincode: "",
+    mapEmbedUrl: "",
+    serviceAreasText: "",
+    googleReviewsUrl: "",
+    whatsappPhone: "",
+    weekdayOpen: "09:00",
+    weekdayClose: "18:00",
+    sundayClosed: true,
   });
   const [contacts, setContacts] = useState<ContactPerson[]>([
     { name: "", title: "", phone: "", phoneDisplay: "" },
@@ -106,7 +119,6 @@ export function AdminDashboardClient({ email }: { email: string }) {
     icon: "general",
     imageUrl: "",
   });
-  const [heroFile, setHeroFile] = useState<File | null>(null);
   const [gallery, setGallery] = useState<GalleryItem[]>([]);
   const [galleryFile, setGalleryFile] = useState<File | null>(null);
   const [galleryCaption, setGalleryCaption] = useState("");
@@ -129,6 +141,7 @@ export function AdminDashboardClient({ email }: { email: string }) {
           tagline: h.tagline ?? "",
           subtitle: h.subtitle ?? "",
           imageUrl: h.imageUrl ?? "",
+          videoUrl: h.videoUrl ?? "",
           ctaPrimary: h.ctaPrimary ?? "",
           ctaSecondary: h.ctaSecondary ?? "",
         });
@@ -166,6 +179,13 @@ export function AdminDashboardClient({ email }: { email: string }) {
       }
       if (siteRes.ok) {
         const s = await siteRes.json();
+        const hours = s.hours as
+          | {
+              monday?: { open?: string; close?: string; closed?: boolean };
+              sunday?: { closed?: boolean; open?: string; close?: string };
+            }
+          | undefined;
+        const mon = hours?.monday;
         setSiteForm({
           name: s.name ?? "",
           nameTamil: s.nameTamil ?? "",
@@ -173,6 +193,20 @@ export function AdminDashboardClient({ email }: { email: string }) {
           location: s.location ?? "",
           locationTamil: s.locationTamil ?? "",
           description: s.description ?? "",
+          address: s.address ?? "",
+          addressTamil: s.addressTamil ?? "",
+          pincode: s.pincode ?? "",
+          mapEmbedUrl: s.mapEmbedUrl ?? "",
+          serviceAreasText: Array.isArray(s.serviceAreas)
+            ? (s.serviceAreas as string[]).join(", ")
+            : "",
+          googleReviewsUrl: s.googleReviewsUrl ?? "",
+          whatsappPhone: s.whatsappPhone ?? "",
+          weekdayOpen:
+            mon && !mon.closed && mon.open ? mon.open : "09:00",
+          weekdayClose:
+            mon && !mon.closed && mon.close ? mon.close : "18:00",
+          sundayClosed: hours?.sunday?.closed !== false,
         });
         try {
           const parsed = JSON.parse(s.contactsJson || "[]") as ContactPerson[];
@@ -224,15 +258,18 @@ export function AdminDashboardClient({ email }: { email: string }) {
     setError("");
     try {
       let imageUrl = hero.imageUrl;
+      let videoUrl = hero.videoUrl;
       if (heroFile) imageUrl = await uploadFile(heroFile);
+      if (heroVideoFile) videoUrl = await uploadFile(heroVideoFile);
       const res = await fetch("/api/admin/hero", {
         method: "PUT",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...hero, imageUrl }),
+        body: JSON.stringify({ ...hero, imageUrl, videoUrl }),
       });
       if (!res.ok) throw new Error("Save failed");
       setHeroFile(null);
+      setHeroVideoFile(null);
       setStatus("Hero saved");
       await loadAll();
     } catch (err) {
@@ -269,6 +306,8 @@ export function AdminDashboardClient({ email }: { email: string }) {
           description: about.description,
           details: about.details,
           footerNote: about.footerNote,
+          imageOneUrl: about.imageOneUrl || null,
+          imageTwoUrl: about.imageTwoUrl || null,
           people,
         }),
       });
@@ -288,11 +327,46 @@ export function AdminDashboardClient({ email }: { email: string }) {
     setStatus("");
     setError("");
     try {
+      const open = siteForm.weekdayOpen.slice(0, 5) || "09:00";
+      const close = siteForm.weekdayClose.slice(0, 5) || "18:00";
+      const weekday = { open, close };
+      const hours = {
+        monday: weekday,
+        tuesday: weekday,
+        wednesday: weekday,
+        thursday: weekday,
+        friday: weekday,
+        saturday: weekday,
+        sunday: siteForm.sundayClosed
+          ? { closed: true as const }
+          : weekday,
+      };
+      const serviceAreas = siteForm.serviceAreasText
+        .split(/[,|\n]+/)
+        .map((a) => a.trim())
+        .filter(Boolean);
+
       const res = await fetch("/api/admin/site", {
         method: "PUT",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...siteForm, contacts }),
+        body: JSON.stringify({
+          name: siteForm.name,
+          nameTamil: siteForm.nameTamil,
+          tagline: siteForm.tagline,
+          location: siteForm.location,
+          locationTamil: siteForm.locationTamil,
+          description: siteForm.description,
+          address: siteForm.address,
+          addressTamil: siteForm.addressTamil,
+          pincode: siteForm.pincode,
+          mapEmbedUrl: siteForm.mapEmbedUrl,
+          googleReviewsUrl: siteForm.googleReviewsUrl,
+          whatsappPhone: siteForm.whatsappPhone,
+          serviceAreas,
+          hours,
+          contacts,
+        }),
       });
       if (!res.ok) throw new Error("Save failed");
       setStatus("Site settings saved");
@@ -503,6 +577,27 @@ export function AdminDashboardClient({ email }: { email: string }) {
               <p className="mt-2 truncate text-xs text-muted">{hero.imageUrl}</p>
             ) : null}
           </div>
+          <div>
+            <Label htmlFor="heroVideo">Hero video (optional, mp4/webm)</Label>
+            <Input
+              id="heroVideo"
+              type="file"
+              accept="video/mp4,video/webm,video/quicktime"
+              onChange={(e) => setHeroVideoFile(e.target.files?.[0] ?? null)}
+            />
+            {hero.videoUrl ? (
+              <p className="mt-2 truncate text-xs text-muted">{hero.videoUrl}</p>
+            ) : null}
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              className="mt-2"
+              onClick={() => setHero({ ...hero, videoUrl: "" })}
+            >
+              Clear video URL
+            </Button>
+          </div>
           <Button type="submit" disabled={saving}>
             <Save className="size-4" />
             Save hero
@@ -552,6 +647,39 @@ export function AdminDashboardClient({ email }: { email: string }) {
               value={about.footerNote}
               onChange={(e) => setAbout({ ...about, footerNote: e.target.value })}
             />
+          </div>
+
+          <p className="text-sm font-semibold text-foreground">Workshop images</p>
+          <div className="grid gap-4 sm:grid-cols-2">
+            {(["imageOneUrl", "imageTwoUrl"] as const).map((key, idx) => (
+              <div key={key} className="space-y-2 rounded-2xl bg-elevated p-4">
+                <Label>Image {idx + 1}</Label>
+                {about[key] ? (
+                  <div className="relative h-28 w-full overflow-hidden rounded-xl ring-1 ring-black/5">
+                    <Image
+                      src={about[key]}
+                      alt={`Workshop ${idx + 1}`}
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                ) : null}
+                <Input
+                  type="file"
+                  accept="image/*"
+                  onChange={async (e) => {
+                    const file = e.target.files?.[0];
+                    if (!file) return;
+                    try {
+                      const url = await uploadFile(file);
+                      setAbout((prev) => ({ ...prev, [key]: url }));
+                    } catch (err) {
+                      setError(err instanceof Error ? err.message : "Upload failed");
+                    }
+                  }}
+                />
+              </div>
+            ))}
           </div>
 
           <p className="text-sm font-semibold text-foreground">
@@ -681,6 +809,106 @@ export function AdminDashboardClient({ email }: { email: string }) {
                 id="locationTamil"
                 value={siteForm.locationTamil}
                 onChange={(e) => setSiteForm({ ...siteForm, locationTamil: e.target.value })}
+              />
+            </div>
+          </div>
+          <div>
+            <Label htmlFor="address">Full address</Label>
+            <Input
+              id="address"
+              value={siteForm.address}
+              onChange={(e) => setSiteForm({ ...siteForm, address: e.target.value })}
+              placeholder="Mevani, Namakkal District, Tamil Nadu"
+            />
+          </div>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div>
+              <Label htmlFor="addressTamil">Address (Tamil)</Label>
+              <Input
+                id="addressTamil"
+                value={siteForm.addressTamil}
+                onChange={(e) => setSiteForm({ ...siteForm, addressTamil: e.target.value })}
+              />
+            </div>
+            <div>
+              <Label htmlFor="pincode">PIN code</Label>
+              <Input
+                id="pincode"
+                value={siteForm.pincode}
+                onChange={(e) => setSiteForm({ ...siteForm, pincode: e.target.value })}
+              />
+            </div>
+          </div>
+          <div className="grid gap-4 sm:grid-cols-3">
+            <div>
+              <Label htmlFor="weekdayOpen">Weekday open</Label>
+              <Input
+                id="weekdayOpen"
+                type="time"
+                value={siteForm.weekdayOpen}
+                onChange={(e) => setSiteForm({ ...siteForm, weekdayOpen: e.target.value })}
+              />
+            </div>
+            <div>
+              <Label htmlFor="weekdayClose">Weekday close</Label>
+              <Input
+                id="weekdayClose"
+                type="time"
+                value={siteForm.weekdayClose}
+                onChange={(e) => setSiteForm({ ...siteForm, weekdayClose: e.target.value })}
+              />
+            </div>
+            <div className="flex items-end pb-2">
+              <label className="flex items-center gap-2 text-sm text-foreground">
+                <input
+                  type="checkbox"
+                  checked={siteForm.sundayClosed}
+                  onChange={(e) =>
+                    setSiteForm({ ...siteForm, sundayClosed: e.target.checked })
+                  }
+                />
+                Sunday closed
+              </label>
+            </div>
+          </div>
+          <div>
+            <Label htmlFor="mapEmbedUrl">Google Maps embed URL</Label>
+            <Textarea
+              id="mapEmbedUrl"
+              value={siteForm.mapEmbedUrl}
+              onChange={(e) => setSiteForm({ ...siteForm, mapEmbedUrl: e.target.value })}
+              placeholder="https://maps.google.com/maps?q=...&output=embed"
+            />
+          </div>
+          <div>
+            <Label htmlFor="serviceAreas">Service areas (comma-separated)</Label>
+            <Textarea
+              id="serviceAreas"
+              value={siteForm.serviceAreasText}
+              onChange={(e) =>
+                setSiteForm({ ...siteForm, serviceAreasText: e.target.value })
+              }
+            />
+          </div>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div>
+              <Label htmlFor="whatsappPhone">WhatsApp phone (digits)</Label>
+              <Input
+                id="whatsappPhone"
+                value={siteForm.whatsappPhone}
+                onChange={(e) =>
+                  setSiteForm({ ...siteForm, whatsappPhone: e.target.value })
+                }
+              />
+            </div>
+            <div>
+              <Label htmlFor="googleReviewsUrl">Google reviews URL</Label>
+              <Input
+                id="googleReviewsUrl"
+                value={siteForm.googleReviewsUrl}
+                onChange={(e) =>
+                  setSiteForm({ ...siteForm, googleReviewsUrl: e.target.value })
+                }
               />
             </div>
           </div>

@@ -2,7 +2,7 @@
  * Shared security helpers for admin APIs and redirects.
  */
 
-const MAX_UPLOAD_BYTES = 8 * 1024 * 1024; // 8MB
+const MAX_UPLOAD_BYTES = 20 * 1024 * 1024; // 20MB (hero video)
 const ALLOWED_UPLOAD_TYPES = new Set([
   "image/jpeg",
   "image/png",
@@ -51,7 +51,7 @@ export function validateUploadFile(file: File): string | null {
     return "No file provided";
   }
   if (file.size > MAX_UPLOAD_BYTES) {
-    return "File too large (max 8MB)";
+    return "File too large (max 20MB)";
   }
   const type = file.type || "";
   if (!ALLOWED_UPLOAD_TYPES.has(type)) {

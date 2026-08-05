@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { X } from "lucide-react";
 import { AppleCarousel, AppleCarouselItem } from "@/app/components/apple-carousel";
@@ -39,7 +40,7 @@ export function Services({ services }: ServicesProps) {
         <SectionHeading
           eyebrow="What we make"
           title="Fabrication services"
-          description="Swipe or use the arrows — tap a service for full details."
+          description="Swipe or use the arrows — open a service for details or visit its page."
         />
       </div>
 
@@ -128,20 +129,16 @@ export function Services({ services }: ServicesProps) {
                 {active.details || active.description}
               </p>
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-                <a href="#contact" onClick={() => setActiveSlug(null)}>
+                <Link href={`/services/${active.slug}`} onClick={() => setActiveSlug(null)}>
                   <Button size="lg" className="w-full sm:w-auto">
+                    Full page
+                  </Button>
+                </Link>
+                <a href="#contact" onClick={() => setActiveSlug(null)}>
+                  <Button size="lg" variant="outline" className="w-full sm:w-auto">
                     Request a quote
                   </Button>
                 </a>
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="lg"
-                  className="w-full sm:w-auto"
-                  onClick={() => setActiveSlug(null)}
-                >
-                  Close
-                </Button>
               </div>
             </div>
           </div>

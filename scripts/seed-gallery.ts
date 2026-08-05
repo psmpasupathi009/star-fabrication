@@ -1,4 +1,4 @@
-import { readFileSync, readdirSync } from "fs";
+import { readFileSync, existsSync } from "fs";
 import path from "path";
 import { PrismaClient } from "@prisma/client";
 import { config } from "dotenv";
@@ -20,11 +20,20 @@ if (url) {
 }
 
 const SEED_FILES = [
-  { file: "gate.jpg", caption: "Designer Gate", alt: "Designer metal gate with intricate fabrication" },
-  { file: "canopy.jpg", caption: "Residential Canopy", alt: "Curved metal canopy over residential driveway" },
-  { file: "shed.jpg", caption: "Industrial Shed", alt: "Industrial shed with blue roof and open frame" },
-  { file: "roof.jpg", caption: "Roofing Work", alt: "Multi-tier residential roof structure" },
-  { file: "welder.jpg", caption: "Precision Welding", alt: "Welder at work with sparks flying" },
+  { file: "services/gate.jpg", caption: "Designer Gate", alt: "Ornate wrought iron gate" },
+  { file: "services/grill.jpg", caption: "Window Grills", alt: "House with window security grills" },
+  { file: "services/railing.jpg", caption: "Balcony Railings", alt: "Metal balcony railings" },
+  { file: "services/staircase.jpg", caption: "Staircase Handrail", alt: "Interior metal stair railing" },
+  { file: "services/fence.jpg", caption: "Compound Fencing", alt: "Security metal gate and fencing" },
+  { file: "services/roof.jpg", caption: "Roofing Work", alt: "Corrugated metal roofing and cladding" },
+  { file: "services/parking.jpg", caption: "Parking Structure", alt: "Architectural metal cladding" },
+  { file: "services/canopy.jpg", caption: "Canopy & Cladding", alt: "Home with metal canopy and railings" },
+  { file: "services/shutter.jpg", caption: "Rolling Shutter", alt: "Industrial metal door and shutter" },
+  { file: "services/industrial.jpg", caption: "Industrial Shed", alt: "Fabrication workshop interior" },
+  { file: "services/stainless.jpg", caption: "Stainless Works", alt: "Stainless steel piping fabrication" },
+  { file: "services/weld.jpg", caption: "Precision Welding", alt: "Welding sparks on metalwork" },
+  { file: "welder.jpg", caption: "Workshop Welding", alt: "Welder at work with sparks" },
+  { file: "workshop.jpg", caption: "Our Workshop", alt: "Star Fabrication workshop" },
 ] as const;
 
 async function uploadBuffer(buffer: Buffer, publicId: string): Promise<string> {
@@ -49,22 +58,25 @@ async function uploadBuffer(buffer: Buffer, publicId: string): Promise<string> {
 
 async function main() {
   const galleryDir = path.join(process.cwd(), "public", "gallery");
-  const existing = await prisma.galleryMedia.count();
-  if (existing > 0) {
-    console.log(`Gallery already has ${existing} item(s). Skipping seed.`);
-    return;
-  }
+  const existingRows = await prisma.galleryMedia.findMany({
+    select: { caption: true },
+  });
+  const existingCaptions = new Set(
+    existingRows.map((r) => r.caption?.trim().toLowerCase()).filter(Boolean)
+  );
 
-  const available = new Set(readdirSync(galleryDir));
-  let order = 0;
+  let order = existingRows.length;
+  let added = 0;
 
   for (const item of SEED_FILES) {
-    if (!available.has(item.file)) {
+    if (existingCaptions.has(item.caption.toLowerCase())) continue;
+    const fullPath = path.join(galleryDir, item.file);
+    if (!existsSync(fullPath)) {
       console.warn(`Missing ${item.file}, skip`);
       continue;
     }
-    const buffer = readFileSync(path.join(galleryDir, item.file));
-    const publicId = path.parse(item.file).name;
+    const buffer = readFileSync(fullPath);
+    const publicId = `seed-${path.parse(item.file).name}`;
     console.log(`Uploading ${item.file}…`);
     const secureUrl = await uploadBuffer(buffer, publicId);
     await prisma.galleryMedia.create({
@@ -77,9 +89,14 @@ async function main() {
       },
     });
     console.log(`  → ${secureUrl}`);
+    added += 1;
   }
 
-  console.log("Seed complete.");
+  if (added === 0) {
+    console.log(`Gallery already covered (${existingRows.length} item(s)). Nothing to add.`);
+  } else {
+    console.log(`Added ${added} gallery item(s). Total target captions: ${SEED_FILES.length}.`);
+  }
 }
 
 main()
@@ -87,6 +104,4 @@ main()
     console.error(e);
     process.exit(1);
   })
-  .finally(async () => {
-    await prisma.$disconnect();
-  });
+  .finally(() => prisma.$disconnect());

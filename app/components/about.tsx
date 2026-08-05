@@ -12,6 +12,12 @@ type AboutProps = {
   about: AboutData;
 };
 
+const PROCESS_STEPS = [
+  { title: "Measure", text: "On-site sizing so the work fits your opening." },
+  { title: "Fabricate", text: "Welded and finished in our Mevani workshop." },
+  { title: "Install", text: "Fitted, adjusted, and handed over ready to use." },
+] as const;
+
 export function About({ about }: AboutProps) {
   const [open, setOpen] = useState(false);
 
@@ -37,7 +43,21 @@ export function About({ about }: AboutProps) {
           description={about.description}
         />
 
-        <div className="flex flex-col items-center gap-4 text-center sm:gap-5">
+        <ol className="mx-auto mt-2 grid max-w-3xl gap-6 sm:grid-cols-3 sm:gap-8">
+          {PROCESS_STEPS.map((step, i) => (
+            <li key={step.title} className="text-center">
+              <p className="text-xs font-semibold uppercase tracking-widest text-gold-dim">
+                {String(i + 1).padStart(2, "0")}
+              </p>
+              <p className="mt-2 font-display text-lg font-bold uppercase tracking-tight text-foreground">
+                {step.title}
+              </p>
+              <p className="mt-2 text-sm leading-relaxed text-muted">{step.text}</p>
+            </li>
+          ))}
+        </ol>
+
+        <div className="mt-8 flex flex-col items-center gap-4 text-center sm:mt-10 sm:gap-5">
           <button type="button" className="apple-link-gold" onClick={() => setOpen(true)}>
             Learn more <span aria-hidden>›</span>
           </button>
@@ -94,16 +114,23 @@ export function About({ about }: AboutProps) {
                       className="rounded-2xl bg-elevated p-5"
                     >
                       {p.imageUrl ? (
-                        <div className="relative mb-4 aspect-square w-full max-w-36 overflow-hidden rounded-2xl">
+                        <div className="relative mb-4 aspect-square w-full max-w-40 overflow-hidden rounded-2xl ring-1 ring-black/5">
                           <Image
                             src={p.imageUrl}
                             alt={p.name}
                             fill
-                            sizes="144px"
+                            sizes="160px"
                             className="object-cover"
                           />
                         </div>
-                      ) : null}
+                      ) : (
+                        <div
+                          className="mb-4 flex aspect-square w-full max-w-40 items-center justify-center rounded-2xl bg-white text-2xl font-display font-bold uppercase text-gold-dim ring-1 ring-black/5"
+                          aria-hidden
+                        >
+                          {p.name.slice(0, 1)}
+                        </div>
+                      )}
                       <p className="font-display text-xl font-semibold uppercase tracking-tight text-foreground">
                         {p.name}
                       </p>

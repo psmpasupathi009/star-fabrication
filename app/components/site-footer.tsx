@@ -1,7 +1,8 @@
-import { MapPin, Phone } from "lucide-react";
+import { Clock, MapPin, Phone } from "lucide-react";
 import Link from "next/link";
 import { StarLogo } from "@/app/components/star-logo";
 import type { ContactPerson, SiteData } from "@/lib/content";
+import { formatHoursLines } from "@/lib/hours";
 import { navLinks, telHref } from "@/lib/site";
 
 type SiteFooterProps = {
@@ -11,6 +12,8 @@ type SiteFooterProps = {
 };
 
 export function SiteFooter({ site, contacts, isAdmin }: SiteFooterProps) {
+  const hoursLines = formatHoursLines(site.hours);
+
   return (
     <footer className="border-t border-black/5 bg-elevated text-[12px] leading-relaxed text-muted">
       <div className="section-inner grid gap-8 py-10 sm:gap-10 sm:py-12 md:grid-cols-2 lg:grid-cols-3 lg:py-14">
@@ -31,6 +34,11 @@ export function SiteFooter({ site, contacts, isAdmin }: SiteFooterProps) {
                 </a>
               </li>
             ))}
+            <li>
+              <Link href="/privacy" className="hover:text-foreground hover:underline">
+                Privacy
+              </Link>
+            </li>
           </ul>
         </div>
 
@@ -53,10 +61,22 @@ export function SiteFooter({ site, contacts, isAdmin }: SiteFooterProps) {
             <li className="inline-flex items-start gap-2">
               <MapPin className="mt-0.5 size-3 shrink-0 text-gold-dim" />
               <span>
-                {site.location}
-                {site.locationTamil ? ` · ${site.locationTamil}` : ""}
+                {site.address}
+                {site.pincode ? ` — ${site.pincode}` : ""}
+                {site.addressTamil ? (
+                  <>
+                    <br />
+                    {site.addressTamil}
+                  </>
+                ) : null}
               </span>
             </li>
+            {hoursLines.map((line) => (
+              <li key={line} className="inline-flex items-start gap-2">
+                <Clock className="mt-0.5 size-3 shrink-0 text-gold-dim" />
+                <span>{line}</span>
+              </li>
+            ))}
           </ul>
         </div>
       </div>
@@ -67,6 +87,9 @@ export function SiteFooter({ site, contacts, isAdmin }: SiteFooterProps) {
             Copyright © {new Date().getFullYear()} {site.name}. All rights reserved.
           </p>
           <div className="flex items-center gap-5">
+            <Link href="/privacy" className="hover:text-foreground hover:underline">
+              Privacy Policy
+            </Link>
             <Link
               href={isAdmin ? "/admin/dashboard" : "/admin/login"}
               className="hover:text-foreground hover:underline"

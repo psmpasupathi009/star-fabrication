@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { withTimeout } from "@/lib/db";
+import { DEFAULT_HOURS, parseHoursJson, type BusinessHours } from "@/lib/hours";
 import { contacts as defaultContacts, services as defaultServices, site } from "@/lib/site";
 
 export type ContactPerson = {
@@ -26,6 +27,14 @@ export type SiteData = {
   locationTamil: string | null;
   description: string | null;
   contacts: ContactPerson[];
+  address: string;
+  addressTamil: string | null;
+  pincode: string | null;
+  hours: BusinessHours;
+  mapEmbedUrl: string | null;
+  serviceAreas: string[];
+  googleReviewsUrl: string | null;
+  whatsappPhone: string;
 };
 
 export type HeroData = {
@@ -68,6 +77,14 @@ export const FALLBACK_SITE: SiteData = {
   locationTamil: site.locationTamil,
   description: site.description,
   contacts: defaultContacts.map((c) => ({ ...c })),
+  address: site.address,
+  addressTamil: site.addressTamil,
+  pincode: site.pincode || null,
+  hours: DEFAULT_HOURS,
+  mapEmbedUrl: site.mapEmbedUrl,
+  serviceAreas: [...site.serviceAreas],
+  googleReviewsUrl: site.googleReviewsUrl || null,
+  whatsappPhone: defaultContacts[0].phone,
 };
 
 export const FALLBACK_HERO: HeroData = {
@@ -82,13 +99,13 @@ export const FALLBACK_HERO: HeroData = {
 export const FALLBACK_ABOUT: AboutData = {
   eyebrow: "About us",
   title: "Built on craft, driven by satisfaction",
-  description: `From designer gates to industrial sheds, ${site.name} delivers durable metalwork for homes and businesses across ${site.location}.`,
-  details: `${site.name} is a metal fabrication workshop in ${site.location} (${site.locationTamil}). We take on grill works, gates, roofing, doors, railings, sheds, and custom welding for homes and businesses.
+  description: `From designer gates to industrial sheds, ${site.name} delivers durable metalwork for homes and businesses across ${site.location} and nearby towns.`,
+  details: `${site.name} is a metal fabrication workshop in ${site.location} (${site.locationTamil}), serving Namakkal district for years. We fabricate in mild steel (MS) and stainless steel (SS) — gates, grills, roofing, doors, railings, sheds, and custom welding for homes and businesses.
 
-Every job is measured on site, fabricated with care, and finished for strength and daily use. Our motive is your satisfaction — clear communication, solid workmanship, and on-time delivery.`,
+Our process is simple: measure on site → fabricate in the workshop → install and finish. Every job is built for strength, Tamil Nadu weather, and daily use. Our motive is your satisfaction — clear communication, solid workmanship, and on-time delivery.`,
   footerNote: `Based in ${site.location} (${site.locationTamil}) — ${site.nameTamil}.`,
-  imageOneUrl: null,
-  imageTwoUrl: null,
+  imageOneUrl: "/gallery/workshop.jpg",
+  imageTwoUrl: "/gallery/welder.jpg",
   people: defaultContacts.map((c) => ({
     name: c.name,
     title: c.title,
@@ -120,6 +137,21 @@ function parseContacts(json: string): ContactPerson[] {
   return FALLBACK_SITE.contacts;
 }
 
+export function parseServiceAreas(json: string | null | undefined): string[] {
+  if (!json) return FALLBACK_SITE.serviceAreas;
+  try {
+    const parsed = JSON.parse(json) as unknown;
+    if (!Array.isArray(parsed)) return FALLBACK_SITE.serviceAreas;
+    const areas = parsed
+      .map((a) => String(a ?? "").trim())
+      .filter(Boolean)
+      .slice(0, 24);
+    return areas.length ? areas : FALLBACK_SITE.serviceAreas;
+  } catch {
+    return FALLBACK_SITE.serviceAreas;
+  }
+}
+
 export function parseAboutPeople(json: string | null | undefined): AboutPerson[] {
   if (!json) return [];
   try {
@@ -149,6 +181,11 @@ export async function getSiteData(): Promise<SiteData> {
       null
     );
     if (!row) return FALLBACK_SITE;
+    const contacts = parseContacts(row.contactsJson);
+    const whatsappPhone =
+      row.whatsappPhone?.replace(/\D/g, "").slice(0, 15) ||
+      contacts[0]?.phone ||
+      FALLBACK_SITE.whatsappPhone;
     return {
       name: row.name,
       nameTamil: row.nameTamil,
@@ -156,7 +193,15 @@ export async function getSiteData(): Promise<SiteData> {
       location: row.location,
       locationTamil: row.locationTamil,
       description: row.description,
-      contacts: parseContacts(row.contactsJson),
+      contacts,
+      address: row.address?.trim() || FALLBACK_SITE.address,
+      addressTamil: row.addressTamil?.trim() || FALLBACK_SITE.addressTamil,
+      pincode: row.pincode?.trim() || null,
+      hours: parseHoursJson(row.hoursJson),
+      mapEmbedUrl: row.mapEmbedUrl?.trim() || FALLBACK_SITE.mapEmbedUrl,
+      serviceAreas: parseServiceAreas(row.serviceAreasJson),
+      googleReviewsUrl: row.googleReviewsUrl?.trim() || null,
+      whatsappPhone,
     };
   } catch {
     return FALLBACK_SITE;
@@ -175,7 +220,7 @@ export async function getHeroData(): Promise<HeroData> {
       tagline: row.tagline,
       subtitle: row.subtitle,
       imageUrl: row.imageUrl || FALLBACK_HERO.imageUrl,
-      videoUrl: FALLBACK_HERO.videoUrl,
+      videoUrl: row.videoUrl?.trim() || FALLBACK_HERO.videoUrl,
       ctaPrimary: row.ctaPrimary,
       ctaSecondary: row.ctaSecondary,
     };
@@ -199,8 +244,8 @@ export async function getAboutData(): Promise<AboutData> {
       description: row.description,
       details: row.details?.trim() || FALLBACK_ABOUT.details,
       footerNote: row.footerNote,
-      imageOneUrl: row.imageOneUrl || null,
-      imageTwoUrl: row.imageTwoUrl || null,
+      imageOneUrl: row.imageOneUrl || FALLBACK_ABOUT.imageOneUrl,
+      imageTwoUrl: row.imageTwoUrl || FALLBACK_ABOUT.imageTwoUrl,
       people: people.length ? people : FALLBACK_ABOUT.people,
     };
   } catch {
@@ -229,6 +274,11 @@ export async function getServicesData(): Promise<ServiceData[]> {
   } catch {
     return FALLBACK_SERVICES;
   }
+}
+
+export async function getServiceBySlug(slug: string): Promise<ServiceData | null> {
+  const services = await getServicesData();
+  return services.find((s) => s.slug === slug) ?? null;
 }
 
 export async function getGalleryData() {

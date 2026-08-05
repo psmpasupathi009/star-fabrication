@@ -23,9 +23,26 @@ const contacts = [
 ];
 
 async function main() {
+  const { DEFAULT_HOURS } = await import("../lib/hours");
+
   await prisma.siteSettings.upsert({
     where: { key: "default" },
-    update: {},
+    update: {
+      address: "Mevani, Namakkal District, Tamil Nadu",
+      addressTamil: "மேவாணி, நாமக்கல் மாவட்டம், தமிழ்நாடு",
+      hoursJson: JSON.stringify(DEFAULT_HOURS),
+      mapEmbedUrl:
+        "https://maps.google.com/maps?q=Mevani,+Namakkal,+Tamil+Nadu&z=14&output=embed",
+      serviceAreasJson: JSON.stringify([
+        "Mevani",
+        "Rasipuram",
+        "Namakkal",
+        "Tiruchengode",
+        "Paramathi",
+        "Nearby villages",
+      ]),
+      whatsappPhone: "8807920508",
+    },
     create: {
       key: "default",
       name: "Star Fabrication",
@@ -36,6 +53,20 @@ async function main() {
       description:
         "Custom metal fabrication in Mevani — gates, grills, roofing, doors, and industrial structures built with craftsmanship.",
       contactsJson: JSON.stringify(contacts),
+      address: "Mevani, Namakkal District, Tamil Nadu",
+      addressTamil: "மேவாணி, நாமக்கல் மாவட்டம், தமிழ்நாடு",
+      hoursJson: JSON.stringify(DEFAULT_HOURS),
+      mapEmbedUrl:
+        "https://maps.google.com/maps?q=Mevani,+Namakkal,+Tamil+Nadu&z=14&output=embed",
+      serviceAreasJson: JSON.stringify([
+        "Mevani",
+        "Rasipuram",
+        "Namakkal",
+        "Tiruchengode",
+        "Paramathi",
+        "Nearby villages",
+      ]),
+      whatsappPhone: "8807920508",
     },
   });
 
@@ -43,6 +74,7 @@ async function main() {
     where: { key: "default" },
     update: {
       imageUrl: "/gallery/hero.jpg",
+      videoUrl: "/gallery/hero.mp4",
     },
     create: {
       key: "default",
@@ -50,16 +82,22 @@ async function main() {
       subtitle:
         "Gates, grills, roofing, and industrial structures — welded with precision in Mevani.",
       imageUrl: "/gallery/hero.jpg",
+      videoUrl: "/gallery/hero.mp4",
       ctaPrimary: "Get a Quote",
       ctaSecondary: "Call Now",
     },
   });
 
+  const aboutDetails = `Star Fabrication is a metal fabrication workshop in Mevani (மேவாணி), serving Namakkal district for years. We fabricate in mild steel (MS) and stainless steel (SS) — gates, grills, roofing, doors, railings, sheds, and custom welding for homes and businesses.
+
+Our process is simple: measure on site → fabricate in the workshop → install and finish. Every job is built for strength, Tamil Nadu weather, and daily use. Our motive is your satisfaction — clear communication, solid workmanship, and on-time delivery.`;
+
   await prisma.aboutContent.upsert({
     where: { key: "default" },
     update: {
-      details:
-        "Star Fabrication is a metal fabrication workshop in Mevani (மேவாணி). We take on grill works, gates, roofing, doors, railings, sheds, and custom welding for homes and businesses.\n\nEvery job is measured on site, fabricated with care, and finished for strength and daily use. Our motive is your satisfaction — clear communication, solid workmanship, and on-time delivery.",
+      details: aboutDetails,
+      imageOneUrl: "/gallery/workshop.jpg",
+      imageTwoUrl: "/gallery/welder.jpg",
       peopleJson: JSON.stringify(contacts.map((c) => ({ ...c, imageUrl: null, extra: null }))),
     },
     create: {
@@ -67,17 +105,22 @@ async function main() {
       eyebrow: "About us",
       title: "Built on craft, driven by satisfaction",
       description:
-        "From designer gates to industrial sheds, Star Fabrication delivers durable metalwork for homes and businesses across Mevani.",
-      details:
-        "Star Fabrication is a metal fabrication workshop in Mevani (மேவாணி). We take on grill works, gates, roofing, doors, railings, sheds, and custom welding for homes and businesses.\n\nEvery job is measured on site, fabricated with care, and finished for strength and daily use. Our motive is your satisfaction — clear communication, solid workmanship, and on-time delivery.",
-      footerNote:
-        "Based in Mevani (மேவாணி) — ஸ்டார் பேப்ரிக்கேஷன்.",
+        "From designer gates to industrial sheds, Star Fabrication delivers durable metalwork for homes and businesses across Mevani and nearby towns.",
+      details: aboutDetails,
+      footerNote: "Based in Mevani (மேவாணி) — ஸ்டார் பேப்ரிக்கேஷன்.",
+      imageOneUrl: "/gallery/workshop.jpg",
+      imageTwoUrl: "/gallery/welder.jpg",
       peopleJson: JSON.stringify(contacts.map((c) => ({ ...c, imageUrl: null, extra: null }))),
     },
   });
 
+  const { SERVICE_IMAGE_BY_SLUG, DEFAULT_SERVICE_IMAGE } = await import(
+    "../lib/service-images"
+  );
+
   for (let i = 0; i < defaultServices.length; i++) {
     const s = defaultServices[i];
+    const imageUrl = SERVICE_IMAGE_BY_SLUG[s.id] ?? DEFAULT_SERVICE_IMAGE;
     await prisma.serviceItem.upsert({
       where: { slug: s.id },
       update: {
@@ -85,6 +128,7 @@ async function main() {
         description: s.description,
         details: s.details,
         icon: s.id,
+        imageUrl,
         order: i,
       },
       create: {
@@ -93,6 +137,7 @@ async function main() {
         description: s.description,
         details: s.details,
         icon: s.id,
+        imageUrl,
         order: i,
       },
     });

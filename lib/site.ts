@@ -4,9 +4,35 @@ export const site = {
   tagline: "Our Motive Your Satisfaction",
   location: "Mevani",
   locationTamil: "மேவாணி",
+  address: "Mevani, Namakkal District, Tamil Nadu",
+  addressTamil: "மேவாணி, நாமக்கல் மாவட்டம், தமிழ்நாடு",
+  pincode: "",
   description:
     "Custom metal fabrication in Mevani — gates, grills, roofing, doors, and industrial structures built with craftsmanship.",
+  mapEmbedUrl:
+    "https://maps.google.com/maps?q=Mevani,+Namakkal,+Tamil+Nadu&z=14&output=embed",
+  serviceAreas: [
+    "Mevani",
+    "Rasipuram",
+    "Namakkal",
+    "Tiruchengode",
+    "Paramathi",
+    "Nearby villages",
+  ],
+  googleReviewsUrl: "",
 } as const;
+
+export function getSiteUrl() {
+  const raw = process.env.NEXT_PUBLIC_SITE_URL?.trim();
+  if (raw) {
+    try {
+      return new URL(raw).origin;
+    } catch {
+      /* fall through */
+    }
+  }
+  return "https://starfabrication.local";
+}
 
 export const contacts = [
   {
@@ -26,10 +52,11 @@ export const contacts = [
 export const primaryContact = contacts[0];
 
 export const navLinks = [
-  { href: "#about", label: "About" },
-  { href: "#services", label: "Services" },
-  { href: "#gallery", label: "Gallery" },
-  { href: "#contact", label: "Contact" },
+  { href: "/#about", label: "About" },
+  { href: "/#services", label: "Services" },
+  { href: "/#gallery", label: "Gallery" },
+  { href: "/#faq", label: "FAQ" },
+  { href: "/#contact", label: "Contact" },
 ] as const;
 
 export const services = [
@@ -147,14 +174,18 @@ export function buildQuoteMessage(input: {
   phone: string;
   service: string;
   message: string;
+  email?: string;
 }) {
   return [
     `Hello Star Fabrication,`,
     ``,
     `Name: ${input.name}`,
     `Phone: ${input.phone}`,
+    input.email ? `Email: ${input.email}` : null,
     `Service: ${input.service}`,
     ``,
     input.message,
-  ].join("\n");
+  ]
+    .filter((line) => line !== null)
+    .join("\n");
 }

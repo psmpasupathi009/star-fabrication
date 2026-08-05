@@ -20,15 +20,23 @@ model User {
 }
 
 model SiteSettings {
-  id            String  @id @default(auto()) @map("_id") @db.ObjectId
-  key           String  @unique
-  name          String
-  nameTamil     String?
-  tagline       String
-  location      String
-  locationTamil String?
-  description   String?
-  contactsJson  String
+  id               String  @id @default(auto()) @map("_id") @db.ObjectId
+  key              String  @unique
+  name             String
+  nameTamil        String?
+  tagline          String
+  location         String
+  locationTamil    String?
+  description      String?
+  contactsJson     String
+  address          String?
+  addressTamil     String?
+  pincode          String?
+  hoursJson        String?
+  mapEmbedUrl      String?
+  serviceAreasJson String?
+  googleReviewsUrl String?
+  whatsappPhone    String?
 }
 
 model HeroContent {
@@ -37,6 +45,7 @@ model HeroContent {
   tagline      String
   subtitle     String
   imageUrl     String?
+  videoUrl     String?
   ctaPrimary   String  @default("Get a Quote")
   ctaSecondary String  @default("Call Now")
 }
