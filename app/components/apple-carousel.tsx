@@ -56,7 +56,8 @@ export function AppleCarousel({
     const el = trackRef.current;
     if (!el) return;
     const first = el.querySelector<HTMLElement>("[data-carousel-item]");
-    const gap = 16;
+    const styles = first ? getComputedStyle(el) : null;
+    const gap = styles ? parseFloat(styles.columnGap || styles.gap || "16") || 16 : 16;
     const amount = first ? first.offsetWidth + gap : el.clientWidth * 0.85;
     el.scrollBy({ left: dir * amount, behavior: "smooth" });
   }, []);
@@ -68,20 +69,20 @@ export function AppleCarousel({
         role="region"
         aria-label={label}
         className={cn(
-          "flex gap-4 overflow-x-auto scroll-smooth pb-2 [-ms-overflow-style:none] [scrollbar-width:none] snap-x snap-mandatory [&::-webkit-scrollbar]:hidden",
+          "flex gap-3 overflow-x-auto scroll-smooth pb-2 [-ms-overflow-style:none] [scrollbar-width:none] snap-x snap-mandatory sm:gap-4 [&::-webkit-scrollbar]:hidden",
           trackClassName
         )}
       >
         {children}
       </div>
 
-      <div className="mt-5 flex justify-end gap-2">
+      <div className="mt-4 flex justify-end gap-2 sm:mt-5">
         <button
           type="button"
           aria-label="Previous"
           disabled={!canPrev}
           onClick={() => scrollByCard(-1)}
-          className="inline-flex size-10 items-center justify-center rounded-full bg-white text-foreground shadow-[0_2px_12px_rgba(0,0,0,0.12)] ring-1 ring-black/5 disabled:cursor-default disabled:opacity-35"
+          className="inline-flex size-9 items-center justify-center rounded-full bg-white text-foreground shadow-[0_2px_12px_rgba(0,0,0,0.12)] ring-1 ring-black/5 disabled:cursor-default disabled:opacity-35 sm:size-10"
         >
           <ChevronLeft className="size-5" />
         </button>
@@ -90,7 +91,7 @@ export function AppleCarousel({
           aria-label="Next"
           disabled={!canNext}
           onClick={() => scrollByCard(1)}
-          className="inline-flex size-10 items-center justify-center rounded-full bg-white text-foreground shadow-[0_2px_12px_rgba(0,0,0,0.12)] ring-1 ring-black/5 disabled:cursor-default disabled:opacity-35"
+          className="inline-flex size-9 items-center justify-center rounded-full bg-white text-foreground shadow-[0_2px_12px_rgba(0,0,0,0.12)] ring-1 ring-black/5 disabled:cursor-default disabled:opacity-35 sm:size-10"
         >
           <ChevronRight className="size-5" />
         </button>

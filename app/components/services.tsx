@@ -1,43 +1,13 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useState } from "react";
-import {
-  Car,
-  DoorClosed,
-  Fence,
-  Factory,
-  Grid3x3,
-  Home,
-  Layers,
-  PanelTop,
-  Shield,
-  Warehouse,
-  WavesLadder,
-  Wrench,
-  X,
-  type LucideIcon,
-} from "lucide-react";
+import { X } from "lucide-react";
 import { AppleCarousel, AppleCarouselItem } from "@/app/components/apple-carousel";
 import { SectionHeading } from "@/app/components/section-heading";
 import { Button } from "@/app/components/ui/button";
 import type { ServiceData } from "@/lib/content";
-
-const icons: Record<string, LucideIcon> = {
-  grill: Grid3x3,
-  gate: Fence,
-  railing: Shield,
-  staircase: WavesLadder,
-  "compound-wall": Fence,
-  roofing: Warehouse,
-  "cement-sheet": Layers,
-  "parking-shed": Car,
-  "rolling-shutter": PanelTop,
-  stainless: Wrench,
-  "main-door": DoorClosed,
-  "kerala-set": Home,
-  industrial: Factory,
-  general: Wrench,
-};
+import { resolveServiceImage } from "@/lib/service-images";
 
 type ServicesProps = {
   services: ServiceData[];
@@ -46,9 +16,9 @@ type ServicesProps = {
 export function Services({ services }: ServicesProps) {
   const [activeSlug, setActiveSlug] = useState<string | null>(null);
   const active = services.find((s) => s.slug === activeSlug) ?? null;
-  const ActiveIcon = active
-    ? icons[active.icon] ?? icons[active.slug] ?? Wrench
-    : Wrench;
+  const activeImage = active
+    ? resolveServiceImage(active.slug, active.imageUrl)
+    : null;
 
   useEffect(() => {
     if (!active) return;
@@ -64,8 +34,8 @@ export function Services({ services }: ServicesProps) {
   }, [active]);
 
   return (
-    <section id="services" className="scroll-mt-20 bg-elevated py-24 sm:py-32">
-      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+    <section id="services" className="section-shell bg-elevated">
+      <div className="section-inner">
         <SectionHeading
           eyebrow="What we make"
           title="Fabrication services"
@@ -74,32 +44,39 @@ export function Services({ services }: ServicesProps) {
       </div>
 
       {services.length > 0 ? (
-        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <div className="section-bleed">
           <AppleCarousel label="Fabrication services">
             {services.map((service) => {
-              const Icon = icons[service.icon] ?? icons[service.slug] ?? Wrench;
+              const imageSrc = resolveServiceImage(service.slug, service.imageUrl);
               return (
                 <AppleCarouselItem
                   key={service.id}
-                  className="w-[min(85vw,22rem)] sm:w-[26rem]"
+                  className="w-[min(82vw,17rem)] sm:w-[19rem] lg:w-[20rem]"
                 >
                   <button
                     type="button"
                     onClick={() => setActiveSlug(service.slug)}
-                    className="flex h-full min-h-72 w-full flex-col rounded-3xl bg-white p-8 text-left shadow-[0_2px_12px_rgba(0,0,0,0.04)] ring-1 ring-black/5 hover:shadow-[0_8px_28px_rgba(0,0,0,0.08)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold sm:p-10"
+                    className="group relative aspect-4/5 w-full overflow-hidden rounded-3xl bg-[#1d1d1f] text-left shadow-[0_2px_12px_rgba(0,0,0,0.06)] ring-1 ring-black/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
                   >
-                    <span className="inline-flex size-11 items-center justify-center rounded-full bg-elevated text-gold-dim">
-                      <Icon className="size-5" />
+                    <Image
+                      src={imageSrc}
+                      alt={service.title}
+                      fill
+                      sizes="(max-width: 640px) 78vw, 20rem"
+                      className="object-cover transition-transform duration-500 group-hover:scale-[1.04]"
+                    />
+                    <span className="absolute inset-0 bg-[linear-gradient(180deg,transparent_35%,rgba(0,0,0,0.75)_100%)]" />
+                    <span className="absolute inset-x-0 bottom-0 p-4 sm:p-5 lg:p-6">
+                      <span className="block font-display text-xl font-bold uppercase tracking-tight text-white sm:text-2xl">
+                        {service.title}
+                      </span>
+                      <span className="mt-1.5 line-clamp-2 block text-[14px] leading-snug text-white/80 sm:mt-2 sm:text-[15px]">
+                        {service.description}
+                      </span>
+                      <span className="mt-2.5 inline-flex items-center gap-1 text-[14px] font-medium text-gold sm:mt-3 sm:text-[15px]">
+                        Learn more <span aria-hidden>›</span>
+                      </span>
                     </span>
-                    <h3 className="mt-5 font-display text-2xl font-bold uppercase tracking-tight text-foreground sm:text-3xl">
-                      {service.title}
-                    </h3>
-                    <p className="mt-3 flex-1 text-[17px] leading-relaxed text-muted">
-                      {service.description}
-                    </p>
-                    <p className="apple-link mt-5 text-[15px]">
-                      Learn more <span aria-hidden>›</span>
-                    </p>
                   </button>
                 </AppleCarouselItem>
               );
@@ -108,7 +85,7 @@ export function Services({ services }: ServicesProps) {
         </div>
       ) : null}
 
-      {active ? (
+      {active && activeImage ? (
         <div
           className="fixed inset-0 z-60 flex items-end justify-center bg-black/40 p-4 backdrop-blur-sm sm:items-center"
           onClick={() => setActiveSlug(null)}
@@ -117,45 +94,55 @@ export function Services({ services }: ServicesProps) {
           aria-labelledby="service-detail-title"
         >
           <div
-            className="relative max-h-[85dvh] w-full max-w-lg overflow-y-auto rounded-3xl bg-white p-6 shadow-2xl sm:p-8"
+            className="relative max-h-[88dvh] w-full max-w-lg overflow-y-auto rounded-3xl bg-white shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
             <button
               type="button"
-              className="absolute right-4 top-4 inline-flex size-9 items-center justify-center rounded-full bg-elevated text-muted hover:text-foreground"
+              className="absolute right-4 top-4 z-10 inline-flex size-9 items-center justify-center rounded-full bg-white/90 text-muted shadow-sm hover:text-foreground"
               aria-label="Close"
               onClick={() => setActiveSlug(null)}
             >
               <X className="size-4" />
             </button>
 
-            <span className="inline-flex size-12 items-center justify-center rounded-full bg-elevated text-gold-dim">
-              <ActiveIcon className="size-6" />
-            </span>
-            <h3
-              id="service-detail-title"
-              className="mt-4 font-display text-2xl font-bold uppercase tracking-tight text-foreground"
-            >
-              {active.title}
-            </h3>
-            <p className="mt-4 text-[17px] leading-relaxed text-muted">
-              {active.details || active.description}
-            </p>
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <a href="#contact" onClick={() => setActiveSlug(null)}>
-                <Button size="lg" className="w-full sm:w-auto">
-                  Request a quote
-                </Button>
-              </a>
-              <Button
-                type="button"
-                variant="outline"
-                size="lg"
-                className="w-full sm:w-auto"
-                onClick={() => setActiveSlug(null)}
+            <div className="relative aspect-16/10 w-full overflow-hidden rounded-t-3xl bg-elevated">
+              <Image
+                src={activeImage}
+                alt={active.title}
+                fill
+                sizes="(max-width: 640px) 100vw, 32rem"
+                className="object-cover"
+                priority
+              />
+            </div>
+
+            <div className="p-6 sm:p-8">
+              <h3
+                id="service-detail-title"
+                className="font-display text-2xl font-bold uppercase tracking-tight text-foreground"
               >
-                Close
-              </Button>
+                {active.title}
+              </h3>
+              <p className="mt-4 text-[17px] leading-relaxed text-muted">
+                {active.details || active.description}
+              </p>
+              <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+                <a href="#contact" onClick={() => setActiveSlug(null)}>
+                  <Button size="lg" className="w-full sm:w-auto">
+                    Request a quote
+                  </Button>
+                </a>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="lg"
+                  className="w-full sm:w-auto"
+                  onClick={() => setActiveSlug(null)}
+                >
+                  Close
+                </Button>
+              </div>
             </div>
           </div>
         </div>

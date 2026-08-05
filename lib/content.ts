@@ -32,6 +32,8 @@ export type HeroData = {
   tagline: string;
   subtitle: string;
   imageUrl: string;
+  /** Optional Apple-style muted loop; falls back to image */
+  videoUrl?: string | null;
   ctaPrimary: string;
   ctaSecondary: string;
 };
@@ -54,6 +56,7 @@ export type ServiceData = {
   description: string;
   details: string;
   icon: string;
+  imageUrl: string | null;
   order: number;
 };
 
@@ -71,6 +74,7 @@ export const FALLBACK_HERO: HeroData = {
   tagline: site.tagline,
   subtitle: `Gates, grills, roofing, and industrial structures — welded with precision in ${site.location}.`,
   imageUrl: "/gallery/hero.jpg",
+  videoUrl: "/gallery/hero.mp4",
   ctaPrimary: "Get a Quote",
   ctaSecondary: "Call Now",
 };
@@ -102,6 +106,7 @@ export const FALLBACK_SERVICES: ServiceData[] = defaultServices.map((s, i) => ({
   description: s.description,
   details: s.details,
   icon: s.id,
+  imageUrl: null,
   order: i,
 }));
 
@@ -170,6 +175,7 @@ export async function getHeroData(): Promise<HeroData> {
       tagline: row.tagline,
       subtitle: row.subtitle,
       imageUrl: row.imageUrl || FALLBACK_HERO.imageUrl,
+      videoUrl: FALLBACK_HERO.videoUrl,
       ctaPrimary: row.ctaPrimary,
       ctaSecondary: row.ctaSecondary,
     };
@@ -217,6 +223,7 @@ export async function getServicesData(): Promise<ServiceData[]> {
       description: r.description,
       details: r.details?.trim() || r.description,
       icon: r.icon,
+      imageUrl: r.imageUrl?.trim() || null,
       order: r.order,
     }));
   } catch {

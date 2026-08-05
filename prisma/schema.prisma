@@ -61,6 +61,7 @@ model ServiceItem {
   description String
   details     String?
   icon        String
+  imageUrl    String?
   order       Int     @default(0)
 }
 

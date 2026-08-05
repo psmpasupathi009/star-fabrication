@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/admin-auth";
 import { prisma } from "@/lib/prisma";
+import { isAllowedImageUrl } from "@/lib/security";
 
 export async function GET(request: NextRequest) {
   const unauthorized = await requireAdmin(request);
@@ -26,11 +27,17 @@ export async function POST(request: NextRequest) {
       description?: string;
       details?: string;
       icon?: string;
+      imageUrl?: string | null;
       order?: number;
     };
 
     if (!body.title?.trim() || !body.slug?.trim()) {
       return NextResponse.json({ error: "slug and title required" }, { status: 400 });
+    }
+
+    const imageUrl = body.imageUrl?.trim() || null;
+    if (!isAllowedImageUrl(imageUrl)) {
+      return NextResponse.json({ error: "Invalid image URL" }, { status: 400 });
     }
 
     const maxOrder = await prisma.serviceItem.aggregate({ _max: { order: true } });
@@ -41,6 +48,7 @@ export async function POST(request: NextRequest) {
         description: body.description?.trim() || "",
         details: body.details?.trim() || null,
         icon: body.icon?.trim() || "general",
+        imageUrl,
         order: typeof body.order === "number" ? body.order : (maxOrder._max.order ?? -1) + 1,
       },
     });

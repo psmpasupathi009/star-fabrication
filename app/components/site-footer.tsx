@@ -13,8 +13,8 @@ type SiteFooterProps = {
 export function SiteFooter({ site, contacts, isAdmin }: SiteFooterProps) {
   return (
     <footer className="border-t border-black/5 bg-elevated text-[12px] leading-relaxed text-muted">
-      <div className="mx-auto grid max-w-6xl gap-10 px-4 py-14 sm:px-6 lg:grid-cols-3 lg:px-8">
-        <div>
+      <div className="section-inner grid gap-8 py-10 sm:gap-10 sm:py-12 md:grid-cols-2 lg:grid-cols-3 lg:py-14">
+        <div className="md:col-span-2 lg:col-span-1">
           <StarLogo showTamil={Boolean(site.nameTamil)} size="sm" tone="on-light" />
           <p className="mt-4 max-w-xs text-[13px] leading-relaxed">
             {site.tagline}. Metal fabrication crafted in {site.location}.
@@ -23,7 +23,7 @@ export function SiteFooter({ site, contacts, isAdmin }: SiteFooterProps) {
 
         <div>
           <p className="mb-3 font-semibold text-foreground">Explore</p>
-          <ul className="space-y-2">
+          <ul className="grid grid-cols-2 gap-x-4 gap-y-2 sm:block sm:space-y-2">
             {navLinks.map((link) => (
               <li key={link.href}>
                 <a href={link.href} className="hover:text-foreground hover:underline">
@@ -44,21 +44,25 @@ export function SiteFooter({ site, contacts, isAdmin }: SiteFooterProps) {
                   className="inline-flex items-center gap-2 hover:text-foreground hover:underline"
                 >
                   <Phone className="size-3 shrink-0 text-gold-dim" />
-                  {c.name} — {c.phoneDisplay}
+                  <span>
+                    {c.name} — {c.phoneDisplay}
+                  </span>
                 </a>
               </li>
             ))}
-            <li className="inline-flex items-center gap-2">
-              <MapPin className="size-3 shrink-0 text-gold-dim" />
-              {site.location}
-              {site.locationTamil ? ` · ${site.locationTamil}` : ""}
+            <li className="inline-flex items-start gap-2">
+              <MapPin className="mt-0.5 size-3 shrink-0 text-gold-dim" />
+              <span>
+                {site.location}
+                {site.locationTamil ? ` · ${site.locationTamil}` : ""}
+              </span>
             </li>
           </ul>
         </div>
       </div>
 
       <div className="border-t border-black/5">
-        <div className="mx-auto flex max-w-6xl flex-col items-start justify-between gap-3 px-4 py-5 sm:flex-row sm:items-center sm:px-6 lg:px-8">
+        <div className="section-inner flex flex-col items-start justify-between gap-3 py-4 sm:flex-row sm:items-center sm:py-5">
           <p>
             Copyright © {new Date().getFullYear()} {site.name}. All rights reserved.
           </p>

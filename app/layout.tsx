@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     description: site.description,
     locale: "en_IN",
     type: "website",
-    images: [{ url: "/gallery/banner.jpg", width: 1024, height: 585, alt: site.name }],
+    images: [{ url: "/gallery/og.jpg", width: 1600, height: 1066, alt: site.name }],
   },
 };
 

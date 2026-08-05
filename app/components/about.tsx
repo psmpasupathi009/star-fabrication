@@ -29,20 +29,22 @@ export function About({ about }: AboutProps) {
   }, [open]);
 
   return (
-    <section id="about" className="scroll-mt-20 bg-white py-24 sm:py-32">
-      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+    <section id="about" className="section-shell bg-white">
+      <div className="section-inner">
         <SectionHeading
           eyebrow={about.eyebrow}
           title={about.title}
           description={about.description}
         />
 
-        <div className="flex flex-col items-center gap-5 text-center">
+        <div className="flex flex-col items-center gap-4 text-center sm:gap-5">
           <button type="button" className="apple-link-gold" onClick={() => setOpen(true)}>
             Learn more <span aria-hidden>›</span>
           </button>
           {about.footerNote ? (
-            <p className="max-w-xl text-[15px] leading-relaxed text-muted">{about.footerNote}</p>
+            <p className="max-w-xl px-1 text-[14px] leading-relaxed text-muted sm:text-[15px]">
+              {about.footerNote}
+            </p>
           ) : null}
         </div>
       </div>
@@ -56,22 +58,22 @@ export function About({ about }: AboutProps) {
           aria-labelledby="about-detail-title"
         >
           <div
-            className="relative max-h-[88dvh] w-full max-w-2xl overflow-y-auto rounded-3xl bg-white p-6 shadow-2xl sm:p-10"
+            className="relative max-h-[88dvh] w-full max-w-2xl overflow-y-auto rounded-t-3xl bg-white p-5 shadow-2xl sm:rounded-3xl sm:p-8 md:p-10"
             onClick={(e) => e.stopPropagation()}
           >
             <button
               type="button"
-              className="absolute right-4 top-4 inline-flex size-9 items-center justify-center rounded-full bg-elevated text-muted hover:text-foreground"
+              className="absolute right-3 top-3 inline-flex size-9 items-center justify-center rounded-full bg-elevated text-muted hover:text-foreground sm:right-4 sm:top-4"
               aria-label="Close"
               onClick={() => setOpen(false)}
             >
               <X className="size-4" />
             </button>
 
-            <p className="text-sm font-semibold text-gold-dim">{about.eyebrow}</p>
+            <p className="pr-10 text-sm font-semibold text-gold-dim">{about.eyebrow}</p>
             <h3
               id="about-detail-title"
-              className="mt-2 font-display text-3xl font-bold uppercase tracking-tight text-foreground"
+              className="mt-2 font-display text-2xl font-bold uppercase tracking-tight text-foreground sm:text-3xl"
             >
               {about.title}
             </h3>

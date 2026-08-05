@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/admin-auth";
 import { prisma } from "@/lib/prisma";
+import { isAllowedImageUrl } from "@/lib/security";
 
 type RouteContext = { params: Promise<{ id: string }> };
 
@@ -15,9 +16,14 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
       description?: string;
       details?: string | null;
       icon?: string;
+      imageUrl?: string | null;
       order?: number;
       slug?: string;
     };
+
+    if (body.imageUrl !== undefined && !isAllowedImageUrl(body.imageUrl)) {
+      return NextResponse.json({ error: "Invalid image URL" }, { status: 400 });
+    }
 
     const item = await prisma.serviceItem.update({
       where: { id },
@@ -28,6 +34,9 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
           ? { details: body.details?.trim() || null }
           : {}),
         ...(body.icon !== undefined ? { icon: body.icon.trim() } : {}),
+        ...(body.imageUrl !== undefined
+          ? { imageUrl: body.imageUrl?.trim() || null }
+          : {}),
         ...(typeof body.order === "number" ? { order: body.order } : {}),
         ...(body.slug !== undefined
           ? { slug: body.slug.trim().toLowerCase().replace(/\s+/g, "-") }

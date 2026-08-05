@@ -49,8 +49,8 @@ export function Gallery({ items }: GalleryProps) {
   const item = active !== null ? items[active] : null;
 
   return (
-    <section id="gallery" className="scroll-mt-20 bg-white py-24 sm:py-32">
-      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+    <section id="gallery" className="section-shell bg-white">
+      <div className="section-inner">
         <SectionHeading
           eyebrow="Our work"
           title="Project gallery"
@@ -58,9 +58,9 @@ export function Gallery({ items }: GalleryProps) {
         />
 
         {items.length === 0 ? (
-          <div className="rounded-3xl bg-elevated px-6 py-20 text-center">
+          <div className="rounded-3xl bg-elevated px-5 py-16 text-center sm:px-6 sm:py-20">
             <p className="text-sm font-semibold text-foreground">Projects coming soon</p>
-            <p className="mx-auto mt-2 max-w-sm text-[15px] text-muted">
+            <p className="mx-auto mt-2 max-w-sm text-[14px] text-muted sm:text-[15px]">
               New fabrication work will appear here shortly.
             </p>
           </div>
@@ -69,7 +69,7 @@ export function Gallery({ items }: GalleryProps) {
             {items.map((g, i) => (
               <AppleCarouselItem
                 key={g.id}
-                className="w-[min(78vw,20rem)] sm:w-[22rem]"
+                className="w-[min(78vw,18rem)] sm:w-[20rem] lg:w-[22rem]"
               >
                 <button
                   type="button"

@@ -31,6 +31,7 @@ type ServiceItem = {
   description: string;
   details: string | null;
   icon: string;
+  imageUrl: string | null;
   order: number;
 };
 
@@ -103,6 +104,7 @@ export function AdminDashboardClient({ email }: { email: string }) {
     description: "",
     details: "",
     icon: "general",
+    imageUrl: "",
   });
   const [heroFile, setHeroFile] = useState<File | null>(null);
   const [gallery, setGallery] = useState<GalleryItem[]>([]);
@@ -310,10 +312,20 @@ export function AdminDashboardClient({ email }: { email: string }) {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newService),
+        body: JSON.stringify({
+          ...newService,
+          imageUrl: newService.imageUrl || null,
+        }),
       });
       if (!res.ok) throw new Error("Create failed");
-      setNewService({ slug: "", title: "", description: "", details: "", icon: "general" });
+      setNewService({
+        slug: "",
+        title: "",
+        description: "",
+        details: "",
+        icon: "general",
+        imageUrl: "",
+      });
       setStatus("Service added");
       await loadAll();
     } catch (err) {
@@ -756,6 +768,27 @@ export function AdminDashboardClient({ email }: { email: string }) {
               value={newService.details}
               onChange={(e) => setNewService({ ...newService, details: e.target.value })}
             />
+            <div>
+              <Label htmlFor="newServiceImage">Card image (optional)</Label>
+              <Input
+                id="newServiceImage"
+                type="file"
+                accept="image/*"
+                onChange={async (e) => {
+                  const file = e.target.files?.[0];
+                  if (!file) return;
+                  try {
+                    const url = await uploadFile(file);
+                    setNewService((prev) => ({ ...prev, imageUrl: url }));
+                  } catch (err) {
+                    setError(err instanceof Error ? err.message : "Upload failed");
+                  }
+                }}
+              />
+              {newService.imageUrl ? (
+                <p className="mt-1 truncate text-xs text-muted">{newService.imageUrl}</p>
+              ) : null}
+            </div>
             <Button type="submit" disabled={saving}>
               <Plus className="size-4" />
               Add
@@ -765,28 +798,45 @@ export function AdminDashboardClient({ email }: { email: string }) {
           <ul className="space-y-4">
             {services.map((item) => (
               <li key={item.id} className="admin-panel space-y-3 !p-4">
-                <div className="grid gap-3 sm:grid-cols-2">
-                  <Input
-                    value={item.title}
-                    onChange={(e) =>
-                      setServices((prev) =>
-                        prev.map((s) =>
-                          s.id === item.id ? { ...s, title: e.target.value } : s
+                <div className="grid gap-3 sm:grid-cols-[7rem_1fr]">
+                  <div className="relative aspect-square overflow-hidden rounded-2xl bg-elevated">
+                    {item.imageUrl ? (
+                      <Image
+                        src={item.imageUrl}
+                        alt={item.title}
+                        fill
+                        className="object-cover"
+                        sizes="112px"
+                      />
+                    ) : (
+                      <div className="flex h-full items-center justify-center px-2 text-center text-[11px] text-muted">
+                        Stock image
+                      </div>
+                    )}
+                  </div>
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    <Input
+                      value={item.title}
+                      onChange={(e) =>
+                        setServices((prev) =>
+                          prev.map((s) =>
+                            s.id === item.id ? { ...s, title: e.target.value } : s
+                          )
                         )
-                      )
-                    }
-                  />
-                  <Input
-                    value={item.icon}
-                    onChange={(e) =>
-                      setServices((prev) =>
-                        prev.map((s) =>
-                          s.id === item.id ? { ...s, icon: e.target.value } : s
+                      }
+                    />
+                    <Input
+                      value={item.icon}
+                      onChange={(e) =>
+                        setServices((prev) =>
+                          prev.map((s) =>
+                            s.id === item.id ? { ...s, icon: e.target.value } : s
+                          )
                         )
-                      )
-                    }
-                    placeholder="Icon key"
-                  />
+                      }
+                      placeholder="Icon key"
+                    />
+                  </div>
                 </div>
                 <Textarea
                   value={item.description}
@@ -810,6 +860,28 @@ export function AdminDashboardClient({ email }: { email: string }) {
                   }
                   placeholder="Full details"
                 />
+                <div>
+                  <Label htmlFor={`service-img-${item.id}`}>Replace image</Label>
+                  <Input
+                    id={`service-img-${item.id}`}
+                    type="file"
+                    accept="image/*"
+                    onChange={async (e) => {
+                      const file = e.target.files?.[0];
+                      if (!file) return;
+                      try {
+                        const url = await uploadFile(file);
+                        setServices((prev) =>
+                          prev.map((s) =>
+                            s.id === item.id ? { ...s, imageUrl: url } : s
+                          )
+                        );
+                      } catch (err) {
+                        setError(err instanceof Error ? err.message : "Upload failed");
+                      }
+                    }}
+                  />
+                </div>
                 <div className="flex gap-2">
                   <Button type="button" size="sm" onClick={() => saveService(item)} disabled={saving}>
                     <Save className="size-4" />

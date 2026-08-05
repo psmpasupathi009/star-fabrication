@@ -18,28 +18,33 @@ export function SectionHeading({
   return (
     <div
       className={cn(
-        "mb-12 max-w-3xl md:mb-16",
+        "mb-10 max-w-3xl sm:mb-12 md:mb-14",
         align === "center" && "mx-auto text-center",
         className
       )}
     >
       {eyebrow ? (
-        <p className="mb-3 text-sm font-semibold tracking-tight text-gold-dim">
+        <p className="mb-2 text-[13px] font-semibold tracking-tight text-gold-dim sm:mb-3 sm:text-sm">
           {eyebrow}
         </p>
       ) : null}
-      <h2 className="font-display text-[clamp(2.25rem,4.5vw,3.75rem)] font-bold uppercase leading-[1.02] tracking-tight text-foreground">
+      <h2 className="font-display text-[clamp(1.85rem,5vw,3.5rem)] font-bold uppercase leading-[1.05] tracking-tight text-foreground">
         {title}
       </h2>
       <div
         className={cn(
-          "mt-5 h-1 w-12 rounded-full bg-gold",
+          "mt-4 h-1 w-10 rounded-full bg-gold sm:mt-5 sm:w-12",
           align === "center" && "mx-auto"
         )}
         aria-hidden
       />
       {description ? (
-        <p className="mx-auto mt-5 max-w-2xl text-[17px] leading-relaxed text-muted sm:text-[19px]">
+        <p
+          className={cn(
+            "mt-4 max-w-2xl text-[15px] leading-relaxed text-muted sm:mt-5 sm:text-[17px] md:text-[19px]",
+            align === "center" && "mx-auto"
+          )}
+        >
           {description}
         </p>
       ) : null}

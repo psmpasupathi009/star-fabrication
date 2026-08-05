@@ -49,16 +49,16 @@ export default function AdminLoginPage() {
   }
 
   return (
-    <div className="mx-auto flex min-h-dvh max-w-md flex-col justify-center px-4 py-12">
-      <StarLogo size="sm" tone="on-light" className="mb-8" />
-      <h1 className="font-display text-3xl font-bold uppercase tracking-tight text-foreground">
+    <div className="mx-auto flex min-h-dvh max-w-md flex-col justify-center px-4 py-10 sm:px-6 sm:py-12">
+      <StarLogo size="sm" tone="on-light" className="mb-6 sm:mb-8" />
+      <h1 className="font-display text-2xl font-bold uppercase tracking-tight text-foreground sm:text-3xl">
         Admin login
       </h1>
-      <p className="mt-2 text-[15px] text-muted">
+      <p className="mt-2 text-[14px] text-muted sm:text-[15px]">
         Sign in with your admin email to manage the website.
       </p>
 
-      <form onSubmit={onSubmit} className="admin-panel mt-8 space-y-4">
+      <form onSubmit={onSubmit} className="admin-panel mt-6 space-y-4 sm:mt-8">
         <div>
           <Label htmlFor="email">Email</Label>
           <Input

@@ -65,12 +65,12 @@ export function SiteHeader({ contacts }: SiteHeaderProps) {
             : "border-transparent bg-white/40 backdrop-blur-md"
         )}
       >
-        <div className="mx-auto flex h-12 max-w-6xl items-center justify-between gap-4 px-4 sm:h-14 sm:px-6 lg:px-8">
-          <a href="#top" className="shrink-0" onClick={() => setOpen(false)}>
+        <div className="mx-auto flex h-12 max-w-6xl items-center justify-between gap-3 px-4 sm:h-14 sm:gap-4 sm:px-6 lg:px-8">
+          <a href="#top" className="min-w-0 shrink" onClick={() => setOpen(false)}>
             <StarLogo size="sm" tone="on-light" />
           </a>
 
-          <nav className="hidden items-center gap-7 md:flex" aria-label="Primary">
+          <nav className="hidden items-center gap-5 lg:gap-7 md:flex" aria-label="Primary">
             {navLinks.map((link) => (
               <a
                 key={link.href}
