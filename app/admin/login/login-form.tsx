@@ -1,0 +1,102 @@
+"use client";
+
+import { FormEvent, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Button } from "@/app/components/ui/button";
+import { Input } from "@/app/components/ui/input";
+import { Label } from "@/app/components/ui/label";
+import { StarLogo } from "@/app/components/star-logo";
+
+export default function AdminLoginPage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  async function onSubmit(e: FormEvent) {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+    try {
+      const res = await fetch("/api/auth/signin", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ email, password }),
+      });
+      const data = (await res.json()) as { error?: string; user?: { role: string } };
+      if (!res.ok || !data.user) {
+        setError(data.error || "Invalid email or password");
+        return;
+      }
+      const callback = searchParams.get("callbackUrl");
+      const target =
+        callback &&
+        callback.startsWith("/admin") &&
+        !callback.startsWith("//") &&
+        !callback.includes("\\")
+          ? callback
+          : "/admin/dashboard";
+      router.replace(target);
+      router.refresh();
+    } catch {
+      setError("Login failed");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <div className="mx-auto flex min-h-dvh max-w-md flex-col justify-center px-4">
+      <StarLogo size="sm" className="mb-8" />
+      <h1 className="font-display text-2xl font-bold uppercase tracking-wide text-white">
+        Admin login
+      </h1>
+      <p className="mt-2 text-sm text-muted">
+        Sign in with your admin email to manage the website.
+      </p>
+
+      <form onSubmit={onSubmit} className="mt-8 space-y-4 border border-white/10 bg-surface/80 p-6">
+        <div>
+          <Label htmlFor="email">Email</Label>
+          <Input
+            id="email"
+            type="email"
+            autoComplete="email"
+            required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="admin@example.com"
+          />
+        </div>
+        <div>
+          <div className="mb-1.5 flex items-center justify-between gap-2">
+            <Label htmlFor="password" className="mb-0">
+              Password
+            </Label>
+            <a
+              href="/admin/forgot-password"
+              className="text-xs text-gold transition-colors hover:text-white"
+            >
+              Forgot password?
+            </a>
+          </div>
+          <Input
+            id="password"
+            type="password"
+            autoComplete="current-password"
+            required
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </div>
+        {error ? <p className="text-sm text-accent-red">{error}</p> : null}
+        <Button type="submit" className="w-full" disabled={loading}>
+          {loading ? "Signing in…" : "Sign in"}
+        </Button>
+      </form>
+    </div>
+  );
+}
