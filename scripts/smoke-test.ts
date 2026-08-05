@@ -18,11 +18,11 @@ async function check(
   const res = await fetch(`${BASE}${path}`, {
     ...init,
     redirect: "manual",
-    signal: AbortSignal.timeout(15000),
+    signal: AbortSignal.timeout(20000),
   });
   const ok = expected.includes(res.status);
   console.log(`${ok ? "PASS" : "FAIL"} ${name} → ${res.status} (want ${expected.join("|")})`);
-  return { ok, res };
+  return { ok, res, status: res.status };
 }
 
 async function main() {
@@ -32,13 +32,50 @@ async function main() {
   };
 
   assert(await check("Home", "/"));
+  assert(await check("Privacy", "/privacy"));
+  assert(await check("Service page", "/services/gate"));
+  assert(await check("Service 404", "/services/does-not-exist-xyz", undefined, 404));
+  assert(await check("Robots", "/robots.txt"));
+  assert(await check("Sitemap", "/sitemap.xml"));
   assert(await check("Login page", "/admin/login"));
+  assert(await check("Forgot password", "/admin/forgot-password"));
   assert(await check("Dashboard redirect", "/admin/dashboard", undefined, [307, 302]));
   assert(await check("Admin hero blocked", "/api/admin/hero", undefined, 401));
+  assert(await check("Admin site blocked", "/api/admin/site", undefined, 401));
   assert(
     await check("Upload blocked", "/api/upload/media", { method: "POST" }, 401)
   );
   assert(await check("Gallery public GET", "/api/gallery", undefined, [200]));
+
+  assert(
+    await check(
+      "Contact missing fields",
+      "/api/contact",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({}),
+      },
+      400
+    )
+  );
+  assert(
+    await check(
+      "Contact bad email",
+      "/api/contact",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: "Test",
+          phone: "9999999999",
+          message: "Hello",
+          email: "not-an-email",
+        }),
+      },
+      400
+    )
+  );
   assert(
     await check(
       "Contact form",
@@ -81,11 +118,29 @@ async function main() {
     )
   );
 
-  const home = await fetch(`${BASE}/`, { signal: AbortSignal.timeout(15000) });
+  const home = await fetch(`${BASE}/`, { signal: AbortSignal.timeout(20000) });
   const html = await home.text();
-  for (const needle of ["Star Fabrication", "Get a Quote", "Fabrication services"]) {
+  for (const needle of [
+    "Star Fabrication",
+    "Get a Quote",
+    "Fabrication services",
+    "id=\"top\"",
+    "main-content",
+    "Request a quote",
+    "FAQ",
+  ]) {
     const ok = html.includes(needle);
     console.log(`${ok ? "PASS" : "FAIL"} Home contains "${needle}"`);
+    if (!ok) failed += 1;
+  }
+
+  const privacy = await fetch(`${BASE}/privacy`, {
+    signal: AbortSignal.timeout(20000),
+  });
+  const privacyHtml = await privacy.text();
+  for (const needle of ["Privacy Policy", "Skip to content"]) {
+    const ok = privacyHtml.includes(needle);
+    console.log(`${ok ? "PASS" : "FAIL"} Privacy contains "${needle}"`);
     if (!ok) failed += 1;
   }
 
@@ -93,6 +148,13 @@ async function main() {
   for (const h of ["x-content-type-options", "x-frame-options", "referrer-policy"]) {
     const ok = Boolean(headers.get(h));
     console.log(`${ok ? "PASS" : "FAIL"} Header ${h}`);
+    if (!ok) failed += 1;
+  }
+
+  const sitemap = await (await fetch(`${BASE}/sitemap.xml`)).text();
+  for (const needle of ["/privacy", "/services/gate"]) {
+    const ok = sitemap.includes(needle);
+    console.log(`${ok ? "PASS" : "FAIL"} Sitemap contains "${needle}"`);
     if (!ok) failed += 1;
   }
 

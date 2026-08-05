@@ -13,34 +13,42 @@ type HeroProps = {
   nameTamil?: string | null;
 };
 
+function prefersReducedMotion() {
+  if (typeof window === "undefined") return true;
+  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
+
 export function Hero({ hero, primaryPhone, nameTamil }: HeroProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [useVideo, setUseVideo] = useState(true);
+  const [videoOk, setVideoOk] = useState(false);
   const videoSrc = hero.videoUrl?.trim() || "/gallery/hero.mp4";
+  const allowVideo = !prefersReducedMotion();
 
   useEffect(() => {
+    if (!allowVideo) return;
+    const el = videoRef.current;
+    if (!el) return;
+
     let cancelled = false;
+    el.muted = true;
 
-    async function start() {
-      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-        if (!cancelled) setUseVideo(false);
-        return;
-      }
-      const el = videoRef.current;
-      if (!el) return;
-      el.muted = true;
-      try {
-        await el.play();
-      } catch {
-        if (!cancelled) setUseVideo(false);
-      }
-    }
+    const failTimer = setTimeout(() => {
+      if (!cancelled && el.paused) setVideoOk(false);
+    }, 2500);
 
-    void start();
+    el.play()
+      .then(() => {
+        if (!cancelled) setVideoOk(true);
+      })
+      .catch(() => {
+        if (!cancelled) setVideoOk(false);
+      });
+
     return () => {
       cancelled = true;
+      clearTimeout(failTimer);
     };
-  }, [videoSrc]);
+  }, [allowVideo, videoSrc]);
 
   return (
     <section
@@ -51,28 +59,28 @@ export function Hero({ hero, primaryPhone, nameTamil }: HeroProps) {
         <Image
           src={hero.imageUrl}
           alt={
-            useVideo
+            videoOk
               ? ""
               : "Star Fabrication metal workshop — welding and steel work"
           }
           fill
           priority
           sizes="100vw"
-          className={`object-cover object-center ${useVideo ? "opacity-0" : "opacity-100 hero-image-zoom"}`}
-          aria-hidden={useVideo}
+          className={`object-cover object-center ${videoOk ? "opacity-0" : "opacity-100 hero-image-zoom"}`}
+          aria-hidden={videoOk}
         />
 
-        {useVideo ? (
+        {allowVideo ? (
           <video
             ref={videoRef}
-            className="absolute inset-0 h-full w-full object-cover"
+            className={`absolute inset-0 h-full w-full object-cover transition-opacity ${videoOk ? "opacity-100" : "opacity-0"}`}
             autoPlay
             muted
             loop
             playsInline
             preload="metadata"
             poster={hero.imageUrl}
-            onError={() => setUseVideo(false)}
+            onError={() => setVideoOk(false)}
           >
             <source src={videoSrc} type="video/mp4" />
           </video>

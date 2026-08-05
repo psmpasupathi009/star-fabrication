@@ -2,10 +2,10 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { MobileCallBar } from "@/app/components/mobile-call-bar";
 import { SiteFooter } from "@/app/components/site-footer";
 import { SiteHeader } from "@/app/components/site-header";
 import { WhatsAppFab } from "@/app/components/whatsapp-fab";
-import { Button } from "@/app/components/ui/button";
 import {
   getServiceBySlug,
   getServicesData,
@@ -14,6 +14,7 @@ import {
 import { resolveServiceImage } from "@/lib/service-images";
 import { getServerSession } from "@/lib/session";
 import { getSiteUrl, telHref, whatsappUrl } from "@/lib/site";
+import { cn } from "@/lib/utils/cn";
 
 type PageProps = {
   params: Promise<{ slug: string }>;
@@ -88,7 +89,10 @@ export default async function ServicePage({ params }: PageProps) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <SiteHeader contacts={siteData.contacts} />
-      <main className="flex-1 pb-14 md:pb-0">
+      <main
+        id="main-content"
+        className="flex-1 pb-[calc(3.5rem+env(safe-area-inset-bottom))] md:pb-0"
+      >
         <article className="section-shell bg-white">
           <div className="section-inner">
             <p className="text-sm font-semibold text-gold-dim">
@@ -117,10 +121,14 @@ export default async function ServicePage({ params }: PageProps) {
                   {service.details || service.description}
                 </p>
                 <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-                  <Link href="/#contact">
-                    <Button size="lg" className="w-full sm:w-auto">
-                      Request a quote
-                    </Button>
+                  <Link
+                    href="/#contact"
+                    className={cn(
+                      "inline-flex h-12 items-center justify-center rounded-full bg-[#1d1d1f] px-7 text-[15px] font-medium text-white hover:bg-black",
+                      "w-full sm:w-auto"
+                    )}
+                  >
+                    Request a quote
                   </Link>
                   {wa ? (
                     <a
@@ -130,17 +138,23 @@ export default async function ServicePage({ params }: PageProps) {
                       )}
                       target="_blank"
                       rel="noopener noreferrer"
+                      className={cn(
+                        "inline-flex h-12 items-center justify-center rounded-full border border-black/15 px-7 text-[15px] font-medium text-foreground hover:bg-black/[0.04]",
+                        "w-full sm:w-auto"
+                      )}
                     >
-                      <Button size="lg" variant="outline" className="w-full sm:w-auto">
-                        WhatsApp
-                      </Button>
+                      WhatsApp
                     </a>
                   ) : null}
                   {primary ? (
-                    <a href={telHref(primary.phone)}>
-                      <Button size="lg" variant="ghost" className="w-full sm:w-auto">
-                        Call {primary.phoneDisplay}
-                      </Button>
+                    <a
+                      href={telHref(primary.phone)}
+                      className={cn(
+                        "inline-flex h-12 items-center justify-center rounded-full px-7 text-[15px] font-medium text-foreground hover:bg-black/[0.04]",
+                        "w-full sm:w-auto"
+                      )}
+                    >
+                      Call {primary.phoneDisplay}
                     </a>
                   ) : null}
                 </div>
@@ -166,7 +180,7 @@ export default async function ServicePage({ params }: PageProps) {
                               src={relatedImage}
                               alt={s.title}
                               fill
-                              sizes="(max-width: 640px) 50vw, 25vw"
+                              sizes="(max-width: 640px) 100vw, 25vw"
                               className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
                             />
                           </div>
@@ -189,7 +203,8 @@ export default async function ServicePage({ params }: PageProps) {
         </article>
       </main>
       <SiteFooter site={siteData} contacts={siteData.contacts} isAdmin={isAdmin} />
-      <WhatsAppFab phone={wa} hideOnMobile={false} />
+      <MobileCallBar contacts={siteData.contacts} whatsappPhone={wa || ""} />
+      <WhatsAppFab phone={wa || ""} />
     </>
   );
 }

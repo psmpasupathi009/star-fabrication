@@ -1,5 +1,4 @@
 import { SectionHeading } from "@/app/components/section-heading";
-import { Button } from "@/app/components/ui/button";
 import { testimonials } from "@/lib/testimonials";
 
 type TestimonialsProps = {
@@ -28,10 +27,13 @@ export function Testimonials({ googleReviewsUrl }: TestimonialsProps) {
         </ul>
         {googleReviewsUrl ? (
           <div className="mt-10 flex justify-center">
-            <a href={googleReviewsUrl} target="_blank" rel="noopener noreferrer">
-              <Button type="button" variant="outline" size="lg">
-                See Google reviews
-              </Button>
+            <a
+              href={googleReviewsUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex h-12 items-center justify-center rounded-full border border-black/15 px-7 text-[15px] font-medium text-foreground hover:bg-black/[0.04]"
+            >
+              See Google reviews
             </a>
           </div>
         ) : null}

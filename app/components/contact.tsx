@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useState } from "react";
+import Link from "next/link";
 import { Clock, MapPin, MessageCircle, Phone, Send } from "lucide-react";
 import { SectionHeading } from "@/app/components/section-heading";
 import { Button } from "@/app/components/ui/button";
@@ -63,6 +64,10 @@ export function Contact({ site, contacts, services }: ContactProps) {
   }
 
   function openWhatsApp() {
+    if (!name.trim() || !phone.trim() || !message.trim()) {
+      setError("Please fill name, phone, and message before WhatsApp.");
+      return;
+    }
     const text = buildQuoteMessage({ name, phone, email, service, message });
     window.open(whatsappUrl(text, waPhone), "_blank", "noopener,noreferrer");
   }
@@ -213,8 +218,16 @@ export function Contact({ site, contacts, services }: ContactProps) {
                   placeholder="Describe your project, size, and timeline"
                 />
               </div>
-              {error ? <p className="text-sm text-accent-red">{error}</p> : null}
-              {success ? <p className="text-sm font-medium text-foreground">{success}</p> : null}
+              {error ? (
+                <p role="alert" className="text-sm text-accent-red">
+                  {error}
+                </p>
+              ) : null}
+              {success ? (
+                <p role="status" aria-live="polite" className="text-sm font-medium text-foreground">
+                  {success}
+                </p>
+              ) : null}
               <div className="flex flex-col gap-3 pt-1 sm:flex-row sm:items-center">
                 <Button type="submit" size="lg" className="w-full sm:w-auto" disabled={loading}>
                   <Send className="size-4" />
@@ -226,6 +239,7 @@ export function Contact({ site, contacts, services }: ContactProps) {
                   size="lg"
                   className="w-full sm:w-auto"
                   onClick={openWhatsApp}
+                  disabled={loading}
                 >
                   <MessageCircle className="size-4" />
                   WhatsApp
@@ -233,9 +247,9 @@ export function Contact({ site, contacts, services }: ContactProps) {
               </div>
               <p className="text-[12px] text-muted">
                 By submitting, you agree to our{" "}
-                <a href="/privacy" className="underline hover:text-foreground">
+                <Link href="/privacy" className="underline hover:text-foreground">
                   Privacy Policy
-                </a>
+                </Link>
                 .
               </p>
             </form>

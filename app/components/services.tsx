@@ -6,7 +6,6 @@ import { useEffect, useState } from "react";
 import { X } from "lucide-react";
 import { AppleCarousel, AppleCarouselItem } from "@/app/components/apple-carousel";
 import { SectionHeading } from "@/app/components/section-heading";
-import { Button } from "@/app/components/ui/button";
 import type { ServiceData } from "@/lib/content";
 import { resolveServiceImage } from "@/lib/service-images";
 
@@ -129,15 +128,19 @@ export function Services({ services }: ServicesProps) {
                 {active.details || active.description}
               </p>
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-                <Link href={`/services/${active.slug}`} onClick={() => setActiveSlug(null)}>
-                  <Button size="lg" className="w-full sm:w-auto">
-                    Full page
-                  </Button>
+                <Link
+                  href={`/services/${active.slug}`}
+                  onClick={() => setActiveSlug(null)}
+                  className="inline-flex h-12 w-full items-center justify-center rounded-full bg-[#1d1d1f] px-7 text-[15px] font-medium text-white hover:bg-black sm:w-auto"
+                >
+                  Full page
                 </Link>
-                <a href="#contact" onClick={() => setActiveSlug(null)}>
-                  <Button size="lg" variant="outline" className="w-full sm:w-auto">
-                    Request a quote
-                  </Button>
+                <a
+                  href="#contact"
+                  onClick={() => setActiveSlug(null)}
+                  className="inline-flex h-12 w-full items-center justify-center rounded-full border border-black/15 px-7 text-[15px] font-medium text-foreground hover:bg-black/[0.04] sm:w-auto"
+                >
+                  Request a quote
                 </a>
               </div>
             </div>

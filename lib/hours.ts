@@ -72,6 +72,10 @@ export function parseHoursJson(json: string | null | undefined): BusinessHours {
   }
 }
 
+function isClosedDay(s: DaySchedule): s is { closed: true } {
+  return "closed" in s && s.closed === true;
+}
+
 function formatTime(t: string) {
   const [hStr, mStr] = t.split(":");
   const h = Number(hStr);
@@ -97,13 +101,9 @@ export function formatHoursLines(hours: BusinessHours): string[] {
     const start = WEEKDAY_LABELS[WEEKDAYS[i]];
     const end = WEEKDAY_LABELS[WEEKDAYS[j - 1]];
     const label = i === j - 1 ? start.slice(0, 3) : `${start.slice(0, 3)}–${end.slice(0, 3)}`;
-    let text: string;
-    if ("closed" in schedule && schedule.closed) {
-      text = "Closed";
-    } else {
-      const openClose = schedule as { open: string; close: string };
-      text = `${formatTime(openClose.open)} – ${formatTime(openClose.close)}`;
-    }
+    const text = isClosedDay(schedule)
+      ? "Closed"
+      : `${formatTime(schedule.open)} – ${formatTime(schedule.close)}`;
     groups.push({ label, text });
     i = j;
   }
@@ -120,13 +120,16 @@ export function hoursToOpeningHoursSpecification(hours: BusinessHours) {
     saturday: "Saturday",
     sunday: "Sunday",
   };
-  return WEEKDAYS.filter((d) => !("closed" in hours[d] && hours[d].closed)).map((d) => {
-    const s = hours[d] as { open: string; close: string };
+  return WEEKDAYS.filter((d) => !isClosedDay(hours[d])).map((d) => {
+    const s = hours[d];
+    if (isClosedDay(s)) {
+      return null;
+    }
     return {
       "@type": "OpeningHoursSpecification",
       dayOfWeek: dayMap[d],
       opens: s.open,
       closes: s.close,
     };
-  });
+  }).filter((row): row is NonNullable<typeof row> => row !== null);
 }

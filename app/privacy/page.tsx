@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { MobileCallBar } from "@/app/components/mobile-call-bar";
 import { SiteFooter } from "@/app/components/site-footer";
 import { SiteHeader } from "@/app/components/site-header";
+import { WhatsAppFab } from "@/app/components/whatsapp-fab";
 import { getSiteData } from "@/lib/content";
 import { getServerSession } from "@/lib/session";
 import { site as siteDefaults } from "@/lib/site";
@@ -16,20 +18,23 @@ export const dynamic = "force-dynamic";
 export default async function PrivacyPage() {
   const [siteData, session] = await Promise.all([getSiteData(), getServerSession()]);
   const isAdmin = session?.role?.toUpperCase() === "ADMIN";
+  const waPhone =
+    siteData.whatsappPhone || siteData.contacts[0]?.phone || "8807920508";
 
   return (
     <>
       <SiteHeader contacts={siteData.contacts} />
-      <main className="flex-1">
+      <main
+        id="main-content"
+        className="flex-1 pb-[calc(3.5rem+env(safe-area-inset-bottom))] md:pb-0"
+      >
         <article className="section-shell bg-white">
           <div className="section-inner max-w-2xl">
             <p className="text-sm font-semibold text-gold-dim">Legal</p>
             <h1 className="mt-2 font-display text-3xl font-bold uppercase tracking-tight text-foreground sm:text-4xl">
               Privacy Policy
             </h1>
-            <p className="mt-4 text-[15px] text-muted">
-              Last updated: August 2026
-            </p>
+            <p className="mt-4 text-[15px] text-muted">Last updated: August 2026</p>
 
             <div className="mt-10 space-y-6 text-[16px] leading-relaxed text-muted sm:text-[17px]">
               <p>
@@ -77,10 +82,7 @@ export default async function PrivacyPage() {
               </h2>
               <p>
                 Questions about this policy: call{" "}
-                {siteData.contacts[0]
-                  ? siteData.contacts[0].phoneDisplay
-                  : "us"}{" "}
-                or write via the{" "}
+                {siteData.contacts[0] ? siteData.contacts[0].phoneDisplay : "us"} or write via the{" "}
                 <Link href="/#contact" className="text-foreground underline">
                   contact form
                 </Link>
@@ -97,6 +99,8 @@ export default async function PrivacyPage() {
         </article>
       </main>
       <SiteFooter site={siteData} contacts={siteData.contacts} isAdmin={isAdmin} />
+      <MobileCallBar contacts={siteData.contacts} whatsappPhone={waPhone} />
+      <WhatsAppFab phone={waPhone} />
     </>
   );
 }

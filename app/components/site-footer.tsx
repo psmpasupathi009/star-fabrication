@@ -96,9 +96,9 @@ export function SiteFooter({ site, contacts, isAdmin }: SiteFooterProps) {
             >
               Admin
             </Link>
-            <a href="#top" className="hover:text-foreground hover:underline">
+            <Link href="/#top" className="hover:text-foreground hover:underline">
               Back to top
-            </a>
+            </Link>
           </div>
         </div>
       </div>

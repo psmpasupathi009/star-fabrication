@@ -66,9 +66,9 @@ export function SiteHeader({ contacts }: SiteHeaderProps) {
         )}
       >
         <div className="mx-auto flex h-12 max-w-6xl items-center justify-between gap-3 px-4 sm:h-14 sm:gap-4 sm:px-6 lg:px-8">
-          <a href="#top" className="min-w-0 shrink" onClick={() => setOpen(false)}>
+          <Link href="/#top" className="min-w-0 shrink" onClick={() => setOpen(false)}>
             <StarLogo size="sm" tone="on-light" />
-          </a>
+          </Link>
 
           <nav className="hidden items-center gap-5 lg:gap-7 md:flex" aria-label="Primary">
             {navLinks.map((link) => (
@@ -82,10 +82,12 @@ export function SiteHeader({ contacts }: SiteHeaderProps) {
             ))}
           </nav>
 
-          <div className="hidden items-center gap-3 lg:flex">
+          <div className="hidden items-center gap-2 md:flex lg:gap-3">
             {isAdmin ? (
               <>
-                <span className="max-w-35 truncate text-xs text-muted">{user?.email}</span>
+                <span className="hidden max-w-35 truncate text-xs text-muted lg:inline">
+                  {user?.email}
+                </span>
                 <Link
                   href="/admin/dashboard"
                   className="inline-flex h-8 items-center gap-1.5 rounded-full bg-[#1d1d1f] px-3 text-xs font-medium text-white hover:bg-black"
@@ -108,7 +110,8 @@ export function SiteHeader({ contacts }: SiteHeaderProps) {
                 className="inline-flex h-8 items-center gap-1.5 rounded-full bg-gold px-3.5 text-xs font-semibold text-[#1d1d1f] hover:brightness-105"
               >
                 <Phone className="size-3.5" />
-                {primary.phoneDisplay}
+                <span className="hidden sm:inline">{primary.phoneDisplay}</span>
+                <span className="sm:hidden">Call</span>
               </a>
             ) : null}
           </div>
@@ -127,16 +130,21 @@ export function SiteHeader({ contacts }: SiteHeaderProps) {
 
       <div
         className={cn(
-          "fixed inset-0 z-40 bg-white pt-16 md:hidden",
+          "fixed inset-0 z-60 bg-white pt-16 transition-opacity md:hidden",
           open ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"
         )}
         aria-hidden={!open}
+        inert={!open ? true : undefined}
       >
-        <nav className="flex flex-col px-6" aria-label="Mobile">
+        <nav
+          className="flex max-h-[calc(100dvh-4rem)] flex-col overflow-y-auto px-6 pb-[calc(5.5rem+env(safe-area-inset-bottom))]"
+          aria-label="Mobile"
+        >
           {navLinks.map((link) => (
             <a
               key={link.href}
               href={link.href}
+              tabIndex={open ? undefined : -1}
               onClick={() => setOpen(false)}
               className="border-b border-black/5 py-4 text-2xl font-semibold tracking-tight text-foreground"
             >
@@ -148,6 +156,7 @@ export function SiteHeader({ contacts }: SiteHeaderProps) {
               <>
                 <Link
                   href="/admin/dashboard"
+                  tabIndex={open ? undefined : -1}
                   onClick={() => setOpen(false)}
                   className="inline-flex h-12 items-center justify-center rounded-full bg-[#1d1d1f] text-sm font-medium text-white"
                 >
@@ -155,6 +164,7 @@ export function SiteHeader({ contacts }: SiteHeaderProps) {
                 </Link>
                 <button
                   type="button"
+                  tabIndex={open ? undefined : -1}
                   onClick={logout}
                   className="inline-flex h-12 items-center justify-center rounded-full border border-black/10 text-sm font-medium"
                 >
@@ -166,6 +176,7 @@ export function SiteHeader({ contacts }: SiteHeaderProps) {
                 <a
                   key={c.phone}
                   href={telHref(c.phone)}
+                  tabIndex={open ? undefined : -1}
                   onClick={() => setOpen(false)}
                   className="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-gold text-sm font-medium text-[#1d1d1f]"
                 >

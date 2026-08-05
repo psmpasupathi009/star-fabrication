@@ -40,7 +40,7 @@ export default async function Home() {
     <>
       <LocalBusinessJsonLd site={siteData} />
       <SiteHeader contacts={siteData.contacts} />
-      <main className="flex-1 pb-14 md:pb-0">
+      <main id="main-content" className="flex-1 pb-[calc(3.5rem+env(safe-area-inset-bottom))] md:pb-0">
         <Hero hero={hero} primaryPhone={primaryPhone} nameTamil={siteData.nameTamil} />
         <About about={about} />
         <Services services={services} />

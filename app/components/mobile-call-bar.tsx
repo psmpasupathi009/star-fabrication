@@ -17,7 +17,7 @@ export function MobileCallBar({ contacts, whatsappPhone }: MobileCallBarProps) {
   const callPhone = primary?.phone;
 
   return (
-    <div className="fixed inset-x-0 bottom-0 z-40 border-t border-black/8 bg-white/95 backdrop-blur-xl md:hidden">
+    <div className="fixed inset-x-0 bottom-0 z-40 border-t border-black/8 bg-white/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl md:hidden">
       <div className="grid grid-cols-2">
         {callPhone ? (
           <a

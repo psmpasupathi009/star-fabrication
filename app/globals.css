@@ -153,6 +153,12 @@ body {
   padding-block: clamp(3.5rem, 8vw, 7rem);
 }
 
+@media (max-width: 767px) {
+  #contact.section-shell {
+    scroll-margin-bottom: calc(4.5rem + env(safe-area-inset-bottom));
+  }
+}
+
 .section-inner {
   margin-inline: auto;
   width: 100%;
