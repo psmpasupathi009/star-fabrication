@@ -44,16 +44,16 @@ export default function ForgotPasswordPage() {
   }
 
   return (
-    <div className="mx-auto flex min-h-dvh max-w-md flex-col justify-center px-4">
-      <StarLogo size="sm" className="mb-8" />
-      <h1 className="font-display text-2xl font-bold uppercase tracking-wide text-white">
+    <div className="mx-auto flex min-h-dvh max-w-md flex-col justify-center px-4 py-12">
+      <StarLogo size="sm" tone="on-light" className="mb-8" />
+      <h1 className="font-display text-3xl font-bold uppercase tracking-tight text-foreground">
         Forgot password
       </h1>
-      <p className="mt-2 text-sm text-muted">
+      <p className="mt-2 text-[15px] text-muted">
         Enter your admin email and we’ll send a 6-digit code if it’s registered.
       </p>
 
-      <form onSubmit={onSubmit} className="mt-8 space-y-4 border border-white/10 bg-surface/80 p-6">
+      <form onSubmit={onSubmit} className="admin-panel mt-8 space-y-4">
         <div>
           <Label htmlFor="email">Email</Label>
           <Input
@@ -67,18 +67,18 @@ export default function ForgotPasswordPage() {
           />
         </div>
         {error ? <p className="text-sm text-accent-red">{error}</p> : null}
-        {success ? <p className="text-sm text-gold">{success}</p> : null}
+        {success ? <p className="text-sm font-medium text-gold-dim">{success}</p> : null}
         <Button type="submit" className="w-full" disabled={loading}>
           {loading ? "Sending…" : "Send code"}
         </Button>
         <p className="text-center text-xs text-muted">
           Already have a code?{" "}
-          <Link href="/admin/reset-password" className="text-gold hover:text-white">
+          <Link href="/admin/reset-password" className="font-medium text-foreground hover:underline">
             Enter it here
           </Link>
         </p>
         <p className="text-center text-xs text-muted">
-          <Link href="/admin/login" className="text-gold hover:text-white">
+          <Link href="/admin/login" className="font-medium text-foreground hover:underline">
             Back to login
           </Link>
         </p>

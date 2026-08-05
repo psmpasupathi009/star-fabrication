@@ -4,6 +4,8 @@ type StarLogoProps = {
   className?: string;
   showTamil?: boolean;
   size?: "sm" | "md" | "lg";
+  /** on-dark = over photos; on-light = default public pages */
+  tone?: "on-light" | "on-dark";
 };
 
 function StarIcon({ className }: { className?: string }) {
@@ -19,25 +21,37 @@ function StarIcon({ className }: { className?: string }) {
   );
 }
 
-export function StarLogo({ className, showTamil = false, size = "md" }: StarLogoProps) {
+export function StarLogo({
+  className,
+  showTamil = false,
+  size = "md",
+  tone = "on-light",
+}: StarLogoProps) {
   const sizes = {
-    sm: { icon: "size-5", word: "text-lg tracking-[0.08em]", tamil: "text-[0.65rem]" },
-    md: { icon: "size-6", word: "text-xl tracking-[0.1em] sm:text-2xl", tamil: "text-xs" },
-    lg: { icon: "size-8", word: "text-3xl tracking-[0.12em] sm:text-5xl md:text-6xl", tamil: "text-sm sm:text-base" },
+    sm: { icon: "size-5", word: "text-lg tracking-[0.06em]", tamil: "text-[0.65rem]" },
+    md: { icon: "size-6", word: "text-xl tracking-[0.08em] sm:text-2xl", tamil: "text-xs" },
+    lg: {
+      icon: "size-8 sm:size-10",
+      word: "text-[clamp(2.75rem,6vw,4.5rem)] tracking-[0.04em]",
+      tamil: "text-sm sm:text-base",
+    },
   }[size];
+
+  const wordColor = tone === "on-dark" ? "text-white" : "text-foreground";
+  const tamilColor = tone === "on-dark" ? "text-white/70" : "text-muted";
 
   return (
     <div className={cn("flex flex-col", className)}>
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 sm:gap-3">
         <StarIcon className={sizes.icon} />
         <span className={cn("font-display font-bold uppercase leading-none", sizes.word)}>
           <span className="text-gold">Star</span>{" "}
-          <span className="text-white">Fabrication</span>
+          <span className={wordColor}>Fabrication</span>
         </span>
         <StarIcon className={cn(sizes.icon, "hidden sm:block")} />
       </div>
       {showTamil ? (
-        <span className={cn("mt-1 text-muted", sizes.tamil)}>ஸ்டார் பேப்ரிக்கேஷன்</span>
+        <span className={cn("mt-2", sizes.tamil, tamilColor)}>ஸ்டார் பேப்ரிக்கேஷன்</span>
       ) : null}
     </div>
   );

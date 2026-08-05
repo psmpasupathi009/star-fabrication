@@ -41,13 +41,15 @@ async function main() {
 
   await prisma.heroContent.upsert({
     where: { key: "default" },
-    update: {},
+    update: {
+      imageUrl: "/gallery/hero.jpg",
+    },
     create: {
       key: "default",
       tagline: "Our Motive Your Satisfaction",
       subtitle:
         "Gates, grills, roofing, and industrial structures — welded with precision in Mevani.",
-      imageUrl: "/gallery/welder.jpg",
+      imageUrl: "/gallery/hero.jpg",
       ctaPrimary: "Get a Quote",
       ctaSecondary: "Call Now",
     },

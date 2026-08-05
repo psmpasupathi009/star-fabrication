@@ -388,11 +388,11 @@ export function AdminDashboardClient({ email }: { email: string }) {
   }
 
   return (
-    <div className="mx-auto max-w-5xl px-4 py-10 sm:px-6">
-      <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
+    <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
+      <header className="mb-8 flex flex-wrap items-center justify-between gap-4 rounded-3xl border border-black/6 bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.04)] sm:p-6">
         <div>
-          <StarLogo size="sm" />
-          <h1 className="mt-3 font-display text-2xl font-bold uppercase tracking-wide text-white">
+          <StarLogo size="sm" tone="on-light" />
+          <h1 className="mt-3 font-display text-2xl font-bold uppercase tracking-tight text-foreground sm:text-3xl">
             Admin dashboard
           </h1>
           <p className="mt-1 text-sm text-muted">{email}</p>
@@ -408,9 +408,9 @@ export function AdminDashboardClient({ email }: { email: string }) {
             Log out
           </Button>
         </div>
-      </div>
+      </header>
 
-      <div className="mb-6 flex flex-wrap gap-2 border-b border-white/10 pb-4">
+      <div className="mb-6 flex flex-wrap gap-2 rounded-full bg-white/80 p-1.5 ring-1 ring-black/6">
         {TABS.map((t) => (
           <button
             key={t.id}
@@ -421,10 +421,10 @@ export function AdminDashboardClient({ email }: { email: string }) {
               setError("");
             }}
             className={cn(
-              "px-4 py-2 font-display text-xs uppercase tracking-wider transition-colors",
+              "rounded-full px-4 py-2 text-sm font-medium tracking-tight transition-colors",
               tab === t.id
-                ? "bg-gold text-black"
-                : "border border-white/15 text-muted hover:text-white"
+                ? "bg-[#1d1d1f] text-white shadow-sm"
+                : "text-muted hover:bg-black/[0.04] hover:text-foreground"
             )}
           >
             {t.label}
@@ -432,11 +432,19 @@ export function AdminDashboardClient({ email }: { email: string }) {
         ))}
       </div>
 
-      {status ? <p className="mb-4 text-sm text-gold">{status}</p> : null}
-      {error ? <p className="mb-4 text-sm text-accent-red">{error}</p> : null}
+      {status ? (
+        <p className="mb-4 rounded-2xl bg-gold/20 px-4 py-3 text-sm font-medium text-foreground">
+          {status}
+        </p>
+      ) : null}
+      {error ? (
+        <p className="mb-4 rounded-2xl bg-accent-red/10 px-4 py-3 text-sm text-accent-red">
+          {error}
+        </p>
+      ) : null}
 
       {tab === "hero" ? (
-        <form onSubmit={saveHero} className="space-y-4 border border-white/10 bg-surface/80 p-6">
+        <form onSubmit={saveHero} className="admin-panel space-y-4">
           <div>
             <Label htmlFor="tagline">Tagline</Label>
             <Input
@@ -491,7 +499,7 @@ export function AdminDashboardClient({ email }: { email: string }) {
       ) : null}
 
       {tab === "about" ? (
-        <form onSubmit={saveAbout} className="space-y-4 border border-white/10 bg-surface/80 p-6">
+        <form onSubmit={saveAbout} className="admin-panel space-y-4">
           <div>
             <Label htmlFor="eyebrow">Eyebrow</Label>
             <Input
@@ -534,12 +542,12 @@ export function AdminDashboardClient({ email }: { email: string }) {
             />
           </div>
 
-          <p className="font-display text-xs uppercase tracking-[0.2em] text-gold">
+          <p className="text-sm font-semibold text-foreground">
             Owners (shown in Learn more — photo, name, mobile, extra)
           </p>
           {aboutPeople.map((p, i) => (
-            <div key={i} className="space-y-3 border border-white/10 p-4">
-              <p className="text-xs text-muted">Owner {i + 1}</p>
+            <div key={i} className="space-y-3 rounded-2xl bg-elevated p-4">
+              <p className="text-xs font-medium text-muted">Owner {i + 1}</p>
               <div className="grid gap-3 sm:grid-cols-2">
                 <Input
                   placeholder="Name"
@@ -588,7 +596,7 @@ export function AdminDashboardClient({ email }: { email: string }) {
                 }}
               />
               {p.imageUrl ? (
-                <div className="relative h-24 w-24 overflow-hidden border border-white/10">
+                <div className="relative h-24 w-24 overflow-hidden rounded-2xl ring-1 ring-black/5">
                   <Image src={p.imageUrl} alt={p.name || "Person"} fill className="object-cover" />
                 </div>
               ) : null}
@@ -619,7 +627,7 @@ export function AdminDashboardClient({ email }: { email: string }) {
       ) : null}
 
       {tab === "site" ? (
-        <form onSubmit={saveSite} className="space-y-4 border border-white/10 bg-surface/80 p-6">
+        <form onSubmit={saveSite} className="admin-panel space-y-4">
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
               <Label htmlFor="siteName">Business name</Label>
@@ -672,9 +680,9 @@ export function AdminDashboardClient({ email }: { email: string }) {
               onChange={(e) => setSiteForm({ ...siteForm, description: e.target.value })}
             />
           </div>
-          <p className="font-display text-xs uppercase tracking-[0.2em] text-gold">Contacts</p>
+          <p className="text-sm font-semibold text-foreground">Contacts</p>
           {contacts.map((c, i) => (
-            <div key={i} className="grid gap-3 border border-white/10 p-4 sm:grid-cols-2">
+            <div key={i} className="grid gap-3 rounded-2xl bg-elevated p-4 sm:grid-cols-2">
               <Input
                 placeholder="Name"
                 value={c.name}
@@ -722,13 +730,8 @@ export function AdminDashboardClient({ email }: { email: string }) {
 
       {tab === "services" ? (
         <div className="space-y-6">
-          <form
-            onSubmit={addService}
-            className="space-y-3 border border-white/10 bg-surface/80 p-6"
-          >
-            <p className="font-display text-xs uppercase tracking-[0.2em] text-gold">
-              Add service
-            </p>
+          <form onSubmit={addService} className="admin-panel space-y-3">
+            <p className="text-sm font-semibold text-foreground">Add service</p>
             <div className="grid gap-3 sm:grid-cols-2">
               <Input
                 placeholder="Slug (e.g. grill)"
@@ -761,7 +764,7 @@ export function AdminDashboardClient({ email }: { email: string }) {
 
           <ul className="space-y-4">
             {services.map((item) => (
-              <li key={item.id} className="space-y-3 border border-white/10 bg-surface/60 p-4">
+              <li key={item.id} className="admin-panel space-y-3 !p-4">
                 <div className="grid gap-3 sm:grid-cols-2">
                   <Input
                     value={item.title}
@@ -830,13 +833,8 @@ export function AdminDashboardClient({ email }: { email: string }) {
 
       {tab === "gallery" ? (
         <div className="space-y-6">
-          <form
-            onSubmit={uploadGallery}
-            className="space-y-3 border border-white/10 bg-surface/80 p-6"
-          >
-            <p className="font-display text-xs uppercase tracking-[0.2em] text-gold">
-              Upload media
-            </p>
+          <form onSubmit={uploadGallery} className="admin-panel space-y-3">
+            <p className="text-sm font-semibold text-foreground">Upload media</p>
             <Input
               type="file"
               accept="image/*,video/*"
@@ -857,9 +855,9 @@ export function AdminDashboardClient({ email }: { email: string }) {
             {gallery.map((item) => (
               <li
                 key={item.id}
-                className="flex flex-col gap-4 border border-white/10 bg-surface/60 p-4 sm:flex-row sm:items-center"
+                className="admin-panel flex flex-col gap-4 !p-4 sm:flex-row sm:items-center"
               >
-                <div className="relative h-24 w-full shrink-0 overflow-hidden bg-black sm:w-36">
+                <div className="relative h-24 w-full shrink-0 overflow-hidden rounded-2xl bg-elevated sm:w-36">
                   {item.type === "video" ? (
                     <video src={item.url} className="h-full w-full object-cover" muted />
                   ) : (
@@ -873,7 +871,7 @@ export function AdminDashboardClient({ email }: { email: string }) {
                   )}
                 </div>
                 <div className="min-w-0 flex-1">
-                  <p className="truncate font-display text-sm uppercase tracking-wide text-white">
+                  <p className="truncate text-sm font-semibold text-foreground">
                     {item.caption || "Untitled"}
                   </p>
                   <p className="mt-1 truncate text-xs text-muted">{item.url}</p>

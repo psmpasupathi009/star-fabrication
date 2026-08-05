@@ -70,7 +70,7 @@ export const FALLBACK_SITE: SiteData = {
 export const FALLBACK_HERO: HeroData = {
   tagline: site.tagline,
   subtitle: `Gates, grills, roofing, and industrial structures — welded with precision in ${site.location}.`,
-  imageUrl: "/gallery/welder.jpg",
+  imageUrl: "/gallery/hero.jpg",
   ctaPrimary: "Get a Quote",
   ctaSecondary: "Call Now",
 };

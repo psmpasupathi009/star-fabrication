@@ -17,6 +17,7 @@ import {
   X,
   type LucideIcon,
 } from "lucide-react";
+import { AppleCarousel, AppleCarouselItem } from "@/app/components/apple-carousel";
 import { SectionHeading } from "@/app/components/section-heading";
 import { Button } from "@/app/components/ui/button";
 import type { ServiceData } from "@/lib/content";
@@ -63,75 +64,81 @@ export function Services({ services }: ServicesProps) {
   }, [active]);
 
   return (
-    <section id="services" className="relative scroll-mt-20 py-20 sm:py-28">
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-gold/30 to-transparent" />
+    <section id="services" className="scroll-mt-20 bg-elevated py-24 sm:py-32">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <SectionHeading
           eyebrow="What we make"
           title="Fabrication services"
-          description="From residential detail work to industrial structures — tap a service for full details."
+          description="Swipe or use the arrows — tap a service for full details."
         />
-
-        <div className="grid gap-3 sm:grid-cols-2 sm:gap-3.5 lg:grid-cols-4">
-          {services.map((service) => {
-            const Icon = icons[service.icon] ?? icons[service.slug] ?? Wrench;
-            return (
-              <button
-                key={service.id}
-                type="button"
-                onClick={() => setActiveSlug(service.slug)}
-                className="group relative border border-white/10 bg-surface/75 p-5 text-left hover:border-gold/50 hover:bg-surface-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
-              >
-                <span className="absolute inset-x-0 top-0 h-0.5 bg-gold opacity-0 group-hover:opacity-100" />
-                <span className="inline-flex size-11 items-center justify-center border border-gold/25 bg-gold/8 text-gold group-hover:border-gold/50">
-                  <Icon className="size-5" />
-                </span>
-                <h3 className="mt-4 font-display text-lg font-semibold uppercase tracking-wide text-foreground">
-                  {service.title}
-                </h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted">
-                  {service.description}
-                </p>
-                <p className="mt-3 font-display text-[0.65rem] uppercase tracking-[0.2em] text-gold/80">
-                  View details
-                </p>
-              </button>
-            );
-          })}
-        </div>
       </div>
+
+      {services.length > 0 ? (
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+          <AppleCarousel label="Fabrication services">
+            {services.map((service) => {
+              const Icon = icons[service.icon] ?? icons[service.slug] ?? Wrench;
+              return (
+                <AppleCarouselItem
+                  key={service.id}
+                  className="w-[min(85vw,22rem)] sm:w-[26rem]"
+                >
+                  <button
+                    type="button"
+                    onClick={() => setActiveSlug(service.slug)}
+                    className="flex h-full min-h-72 w-full flex-col rounded-3xl bg-white p-8 text-left shadow-[0_2px_12px_rgba(0,0,0,0.04)] ring-1 ring-black/5 hover:shadow-[0_8px_28px_rgba(0,0,0,0.08)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold sm:p-10"
+                  >
+                    <span className="inline-flex size-11 items-center justify-center rounded-full bg-elevated text-gold-dim">
+                      <Icon className="size-5" />
+                    </span>
+                    <h3 className="mt-5 font-display text-2xl font-bold uppercase tracking-tight text-foreground sm:text-3xl">
+                      {service.title}
+                    </h3>
+                    <p className="mt-3 flex-1 text-[17px] leading-relaxed text-muted">
+                      {service.description}
+                    </p>
+                    <p className="apple-link mt-5 text-[15px]">
+                      Learn more <span aria-hidden>›</span>
+                    </p>
+                  </button>
+                </AppleCarouselItem>
+              );
+            })}
+          </AppleCarousel>
+        </div>
+      ) : null}
 
       {active ? (
         <div
-          className="fixed inset-0 z-60 flex items-end justify-center bg-black/90 p-4 sm:items-center"
+          className="fixed inset-0 z-60 flex items-end justify-center bg-black/40 p-4 backdrop-blur-sm sm:items-center"
           onClick={() => setActiveSlug(null)}
           role="dialog"
           aria-modal="true"
           aria-labelledby="service-detail-title"
         >
           <div
-            className="relative max-h-[85dvh] w-full max-w-lg overflow-y-auto border border-gold/25 bg-surface p-6 sm:p-8"
+            className="relative max-h-[85dvh] w-full max-w-lg overflow-y-auto rounded-3xl bg-white p-6 shadow-2xl sm:p-8"
             onClick={(e) => e.stopPropagation()}
           >
             <button
               type="button"
-              className="absolute right-3 top-3 inline-flex size-10 items-center justify-center text-muted hover:text-gold"
+              className="absolute right-4 top-4 inline-flex size-9 items-center justify-center rounded-full bg-elevated text-muted hover:text-foreground"
               aria-label="Close"
               onClick={() => setActiveSlug(null)}
             >
-              <X className="size-5" />
+              <X className="size-4" />
             </button>
 
-            <span className="inline-flex size-12 items-center justify-center border border-gold/30 bg-gold/10 text-gold">
+            <span className="inline-flex size-12 items-center justify-center rounded-full bg-elevated text-gold-dim">
               <ActiveIcon className="size-6" />
             </span>
             <h3
               id="service-detail-title"
-              className="mt-4 font-display text-2xl font-bold uppercase tracking-wide text-foreground"
+              className="mt-4 font-display text-2xl font-bold uppercase tracking-tight text-foreground"
             >
               {active.title}
             </h3>
-            <p className="mt-4 text-sm leading-relaxed text-muted sm:text-base">
+            <p className="mt-4 text-[17px] leading-relaxed text-muted">
               {active.details || active.description}
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">

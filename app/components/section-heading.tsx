@@ -18,30 +18,28 @@ export function SectionHeading({
   return (
     <div
       className={cn(
-        "mb-14 max-w-2xl",
+        "mb-12 max-w-3xl md:mb-16",
         align === "center" && "mx-auto text-center",
         className
       )}
     >
       {eyebrow ? (
-        <div
-          className={cn(
-            "mb-4 flex items-center gap-3",
-            align === "center" && "justify-center"
-          )}
-        >
-          <span className="hidden h-px w-10 bg-gold/80 sm:block" />
-          <p className="font-display text-[0.7rem] uppercase tracking-[0.32em] text-gold sm:text-xs">
-            {eyebrow}
-          </p>
-          <span className="hidden h-px w-10 bg-gold/80 sm:block" />
-        </div>
+        <p className="mb-3 text-sm font-semibold tracking-tight text-gold-dim">
+          {eyebrow}
+        </p>
       ) : null}
-      <h2 className="font-display text-3xl font-bold uppercase tracking-[0.045em] text-foreground sm:text-4xl md:text-[2.85rem] md:leading-[1.1]">
+      <h2 className="font-display text-[clamp(2.25rem,4.5vw,3.75rem)] font-bold uppercase leading-[1.02] tracking-tight text-foreground">
         {title}
       </h2>
+      <div
+        className={cn(
+          "mt-5 h-1 w-12 rounded-full bg-gold",
+          align === "center" && "mx-auto"
+        )}
+        aria-hidden
+      />
       {description ? (
-        <p className="mt-5 text-base leading-relaxed text-muted sm:text-lg">
+        <p className="mx-auto mt-5 max-w-2xl text-[17px] leading-relaxed text-muted sm:text-[19px]">
           {description}
         </p>
       ) : null}

@@ -66,16 +66,16 @@ export default function ResetPasswordForm() {
   }
 
   return (
-    <div className="mx-auto flex min-h-dvh max-w-md flex-col justify-center px-4">
-      <StarLogo size="sm" className="mb-8" />
-      <h1 className="font-display text-2xl font-bold uppercase tracking-wide text-white">
+    <div className="mx-auto flex min-h-dvh max-w-md flex-col justify-center px-4 py-12">
+      <StarLogo size="sm" tone="on-light" className="mb-8" />
+      <h1 className="font-display text-3xl font-bold uppercase tracking-tight text-foreground">
         Reset password
       </h1>
-      <p className="mt-2 text-sm text-muted">
+      <p className="mt-2 text-[15px] text-muted">
         Enter the 6-digit code from your email and choose a new password.
       </p>
 
-      <form onSubmit={onSubmit} className="mt-8 space-y-4 border border-white/10 bg-surface/80 p-6">
+      <form onSubmit={onSubmit} className="admin-panel mt-8 space-y-4">
         <div>
           <Label htmlFor="email">Email</Label>
           <Input
@@ -128,16 +128,16 @@ export default function ResetPasswordForm() {
           />
         </div>
         {error ? <p className="text-sm text-accent-red">{error}</p> : null}
-        {success ? <p className="text-sm text-gold">{success}</p> : null}
+        {success ? <p className="text-sm font-medium text-gold-dim">{success}</p> : null}
         <Button type="submit" className="w-full" disabled={loading}>
           {loading ? "Updating…" : "Update password"}
         </Button>
         <p className="text-center text-xs text-muted">
-          <Link href="/admin/forgot-password" className="text-gold hover:text-white">
+          <Link href="/admin/forgot-password" className="font-medium text-foreground hover:underline">
             Resend code
           </Link>
           {" · "}
-          <Link href="/admin/login" className="text-gold hover:text-white">
+          <Link href="/admin/login" className="font-medium text-foreground hover:underline">
             Back to login
           </Link>
         </p>

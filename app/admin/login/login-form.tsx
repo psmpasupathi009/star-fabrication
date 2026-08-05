@@ -49,16 +49,16 @@ export default function AdminLoginPage() {
   }
 
   return (
-    <div className="mx-auto flex min-h-dvh max-w-md flex-col justify-center px-4">
-      <StarLogo size="sm" className="mb-8" />
-      <h1 className="font-display text-2xl font-bold uppercase tracking-wide text-white">
+    <div className="mx-auto flex min-h-dvh max-w-md flex-col justify-center px-4 py-12">
+      <StarLogo size="sm" tone="on-light" className="mb-8" />
+      <h1 className="font-display text-3xl font-bold uppercase tracking-tight text-foreground">
         Admin login
       </h1>
-      <p className="mt-2 text-sm text-muted">
+      <p className="mt-2 text-[15px] text-muted">
         Sign in with your admin email to manage the website.
       </p>
 
-      <form onSubmit={onSubmit} className="mt-8 space-y-4 border border-white/10 bg-surface/80 p-6">
+      <form onSubmit={onSubmit} className="admin-panel mt-8 space-y-4">
         <div>
           <Label htmlFor="email">Email</Label>
           <Input
@@ -78,7 +78,7 @@ export default function AdminLoginPage() {
             </Label>
             <a
               href="/admin/forgot-password"
-              className="text-xs text-gold transition-colors hover:text-white"
+              className="text-xs font-medium text-muted hover:text-foreground"
             >
               Forgot password?
             </a>

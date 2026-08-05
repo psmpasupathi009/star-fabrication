@@ -60,8 +60,7 @@ export function Contact({ site, contacts, services }: ContactProps) {
   }
 
   return (
-    <section id="contact" className="relative scroll-mt-20 py-20 sm:py-28">
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-gold/30 to-transparent" />
+    <section id="contact" className="scroll-mt-20 bg-elevated py-24 sm:py-32">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <SectionHeading
           eyebrow="Get in touch"
@@ -75,23 +74,21 @@ export function Contact({ site, contacts, services }: ContactProps) {
               <a
                 key={c.phone}
                 href={telHref(c.phone)}
-                className="flex items-start gap-4 border border-white/10 bg-surface/60 p-5 hover:border-gold/45 hover:bg-surface-hover"
+                className="flex items-start gap-4 rounded-2xl bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.04)] ring-1 ring-black/5 hover:shadow-[0_8px_24px_rgba(0,0,0,0.06)]"
               >
-                <span className="inline-flex size-11 shrink-0 items-center justify-center border border-gold/35 bg-gold/10 text-gold">
+                <span className="inline-flex size-11 shrink-0 items-center justify-center rounded-full bg-elevated text-gold-dim">
                   <Phone className="size-4" />
                 </span>
                 <span>
-                  <span className="block font-display text-lg uppercase tracking-wide text-foreground">
+                  <span className="block text-[17px] font-semibold tracking-tight text-foreground">
                     {c.name}
                   </span>
-                  <span className="mt-0.5 block text-xs uppercase tracking-wider text-gold">
-                    {c.title}
-                  </span>
+                  <span className="mt-0.5 block text-sm text-gold-dim">{c.title}</span>
                   <span className="mt-2 block text-muted">{c.phoneDisplay}</span>
                 </span>
               </a>
             ))}
-            <p className="text-sm text-muted">
+            <p className="px-1 text-sm text-muted">
               Location: {site.location}
               {site.locationTamil ? ` (${site.locationTamil})` : ""}
             </p>
@@ -100,7 +97,7 @@ export function Contact({ site, contacts, services }: ContactProps) {
           <div className="lg:col-span-3">
             <form
               onSubmit={onSubmit}
-              className="space-y-4 border border-gold/15 bg-surface/85 p-6 sm:p-8"
+              className="space-y-5 rounded-3xl bg-white p-6 shadow-[0_2px_12px_rgba(0,0,0,0.04)] ring-1 ring-black/5 sm:p-8"
             >
               <div>
                 <Label htmlFor="name">Name</Label>
@@ -134,7 +131,7 @@ export function Contact({ site, contacts, services }: ContactProps) {
                   name="service"
                   value={service}
                   onChange={(e) => setService(e.target.value)}
-                  className="flex h-11 w-full border border-white/15 bg-surface px-3.5 text-sm text-foreground outline-none focus:border-gold/55 focus:ring-1 focus:ring-gold/35"
+                  className="flex h-12 w-full rounded-xl border border-border bg-surface px-4 text-[17px] text-foreground outline-none focus:ring-2 focus:ring-[var(--ring)]"
                 >
                   {services.map((s) => (
                     <option key={s.id} value={s.title}>
@@ -155,7 +152,7 @@ export function Contact({ site, contacts, services }: ContactProps) {
                 />
               </div>
               {error ? <p className="text-sm text-accent-red">{error}</p> : null}
-              {success ? <p className="text-sm text-gold">{success}</p> : null}
+              {success ? <p className="text-sm font-medium text-foreground">{success}</p> : null}
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
                 <Button type="submit" size="lg" className="w-full sm:w-auto" disabled={loading}>
                   <Send className="size-4" />

@@ -29,7 +29,7 @@ export function About({ about }: AboutProps) {
   }, [open]);
 
   return (
-    <section id="about" className="scroll-mt-20 py-20 sm:py-28">
+    <section id="about" className="scroll-mt-20 bg-white py-24 sm:py-32">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <SectionHeading
           eyebrow={about.eyebrow}
@@ -37,48 +37,46 @@ export function About({ about }: AboutProps) {
           description={about.description}
         />
 
-        <div className="flex flex-col items-center gap-4 text-center">
-          <Button type="button" size="lg" onClick={() => setOpen(true)}>
-            Learn more about us
-          </Button>
+        <div className="flex flex-col items-center gap-5 text-center">
+          <button type="button" className="apple-link-gold" onClick={() => setOpen(true)}>
+            Learn more <span aria-hidden>›</span>
+          </button>
           {about.footerNote ? (
-            <p className="max-w-xl text-sm leading-relaxed text-muted">{about.footerNote}</p>
+            <p className="max-w-xl text-[15px] leading-relaxed text-muted">{about.footerNote}</p>
           ) : null}
         </div>
       </div>
 
       {open ? (
         <div
-          className="fixed inset-0 z-60 flex items-end justify-center bg-black/90 p-4 sm:items-center"
+          className="fixed inset-0 z-60 flex items-end justify-center bg-black/40 p-4 backdrop-blur-sm sm:items-center"
           onClick={() => setOpen(false)}
           role="dialog"
           aria-modal="true"
           aria-labelledby="about-detail-title"
         >
           <div
-            className="relative max-h-[88dvh] w-full max-w-3xl overflow-y-auto border border-gold/25 bg-surface p-6 sm:p-8"
+            className="relative max-h-[88dvh] w-full max-w-2xl overflow-y-auto rounded-3xl bg-white p-6 shadow-2xl sm:p-10"
             onClick={(e) => e.stopPropagation()}
           >
             <button
               type="button"
-              className="absolute right-3 top-3 inline-flex size-10 items-center justify-center text-muted hover:text-gold"
+              className="absolute right-4 top-4 inline-flex size-9 items-center justify-center rounded-full bg-elevated text-muted hover:text-foreground"
               aria-label="Close"
               onClick={() => setOpen(false)}
             >
-              <X className="size-5" />
+              <X className="size-4" />
             </button>
 
-            <p className="font-display text-xs uppercase tracking-[0.28em] text-gold">
-              {about.eyebrow}
-            </p>
+            <p className="text-sm font-semibold text-gold-dim">{about.eyebrow}</p>
             <h3
               id="about-detail-title"
-              className="mt-2 font-display text-2xl font-bold uppercase tracking-wide text-foreground sm:text-3xl"
+              className="mt-2 font-display text-3xl font-bold uppercase tracking-tight text-foreground"
             >
               {about.title}
             </h3>
 
-            <div className="mt-6 space-y-4 text-sm leading-relaxed text-muted sm:text-base">
+            <div className="mt-6 space-y-4 text-[17px] leading-relaxed text-muted">
               {about.details.split(/\n\n+/).map((para, i) => (
                 <p key={i}>{para}</p>
               ))}
@@ -86,38 +84,34 @@ export function About({ about }: AboutProps) {
 
             {about.people.length > 0 ? (
               <div className="mt-10">
-                <p className="font-display text-xs uppercase tracking-[0.22em] text-gold">
-                  Owners
-                </p>
+                <p className="text-sm font-semibold text-foreground">Owners</p>
                 <div className="mt-4 grid gap-4 sm:grid-cols-2">
                   {about.people.map((p) => (
                     <div
                       key={`${p.name}-${p.phone}`}
-                      className="border border-white/10 bg-background/60 p-4"
+                      className="rounded-2xl bg-elevated p-5"
                     >
                       {p.imageUrl ? (
-                        <div className="relative mb-4 aspect-square w-full max-w-40 overflow-hidden border border-gold/20">
+                        <div className="relative mb-4 aspect-square w-full max-w-36 overflow-hidden rounded-2xl">
                           <Image
                             src={p.imageUrl}
                             alt={p.name}
                             fill
-                            sizes="160px"
+                            sizes="144px"
                             className="object-cover"
                           />
                         </div>
                       ) : null}
-                      <p className="font-display text-xl font-semibold uppercase tracking-wide text-foreground">
+                      <p className="font-display text-xl font-semibold uppercase tracking-tight text-foreground">
                         {p.name}
                       </p>
                       {p.title ? (
-                        <p className="mt-1 text-xs uppercase tracking-[0.22em] text-gold">
-                          {p.title}
-                        </p>
+                        <p className="mt-1 text-sm text-gold-dim">{p.title}</p>
                       ) : null}
                       {p.phone ? (
                         <a
                           href={telHref(p.phone)}
-                          className="mt-3 inline-block text-sm text-muted hover:text-gold"
+                          className="mt-3 inline-block text-sm text-muted hover:text-foreground"
                         >
                           {p.phoneDisplay || p.phone}
                         </a>
