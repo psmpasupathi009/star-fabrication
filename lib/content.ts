@@ -94,6 +94,127 @@ export type GalleryViewItem = {
   altTamil: string | null;
 };
 
+/** Local gallery when Mongo/Cloudinary is slow or empty */
+export const FALLBACK_GALLERY: GalleryViewItem[] = [
+  {
+    id: "local-gate",
+    url: "/gallery/services/gate-v2.jpg",
+    type: "image",
+    caption: "Designer Gate",
+    captionTamil: "வடிவமைப்பு கதவு",
+    alt: "Ornate wrought iron gate",
+    altTamil: null,
+  },
+  {
+    id: "local-grill",
+    url: "/gallery/services/grill-v2.jpg",
+    type: "image",
+    caption: "Window Grills",
+    captionTamil: "சாளரக் கிரில்",
+    alt: "House with window security grills",
+    altTamil: null,
+  },
+  {
+    id: "local-railing",
+    url: "/gallery/services/railing-v2.jpg",
+    type: "image",
+    caption: "Balcony Railings",
+    captionTamil: "பால்கனி கைப்பிடி",
+    alt: "Metal balcony railings",
+    altTamil: null,
+  },
+  {
+    id: "local-staircase",
+    url: "/gallery/services/staircase-v2.jpg",
+    type: "image",
+    caption: "Staircase Handrail",
+    captionTamil: "படிக்கட்டு கைப்பிடி",
+    alt: "Interior metal stair railing",
+    altTamil: null,
+  },
+  {
+    id: "local-fence",
+    url: "/gallery/services/fence-v2.jpg",
+    type: "image",
+    caption: "Compound Fencing",
+    captionTamil: "கூட்டு வேலி",
+    alt: "Security metal gate and fencing",
+    altTamil: null,
+  },
+  {
+    id: "local-roof",
+    url: "/gallery/services/roof-v2.jpg",
+    type: "image",
+    caption: "Roofing Work",
+    captionTamil: "கூரை வேலை",
+    alt: "Corrugated metal roofing and cladding",
+    altTamil: null,
+  },
+  {
+    id: "local-parking",
+    url: "/gallery/services/parking-v2.jpg",
+    type: "image",
+    caption: "Parking Structure",
+    captionTamil: "பார்க்கிங் ஷெட்",
+    alt: "Steel car parking shed",
+    altTamil: null,
+  },
+  {
+    id: "local-shutter",
+    url: "/gallery/services/shutter-v2.jpg",
+    type: "image",
+    caption: "Rolling Shutter",
+    captionTamil: "ரோலிங் ஷட்டர்",
+    alt: "Industrial metal door and shutter",
+    altTamil: null,
+  },
+  {
+    id: "local-industrial",
+    url: "/gallery/services/industrial-v2.jpg",
+    type: "image",
+    caption: "Industrial Shed",
+    captionTamil: "தொழிற்சாலை ஷெட்",
+    alt: "Fabrication workshop interior",
+    altTamil: null,
+  },
+  {
+    id: "local-stainless",
+    url: "/gallery/services/stainless-v2.jpg",
+    type: "image",
+    caption: "Stainless Works",
+    captionTamil: "ஸ்டெயின்லெஸ் வேலை",
+    alt: "Stainless steel fabrication",
+    altTamil: null,
+  },
+  {
+    id: "local-weld",
+    url: "/gallery/services/weld-v2.jpg",
+    type: "image",
+    caption: "Precision Welding",
+    captionTamil: "துல்லிய வெல்டிங்",
+    alt: "Welding sparks on metalwork",
+    altTamil: null,
+  },
+  {
+    id: "local-welder",
+    url: "/gallery/welder.jpg",
+    type: "image",
+    caption: "Workshop Welding",
+    captionTamil: "பட்டறை வெல்டிங்",
+    alt: "Welder at work with sparks",
+    altTamil: null,
+  },
+  {
+    id: "local-workshop",
+    url: "/gallery/workshop.jpg",
+    type: "image",
+    caption: "Our Workshop",
+    captionTamil: "எங்கள் பட்டறை",
+    alt: "Star Fabrication workshop",
+    altTamil: null,
+  },
+];
+
 export type LocalizedSite = {
   name: string;
   nameEn: string;
@@ -577,9 +698,9 @@ export async function getServiceBySlug(slug: string): Promise<ServiceData | null
 
 export async function getGalleryData(): Promise<GalleryViewItem[]> {
   try {
-    return await withTimeout(
+    const rows = await withTimeout(
       prisma.galleryMedia.findMany({
-        orderBy: [{ createdAt: "desc" }, { order: "asc" }],
+        orderBy: [{ order: "asc" }, { createdAt: "desc" }],
         select: {
           id: true,
           url: true,
@@ -590,10 +711,12 @@ export async function getGalleryData(): Promise<GalleryViewItem[]> {
           altTamil: true,
         },
       }),
-      4000,
-      []
+      8000,
+      null
     );
+    if (!rows?.length) return FALLBACK_GALLERY;
+    return rows;
   } catch {
-    return [];
+    return FALLBACK_GALLERY;
   }
 }
