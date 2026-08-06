@@ -43,26 +43,28 @@ export function About({ about }: AboutProps) {
           description={about.description}
         />
 
-        <ol className="mx-auto mt-2 grid max-w-3xl gap-6 sm:grid-cols-3 sm:gap-8">
+        <ol className="mx-auto grid max-w-3xl gap-8 sm:grid-cols-3 sm:gap-10">
           {PROCESS_STEPS.map((step, i) => (
             <li key={step.title} className="text-center">
               <p className="text-xs font-semibold uppercase tracking-widest text-gold-dim">
                 {String(i + 1).padStart(2, "0")}
               </p>
-              <p className="mt-2 font-display text-lg font-bold uppercase tracking-tight text-foreground">
+              <p className="mt-2 font-display text-lg font-bold uppercase tracking-tight text-foreground sm:text-xl">
                 {step.title}
               </p>
-              <p className="mt-2 text-sm leading-relaxed text-muted">{step.text}</p>
+              <p className="mt-2 text-[15px] leading-relaxed text-muted sm:text-[17px]">
+                {step.text}
+              </p>
             </li>
           ))}
         </ol>
 
-        <div className="mt-8 flex flex-col items-center gap-4 text-center sm:mt-10 sm:gap-5">
+        <div className="mt-10 flex flex-col items-center gap-4 text-center sm:mt-12 sm:gap-5">
           <button type="button" className="apple-link-gold" onClick={() => setOpen(true)}>
             Learn more <span aria-hidden>›</span>
           </button>
           {about.footerNote ? (
-            <p className="max-w-xl px-1 text-[14px] leading-relaxed text-muted sm:text-[15px]">
+            <p className="max-w-2xl px-1 text-[15px] leading-relaxed text-muted sm:text-[17px]">
               {about.footerNote}
             </p>
           ) : null}

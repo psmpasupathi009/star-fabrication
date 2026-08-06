@@ -13,6 +13,20 @@
   --steel: #6e6e73;
   --border: rgba(0, 0, 0, 0.08);
   --ring: rgba(245, 197, 24, 0.45);
+  --page-max: 72rem;
+  --page-gutter: clamp(1.25rem, 4vw, 2.5rem);
+  --section-y: clamp(4rem, 9vw, 7.5rem);
+  --rail-inset: max(
+    var(--page-gutter),
+    calc((100vw - min(100vw, var(--page-max))) / 2 + var(--page-gutter))
+  );
+  --header-h: 3rem;
+}
+
+@media (min-width: 640px) {
+  :root {
+    --header-h: 3.5rem;
+  }
 }
 
 /* Admin shares the public light system with a soft elevated canvas */
@@ -149,28 +163,35 @@ body {
 
 /* Shared responsive section / page shells */
 .section-shell {
-  scroll-margin-top: 4.5rem;
-  padding-block: clamp(3.5rem, 8vw, 7rem);
+  scroll-margin-top: var(--header-h);
+  padding-block: var(--section-y);
 }
 
 @media (max-width: 767px) {
   #contact.section-shell {
-    scroll-margin-bottom: calc(4.5rem + env(safe-area-inset-bottom));
+    scroll-margin-bottom: calc(var(--header-h) + 1rem + env(safe-area-inset-bottom));
   }
 }
 
 .section-inner {
   margin-inline: auto;
   width: 100%;
-  max-width: 72rem;
-  padding-inline: clamp(1rem, 4vw, 2rem);
+  max-width: var(--page-max);
+  padding-inline: var(--page-gutter);
 }
 
+/* Full-bleed carousel rail: cards align to page gutter, peek past the right edge */
 .section-bleed {
-  margin-inline: auto;
   width: 100%;
-  max-width: 72rem;
-  padding-inline: clamp(1rem, 4vw, 2rem);
+  max-width: none;
+  margin-inline: 0;
+  padding-inline: 0;
+}
+
+.carousel-bleed-track {
+  padding-inline-start: var(--rail-inset);
+  padding-inline-end: var(--page-gutter);
+  scroll-padding-inline-start: var(--rail-inset);
 }
 
 @keyframes hero-fade-up {

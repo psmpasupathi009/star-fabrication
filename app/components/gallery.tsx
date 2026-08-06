@@ -14,6 +14,9 @@ export type GalleryViewItem = {
   alt: string | null;
 };
 
+const CAROUSEL_CARD =
+  "w-[min(85vw,24rem)] sm:w-[26rem] lg:w-[30rem]";
+
 type GalleryProps = {
   items: GalleryViewItem[];
 };
@@ -60,17 +63,18 @@ export function Gallery({ items }: GalleryProps) {
         {items.length === 0 ? (
           <div className="rounded-3xl bg-elevated px-5 py-16 text-center sm:px-6 sm:py-20">
             <p className="text-sm font-semibold text-foreground">Projects coming soon</p>
-            <p className="mx-auto mt-2 max-w-sm text-[14px] text-muted sm:text-[15px]">
+            <p className="mx-auto mt-2 max-w-sm text-[15px] text-muted sm:text-[17px]">
               New fabrication work will appear here shortly.
             </p>
           </div>
-        ) : (
-          <AppleCarousel label="Project gallery">
+        ) : null}
+      </div>
+
+      {items.length > 0 ? (
+        <div className="section-bleed">
+          <AppleCarousel label="Project gallery" bleed>
             {items.map((g, i) => (
-              <AppleCarouselItem
-                key={g.id}
-                className="w-[min(78vw,18rem)] sm:w-[20rem] lg:w-[22rem]"
-              >
+              <AppleCarouselItem key={g.id} className={CAROUSEL_CARD}>
                 <button
                   type="button"
                   onClick={() => setActive(i)}
@@ -88,12 +92,12 @@ export function Gallery({ items }: GalleryProps) {
                       src={g.url}
                       alt={g.alt || g.caption || "Gallery project"}
                       fill
-                      sizes="(max-width: 640px) 78vw, 22rem"
+                      sizes="(max-width: 640px) 85vw, (max-width: 1024px) 26rem, 30rem"
                       className="object-cover"
                     />
                   )}
                   {g.caption ? (
-                    <span className="absolute inset-x-0 bottom-0 bg-linear-to-t from-black/65 to-transparent px-4 pb-3 pt-10 text-sm font-medium text-white">
+                    <span className="absolute inset-x-0 bottom-0 bg-linear-to-t from-black/65 to-transparent px-5 pb-4 pt-12 text-[15px] font-medium text-white sm:text-[16px]">
                       {g.caption}
                     </span>
                   ) : null}
@@ -101,8 +105,8 @@ export function Gallery({ items }: GalleryProps) {
               </AppleCarouselItem>
             ))}
           </AppleCarousel>
-        )}
-      </div>
+        </div>
+      ) : null}
 
       {item && active !== null ? (
         <div

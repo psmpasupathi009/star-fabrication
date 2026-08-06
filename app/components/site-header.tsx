@@ -61,11 +61,11 @@ export function SiteHeader({ contacts }: SiteHeaderProps) {
         className={cn(
           "fixed inset-x-0 top-0 z-50 border-b transition-[background-color,box-shadow,border-color] duration-300",
           scrolled || open
-            ? "border-black/5 bg-white/85 shadow-[0_1px_0_rgba(0,0,0,0.04)] backdrop-blur-xl"
+            ? "border-black/5 bg-white shadow-[0_1px_0_rgba(0,0,0,0.04)]"
             : "border-transparent bg-white/40 backdrop-blur-md"
         )}
       >
-        <div className="mx-auto flex h-12 max-w-6xl items-center justify-between gap-3 px-4 sm:h-14 sm:gap-4 sm:px-6 lg:px-8">
+        <div className="section-inner flex h-(--header-h) items-center justify-between gap-3 sm:gap-4">
           <Link href="/#top" className="min-w-0 shrink" onClick={() => setOpen(false)}>
             <StarLogo size="sm" tone="on-light" />
           </Link>

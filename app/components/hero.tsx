@@ -89,7 +89,7 @@ export function Hero({ hero, primaryPhone, nameTamil }: HeroProps) {
 
       <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.5)_0%,rgba(0,0,0,0.28)_42%,rgba(0,0,0,0.62)_100%)]" />
 
-      <div className="relative z-10 mx-auto w-full max-w-6xl px-4 text-center sm:px-6 lg:px-8">
+      <div className="relative z-10 section-inner text-center">
         <div className="hero-fade-up mx-auto max-w-3xl">
           <p className="mb-4 text-[13px] font-semibold tracking-wide text-gold sm:mb-5 sm:text-sm">
             {hero.tagline}

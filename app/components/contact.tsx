@@ -81,32 +81,34 @@ export function Contact({ site, contacts, services }: ContactProps) {
           description={`Send your project details to ${site.name} by email — or continue on WhatsApp.`}
         />
 
-        <div className="grid gap-8 md:gap-10 lg:grid-cols-5 lg:gap-12">
-          <div className="order-2 space-y-3 lg:order-1 lg:col-span-2">
+        <div className="grid gap-10 md:gap-12 lg:grid-cols-5">
+          <div className="order-2 space-y-4 lg:order-1 lg:col-span-2">
             {contacts.map((c) => (
               <a
                 key={c.phone}
                 href={telHref(c.phone)}
-                className="flex items-start gap-3 rounded-2xl bg-white p-4 shadow-[0_2px_12px_rgba(0,0,0,0.04)] ring-1 ring-black/5 hover:shadow-[0_8px_24px_rgba(0,0,0,0.06)] sm:gap-4 sm:p-5"
+                className="flex items-start gap-3 rounded-2xl bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.04)] ring-1 ring-black/5 hover:shadow-[0_8px_24px_rgba(0,0,0,0.06)] sm:gap-4"
               >
                 <span className="inline-flex size-10 shrink-0 items-center justify-center rounded-full bg-elevated text-gold-dim sm:size-11">
                   <Phone className="size-4" />
                 </span>
                 <span className="min-w-0">
-                  <span className="block text-[16px] font-semibold tracking-tight text-foreground sm:text-[17px]">
+                  <span className="block text-[17px] font-semibold tracking-tight text-foreground">
                     {c.name}
                   </span>
                   <span className="mt-0.5 block text-sm text-gold-dim">{c.title}</span>
-                  <span className="mt-1.5 block text-[15px] text-muted sm:mt-2">{c.phoneDisplay}</span>
+                  <span className="mt-2 block text-[15px] text-muted">{c.phoneDisplay}</span>
                 </span>
               </a>
             ))}
 
-            <div className="space-y-3 rounded-2xl bg-white p-4 ring-1 ring-black/5 sm:p-5">
+            <div className="space-y-3 rounded-2xl bg-white p-5 ring-1 ring-black/5">
               <div className="flex items-start gap-3">
                 <MapPin className="mt-0.5 size-4 shrink-0 text-gold-dim" />
                 <div>
-                  <p className="text-[15px] font-medium text-foreground">{site.address}</p>
+                  <p className="text-[15px] font-medium text-foreground sm:text-[17px]">
+                    {site.address}
+                  </p>
                   {site.pincode ? (
                     <p className="mt-0.5 text-sm text-muted">PIN {site.pincode}</p>
                   ) : null}
@@ -150,7 +152,7 @@ export function Contact({ site, contacts, services }: ContactProps) {
           <div className="order-1 lg:order-2 lg:col-span-3">
             <form
               onSubmit={onSubmit}
-              className="space-y-4 rounded-3xl bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.04)] ring-1 ring-black/5 sm:space-y-5 sm:p-7 md:p-8"
+              className="space-y-5 rounded-3xl bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.04)] ring-1 ring-black/5 sm:p-7 md:p-8"
             >
               <div className="grid gap-4 sm:grid-cols-2 sm:gap-5">
                 <div>

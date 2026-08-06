@@ -17,18 +17,18 @@ export function Faq() {
           title="Common questions"
           description="Site visits, materials, timelines, and payment — answered briefly."
         />
-        <ul className="mx-auto max-w-2xl divide-y divide-black/8 border-y border-black/8">
+        <ul className="mx-auto max-w-3xl divide-y divide-black/8 border-y border-black/8">
           {faqItems.map((item, i) => {
             const isOpen = open === i;
             return (
               <li key={item.question}>
                 <button
                   type="button"
-                  className="flex w-full items-start justify-between gap-4 py-5 text-left"
+                  className="flex w-full items-start justify-between gap-4 py-5 text-left sm:py-6"
                   aria-expanded={isOpen}
                   onClick={() => setOpen(isOpen ? null : i)}
                 >
-                  <span className="text-[16px] font-semibold tracking-tight text-foreground sm:text-[17px]">
+                  <span className="text-[17px] font-semibold tracking-tight text-foreground">
                     {item.question}
                   </span>
                   <ChevronDown
@@ -39,7 +39,7 @@ export function Faq() {
                   />
                 </button>
                 {isOpen ? (
-                  <p className="pb-5 pr-8 text-[15px] leading-relaxed text-muted sm:text-[16px]">
+                  <p className="pb-5 pr-8 text-[15px] leading-relaxed text-muted sm:pb-6 sm:text-[17px]">
                     {item.answer}
                   </p>
                 ) : null}

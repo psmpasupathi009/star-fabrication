@@ -6,8 +6,12 @@ import { useEffect, useState } from "react";
 import { X } from "lucide-react";
 import { AppleCarousel, AppleCarouselItem } from "@/app/components/apple-carousel";
 import { SectionHeading } from "@/app/components/section-heading";
+import { Button } from "@/app/components/ui/button";
 import type { ServiceData } from "@/lib/content";
 import { resolveServiceImage } from "@/lib/service-images";
+
+const CAROUSEL_CARD =
+  "w-[min(85vw,24rem)] sm:w-[26rem] lg:w-[30rem]";
 
 type ServicesProps = {
   services: ServiceData[];
@@ -45,14 +49,11 @@ export function Services({ services }: ServicesProps) {
 
       {services.length > 0 ? (
         <div className="section-bleed">
-          <AppleCarousel label="Fabrication services">
+          <AppleCarousel label="Fabrication services" bleed>
             {services.map((service) => {
               const imageSrc = resolveServiceImage(service.slug, service.imageUrl);
               return (
-                <AppleCarouselItem
-                  key={service.id}
-                  className="w-[min(82vw,17rem)] sm:w-[19rem] lg:w-[20rem]"
-                >
+                <AppleCarouselItem key={service.id} className={CAROUSEL_CARD}>
                   <button
                     type="button"
                     onClick={() => setActiveSlug(service.slug)}
@@ -62,18 +63,18 @@ export function Services({ services }: ServicesProps) {
                       src={imageSrc}
                       alt={service.title}
                       fill
-                      sizes="(max-width: 640px) 78vw, 20rem"
+                      sizes="(max-width: 640px) 85vw, (max-width: 1024px) 26rem, 30rem"
                       className="object-cover transition-transform duration-500 group-hover:scale-[1.04]"
                     />
                     <span className="absolute inset-0 bg-[linear-gradient(180deg,transparent_35%,rgba(0,0,0,0.75)_100%)]" />
-                    <span className="absolute inset-x-0 bottom-0 p-4 sm:p-5 lg:p-6">
-                      <span className="block font-display text-xl font-bold uppercase tracking-tight text-white sm:text-2xl">
+                    <span className="absolute inset-x-0 bottom-0 p-5 sm:p-6 lg:p-7">
+                      <span className="block font-display text-2xl font-bold uppercase tracking-tight text-white sm:text-3xl">
                         {service.title}
                       </span>
-                      <span className="mt-1.5 line-clamp-2 block text-[14px] leading-snug text-white/80 sm:mt-2 sm:text-[15px]">
+                      <span className="mt-2 line-clamp-2 block text-[15px] leading-snug text-white/80 sm:mt-2.5 sm:text-[16px]">
                         {service.description}
                       </span>
-                      <span className="mt-2.5 inline-flex items-center gap-1 text-[14px] font-medium text-gold sm:mt-3 sm:text-[15px]">
+                      <span className="mt-3 inline-flex items-center gap-1 text-[15px] font-medium text-gold sm:mt-4 sm:text-[16px]">
                         Learn more <span aria-hidden>›</span>
                       </span>
                     </span>
@@ -128,19 +129,15 @@ export function Services({ services }: ServicesProps) {
                 {active.details || active.description}
               </p>
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-                <Link
-                  href={`/services/${active.slug}`}
-                  onClick={() => setActiveSlug(null)}
-                  className="inline-flex h-12 w-full items-center justify-center rounded-full bg-[#1d1d1f] px-7 text-[15px] font-medium text-white hover:bg-black sm:w-auto"
-                >
-                  Full page
+                <Link href={`/services/${active.slug}`} onClick={() => setActiveSlug(null)}>
+                  <Button size="lg" className="w-full sm:w-auto">
+                    Full page
+                  </Button>
                 </Link>
-                <a
-                  href="#contact"
-                  onClick={() => setActiveSlug(null)}
-                  className="inline-flex h-12 w-full items-center justify-center rounded-full border border-black/15 px-7 text-[15px] font-medium text-foreground hover:bg-black/[0.04] sm:w-auto"
-                >
-                  Request a quote
+                <a href="#contact" onClick={() => setActiveSlug(null)}>
+                  <Button variant="outline" size="lg" className="w-full sm:w-auto">
+                    Request a quote
+                  </Button>
                 </a>
               </div>
             </div>

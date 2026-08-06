@@ -1,4 +1,5 @@
 import { SectionHeading } from "@/app/components/section-heading";
+import { Button } from "@/app/components/ui/button";
 import { testimonials } from "@/lib/testimonials";
 
 type TestimonialsProps = {
@@ -7,17 +8,17 @@ type TestimonialsProps = {
 
 export function Testimonials({ googleReviewsUrl }: TestimonialsProps) {
   return (
-    <section id="testimonials" className="section-shell bg-white">
+    <section id="testimonials" className="section-shell bg-elevated">
       <div className="section-inner">
         <SectionHeading
           eyebrow="Word of mouth"
           title="What customers say"
           description="Neighbors and local businesses who trusted us with their metalwork."
         />
-        <ul className="mx-auto grid max-w-4xl gap-8 sm:gap-10 md:grid-cols-3">
+        <ul className="mx-auto grid max-w-3xl gap-10 md:max-w-none md:grid-cols-3 md:gap-12">
           {testimonials.map((t) => (
             <li key={t.quote} className="text-center md:text-left">
-              <blockquote className="text-[16px] leading-relaxed text-muted sm:text-[17px]">
+              <blockquote className="text-[17px] leading-relaxed text-muted">
                 “{t.quote}”
               </blockquote>
               <p className="mt-4 text-sm font-semibold text-foreground">{t.name}</p>
@@ -26,14 +27,11 @@ export function Testimonials({ googleReviewsUrl }: TestimonialsProps) {
           ))}
         </ul>
         {googleReviewsUrl ? (
-          <div className="mt-10 flex justify-center">
-            <a
-              href={googleReviewsUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex h-12 items-center justify-center rounded-full border border-black/15 px-7 text-[15px] font-medium text-foreground hover:bg-black/[0.04]"
-            >
-              See Google reviews
+          <div className="mt-12 flex justify-center">
+            <a href={googleReviewsUrl} target="_blank" rel="noopener noreferrer">
+              <Button variant="outline" size="lg">
+                See Google reviews
+              </Button>
             </a>
           </div>
         ) : null}
