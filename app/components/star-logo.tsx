@@ -9,6 +9,8 @@ type StarLogoProps = {
   nameEn?: string;
   nameTamil?: string | null;
   locale?: Locale;
+  /** Show the other-language name under the primary wordmark (hero/footer). Off in navbar. */
+  showSecondary?: boolean;
 };
 
 function StarIcon({ className }: { className?: string }) {
@@ -31,6 +33,7 @@ export function StarLogo({
   nameEn = "Star Fabrication",
   nameTamil = "ஸ்டார் பேப்ரிக்கேஷன்",
   locale = "en",
+  showSecondary = true,
 }: StarLogoProps) {
   const sizes = {
     sm: { icon: "size-5", word: "text-lg tracking-[0.06em]", tamil: "text-[0.65rem]" },
@@ -75,9 +78,11 @@ export function StarLogo({
           </span>
           <StarIcon className={cn(sizes.icon, "hidden sm:block")} />
         </div>
-        <span className={cn("mt-2 font-display uppercase", sizes.tamil, secondaryColor)}>
-          {nameEn}
-        </span>
+        {showSecondary ? (
+          <span className={cn("mt-2 font-display uppercase", sizes.tamil, secondaryColor)}>
+            {nameEn}
+          </span>
+        ) : null}
       </div>
     );
   }
@@ -85,7 +90,7 @@ export function StarLogo({
   return (
     <div className={cn("flex flex-col", className)}>
       {englishMark}
-      {tamil ? (
+      {showSecondary && tamil ? (
         <span
           className={cn(
             "mt-2 font-[family-name:var(--font-tamil)]",

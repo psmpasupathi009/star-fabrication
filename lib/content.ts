@@ -154,12 +154,12 @@ export const FALLBACK_SITE: SiteData = {
   name: site.name,
   nameTamil: site.nameTamil,
   tagline: site.tagline,
-  taglineTamil: "எங்கள் நோக்கம் உங்கள் திருப்தி",
+  taglineTamil: "எங்கள் நோக்கம் — உங்கள் திருப்தி",
   location: site.location,
   locationTamil: site.locationTamil,
   description: site.description,
   descriptionTamil:
-    "மேவாணியில் தனிப்பயன் உலோக பேப்ரிக்கேஷன் — கதவுகள், கிரில்கள், கூரை, கதவுகள் மற்றும் தொழில்துறை கட்டமைப்புகள்.",
+    "மேவாணியில் தனிப்பயன் உலோக வேலைகள் — கதவு, சாளரக் கிரில், கூரை, கைப்பிடி, ஷெட் மற்றும் தொழிற்சாலை கட்டமைப்புகள்.",
   contacts: defaultContacts.map((c) => ({ ...c })),
   address: site.address,
   addressTamil: site.addressTamil,
@@ -173,30 +173,30 @@ export const FALLBACK_SITE: SiteData = {
 
 export const FALLBACK_HERO: HeroData = {
   tagline: site.tagline,
-  taglineTamil: "எங்கள் நோக்கம் உங்கள் திருப்தி",
+  taglineTamil: "எங்கள் நோக்கம் — உங்கள் திருப்தி",
   subtitle: `Gates, grills, roofing, and industrial structures — welded with precision in ${site.location}.`,
-  subtitleTamil: `கதவுகள், கிரில்கள், கூரை மற்றும் தொழில்துறை கட்டமைப்புகள் — ${site.locationTamil}-ல் துல்லியமாக வெல்டிங்.`,
+  subtitleTamil: `கதவு, சாளரக் கிரில், கூரை மற்றும் தொழிற்சாலை கட்டமைப்புகள் — ${site.locationTamil}-ல் துல்லியமாக வெல்டிங் செய்கிறோம்.`,
   imageUrl: "/gallery/hero.jpg",
   videoUrl: "/gallery/hero.mp4",
   ctaPrimary: "Get a Quote",
-  ctaPrimaryTamil: "மேற்கோள் பெறுங்கள்",
+  ctaPrimaryTamil: "விலை மதிப்பீடு கேட்க",
   ctaSecondary: "Call Now",
-  ctaSecondaryTamil: "இப்போது அழைக்கவும்",
+  ctaSecondaryTamil: "இப்போது அழைக்க",
 };
 
 export const FALLBACK_ABOUT: AboutData = {
   eyebrow: "About us",
   eyebrowTamil: "எங்களைப் பற்றி",
   title: "Built on craft, driven by satisfaction",
-  titleTamil: "கைவினைப்பணியில் உறுதி, திருப்தியில் இயக்கம்",
+  titleTamil: "நுணுக்கமான வேலை, உங்கள் திருப்தியே எங்கள் இலக்கு",
   description: `From designer gates to industrial sheds, ${site.name} delivers durable metalwork for homes and businesses across ${site.location} and nearby towns.`,
-  descriptionTamil: `வடிவமைப்பு கதவுகள் முதல் தொழில்துறை ஷெட்கள் வரை, ${site.nameTamil} ${site.locationTamil} மற்றும் அருகிலுள்ள ஊர்களில் நீடித்த உலோக வேலைகளை வழங்குகிறது.`,
+  descriptionTamil: `அலங்கார கதவு முதல் தொழிற்சாலை ஷெட் வரை, ${site.nameTamil} ${site.locationTamil} மற்றும் அருகிலுள்ள ஊர்களில் வீடுகள் மற்றும் கடைகளுக்கு உறுதியான உலோக வேலைகளைச் செய்கிறது.`,
   details: `${site.name} is a metal fabrication workshop in ${site.location} (${site.locationTamil}), serving Namakkal district for years. We fabricate in mild steel (MS) and stainless steel (SS) — gates, grills, roofing, doors, railings, sheds, and custom welding for homes and businesses.
 
 Our process is simple: measure on site → fabricate in the workshop → install and finish. Every job is built for strength, Tamil Nadu weather, and daily use. Our motive is your satisfaction — clear communication, solid workmanship, and on-time delivery.`,
-  detailsTamil: `${site.nameTamil} ${site.locationTamil}-ல் உள்ள உலோக பேப்ரிக்கேஷன் பட்டறை. பல ஆண்டுகளாக நாமக்கல் மாவட்டத்திற்கு சேவை செய்கிறோம். மைல்டு ஸ்டீல் (MS) மற்றும் ஸ்டெயின்லெஸ் ஸ்டீல் (SS)-ல் கதவுகள், கிரில்கள், கூரை, ரெயிலிங், ஷெட் மற்றும் தனிப்பயன் வெல்டிங் செய்கிறோம்.
+  detailsTamil: `${site.nameTamil} ${site.locationTamil}-ல் இயங்கும் உலோக வேலைப் பட்டறை. பல ஆண்டுகளாக நாமக்கல் மாவட்டத்திற்கு சேவை செய்கிறோம். மைல்டு ஸ்டீல் (MS) மற்றும் ஸ்டெயின்லெஸ் ஸ்டீல் (SS)-ல் கதவு, சாளரக் கிரில், கூரை, கைப்பிடி, ஷெட் மற்றும் தனிப்பயன் வெல்டிங் செய்கிறோம்.
 
-எங்கள் முறை எளிது: இடத்தில் அளவு → பட்டறையில் தயாரிப்பு → பொருத்தி முடித்தல். ஒவ்வொரு பணியும் வலிமைக்கும் தமிழ்நாட்டு வானிலைக்கும் தினசரி பயன்பாட்டிற்கும் ஏற்றது. எங்கள் நோக்கம் உங்கள் திருப்தி.`,
+எங்கள் முறை எளிது: இடத்தில் அளவு → பட்டறையில் தயாரிப்பு → பொருத்தி முடித்தல். ஒவ்வொரு பணியும் வலிமை, தமிழ்நாட்டு வானிலை, தினசரி பயன்பாடு ஆகியவற்றுக்கு ஏற்றது. எங்கள் நோக்கம் உங்கள் திருப்தி — தெளிவான பேச்சு, உறுதியான வேலை, சரியான நேரத்தில் ஒப்படைப்பு.`,
   footerNote: `Based in ${site.location} (${site.locationTamil}) — ${site.nameTamil}.`,
   footerNoteTamil: `${site.locationTamil}-ல் அமைந்துள்ளது — ${site.nameTamil}.`,
   imageOneUrl: "/gallery/workshop.jpg",
@@ -213,77 +213,98 @@ Our process is simple: measure on site → fabricate in the workshop → install
 
 const SERVICE_TA: Record<string, { title: string; description: string; details: string }> = {
   grill: {
-    title: "கிரில் பணிகள்",
-    description: "வீட்டிற்கு ஏற்ற பாதுகாப்பு மற்றும் அலங்கார சாளர கிரில்கள்.",
+    title: "சாளரக் கிரில் பணிகள்",
+    description: "வீட்டிற்கு ஏற்ற பாதுகாப்பு மற்றும் அழகான சாளரக் கிரில்கள்.",
     details:
-      "MS மற்றும் வடிவமைப்பு கிரில்கள் — இடத்தில் அளந்து, வலிமைக்காக வெல்டிங், தமிழ்நாட்டு வானிலைக்கு ஏற்ற பூச்சு.",
+      "மைல்டு ஸ்டீல் மற்றும் வடிவமைப்பு கிரில்கள் — இடத்தில் அளந்து, வலிமைக்காக வெல்டிங், தமிழ்நாட்டு வானிலைக்கு ஏற்ற பூச்சு. வீடு, அபார்ட்மெண்ட், கடைகளுக்கு ஏற்றது.",
   },
   gate: {
     title: "கதவு பணிகள்",
-    description: "வடிவமைப்பு மற்றும் கனமான கதவுகள் — லேசர் கட் மற்றும் வெல்டிங்.",
+    description: "அலங்கார மற்றும் கனமான முதன்மைக் கதவுகள் — லேசர் கட் மற்றும் வெல்டிங்.",
     details:
-      "முதன்மை கதவுகள், காம்பவுண்ட் கதவுகள், ஸ்லைடிங் கதவுகள். தினசரி பயன்பாட்டிற்கு உறுதியான கட்டுமானம்.",
+      "முதன்மை கதவு, காம்பவுண்ட் கதவு, ஸ்லைடிங் கதவு. தினசரி பயன்பாட்டிற்கு உறுதியான சட்டம், ஹிஞ்ச் அல்லது ரோலர்.",
   },
   railing: {
-    title: "ரெயிலிங் பணிகள்",
-    description: "சாளரம், பால்கனி, டெரஸ் ரெயிலிங்குகள் — MS மற்றும் SS.",
-    details: "பால்கனி, டெரஸ், படிக்கட்டு ரெயிலிங்குகள். சுத்தமான வெல்டிங் மற்றும் பூச்சு.",
+    title: "கைப்பிடி / ரெயிலிங் பணிகள்",
+    description: "சாளரம், பால்கனி, டெரஸ் கைப்பிடிகள் — MS மற்றும் SS.",
+    details:
+      "பால்கனி, டெரஸ், படிக்கட்டு கைப்பிடிகள். சுத்தமான வெல்டிங் மற்றும் பூச்சு அல்லது பளபளப்பு.",
   },
   staircase: {
-    title: "படிக்கட்டு & ஹேண்ட்ரெயில்",
-    description: "வீடுகள் மற்றும் கடைகளுக்கான உலோக படிக்கட்டுகள்.",
-    details: "நேர் மற்றும் சுழல் உலோக படிக்கட்டுகள் — பாதுகாப்பான உயரம்/ஓட்டம்.",
+    title: "படிக்கட்டு மற்றும் கைப்பிடி",
+    description: "வீடுகள் மற்றும் கடைகளுக்கான உலோகப் படிக்கட்டுகள்.",
+    details:
+      "நேர் மற்றும் சுழல் உலோகப் படிக்கட்டுகள் — பாதுகாப்பான உயரம்/படி அகலம், வீடு மற்றும் கடை மேஜானின்களுக்கு ஏற்றது.",
   },
   "compound-wall": {
-    title: "காம்பவுண்ட் வால் & வேலி",
-    description: "எல்லை வேலி மற்றும் காம்பவுண்ட் வால் எஃகு பணிகள்.",
-    details: "காம்பவுண்ட் சட்டங்கள், கிரில் வேலி, கதவுடன் இணைந்த எல்லைப் பணிகள்.",
+    title: "சுற்றுச்சுவர் மற்றும் வேலி",
+    description: "எல்லை வேலி மற்றும் சுற்றுச்சுவர் இரும்புப் பணிகள்.",
+    details:
+      "சுற்றுச்சுவர் சட்டம், கிரில் வேலி, கதவுடன் இணைந்த எல்லைப் பணிகள். வீட்டு மனை மற்றும் கிடங்கு எல்லைகளுக்கு ஏற்றது.",
   },
   roofing: {
-    title: "கூரை தகடு",
-    description: "வீடு, ஷெட், கேனபிக்கான நீடித்த உலோக கூரை.",
-    details: "வண்ண பூச்சு மற்றும் GI கூரை தகடுகள் — பருவமழைக்கு ஏற்ற பொருத்துதல்.",
+    title: "கூரை தகடு பணிகள்",
+    description: "வீடு, ஷெட், கேனபிக்கான நீடித்த உலோகக் கூரை.",
+    details:
+      "வண்ணப் பூச்சு மற்றும் GI கூரைத் தகடுகள் — சாய்வு திட்டம், பர்லின், மழைக்கு ஏற்ற பொருத்துதல்.",
   },
   "cement-sheet": {
-    title: "சிமெண்ட் தகடு",
-    description: "சிமெண்ட் தகடு கூரை மற்றும் கிளாடிங்.",
-    details: "பட்ஜெட் ஷெட்களுக்கான சிமெண்ட் / ஃபைபர் தகடு கூரை.",
+    title: "சிமெண்ட் தகடு பணிகள்",
+    description: "சிமெண்ட் தகடு கூரை மற்றும் சுவர் மூடல்.",
+    details:
+      "குறைந்த செலவில் ஷெட் மற்றும் வெளிக் கட்டிடங்களுக்கு சிமெண்ட் / ஃபைபர் தகடு கூரை — சரியான மேற்பொருத்துதல்.",
   },
   "parking-shed": {
-    title: "கார் பார்க்கிங் ஷெட்",
-    description: "எஃகு கார் பார்க்கிங் ஷெட் மற்றும் கேனபி.",
-    details: "ஒரு மற்றும் பல கார் ஷெட்கள் — குழாய் அல்லது பாக்ஸ் சட்டம்.",
+    title: "கார் நிறுத்த ஷெட்",
+    description: "இரும்பு கார் நிறுத்த ஷெட் மற்றும் கேனபி.",
+    details:
+      "ஒரு மற்றும் பல கார் ஷெட்கள் — குழாய் அல்லது பாக்ஸ் சட்டம், தகடுக் கூரை. வீட்டு முன் மற்றும் அபார்ட்மெண்ட் பார்க்கிங்கிற்கு ஏற்றது.",
   },
   "rolling-shutter": {
     title: "ரோலிங் ஷட்டர்",
-    description: "கடை மற்றும் கேரேஜ் ரோலிங் ஷட்டர்கள்.",
-    details: "கடை, கோடவுன், கேரேஜ்களுக்கான MS ரோலிங் ஷட்டர்கள்.",
+    description: "கடை மற்றும் கேரேஜ் ரோலிங் ஷட்டர்கள் — தயாரித்துப் பொருத்துதல்.",
+    details:
+      "கடை, கோடவுன், கேரேஜ்களுக்கான MS ரோலிங் ஷட்டர் — திறப்பு அளவுக்கு ஏற்ப, சீரான இயக்கம்.",
   },
   stainless: {
     title: "ஸ்டெயின்லெஸ் ஸ்டீல் பணிகள்",
-    description: "SS ரெயிலிங், சமையலறை ஸ்டாண்ட், தனிப்பயன் SS.",
-    details: "ஸ்டெயின்லெஸ் ரெயிலிங், கிச்சன் பிளாட்ஃபார்ம், காட்சி ஸ்டாண்ட்கள்.",
+    description: "SS கைப்பிடி, சமையலறை ஸ்டாண்ட், தனிப்பயன் SS வேலை.",
+    details:
+      "ஸ்டெயின்லெஸ் கைப்பிடி, சமையலறை மேடை, காட்சி ஸ்டாண்ட் — வீடு, ஹோட்டல், கடைகளுக்கு பளபளப்பு பூச்சு.",
   },
   "main-door": {
-    title: "முதன்மை கதவு பணிகள்",
-    description: "வலுவான முதன்மை கதவுகள் — நம்பகமான ஹார்ட்வேர்.",
-    details: "MS முதன்மை மற்றும் பாதுகாப்பு கதவுகள் — சட்டம், பூட்டு, பூச்சு.",
+    title: "முதன்மைக் கதவு பணிகள்",
+    description: "வலுவான முதன்மைக் கதவுகள் — நம்பகமான பூட்டு மற்றும் பூச்சு.",
+    details:
+      "MS முதன்மை மற்றும் பாதுகாப்புக் கதவுகள் — சட்டம், பூட்டு, தெருப் பக்க அழகுக்கான பூச்சு.",
   },
   "kerala-set": {
-    title: "கேரள பாணி செட்கள்",
+    title: "கேரள பாணி செட் / ஷெட்",
     description: "நீடித்த கேரள பாணி ஷெட் மற்றும் செட் பணிகள்.",
-    details: "பாரம்பரிய விகிதங்களுடன் கேரள பாணி செட் / ஷெட் கட்டமைப்புகள்.",
+    details:
+      "பாரம்பரிய விகிதங்களுடன் கேரள பாணி செட் / ஷெட் — வெளி இருக்கை மற்றும் மூடிய முற்றம் ஆகியவற்றுக்கு ஏற்றது.",
   },
   industrial: {
-    title: "தொழில்துறை ஷெட்கள்",
+    title: "தொழிற்சாலை ஷெட்கள்",
     description: "வணிகத்திற்கான கட்டமைப்பு சட்டங்கள் மற்றும் ஷெட்கள்.",
-    details: "டிரஸ், தூண்கள், கிளாடிங்குடன் தொழில்துறை / பட்டறை ஷெட்கள்.",
+    details:
+      "தொழிற்சாலை மற்றும் பட்டறை ஷெட்கள் — டிரஸ், தூண், கிளாடிங். சிறிய ஆலை, வெல்டிங் பட்டறை, சேமிப்புக்கு ஏற்ற அளவு.",
   },
   general: {
-    title: "பொது பேப்ரிக்கேஷன்",
-    description: "தனிப்பயன் வெல்டிங் மற்றும் உலோக வேலைகள்.",
-    details: "பிராக்கெட், சட்டம், பழுது, தனிப்பட்ட உலோக வேலைகள் — மேவாணி மற்றும் அருகில்.",
+    title: "பொது உலோக வேலைகள்",
+    description: "தனிப்பயன் வெல்டிங் மற்றும் அனைத்து வகை இரும்பு வேலைகள்.",
+    details:
+      "பிராக்கெட், சட்டம், பழுது, தனிப்பட்ட உலோக வேலைகள். அளவு அல்லது ஸ்கெட்ச் கொடுங்கள் — மேவாணி மற்றும் அருகில் தயாரித்துத் தருகிறோம்.",
   },
+};
+
+const AREA_TA: Record<string, string> = {
+  Mevani: "மேவாணி",
+  Rasipuram: "ராசிபுரம்",
+  Namakkal: "நாமக்கல்",
+  Tiruchengode: "திருச்செங்கோடு",
+  Paramathi: "பரமத்தி",
+  "Nearby villages": "அருகிலுள்ள கிராமங்கள்",
 };
 
 export const FALLBACK_SERVICES: ServiceData[] = defaultServices.map((s, i) => {
@@ -366,7 +387,10 @@ export function localizeSite(siteData: SiteData, locale: Locale): LocalizedSite 
     pincode: siteData.pincode,
     hours: siteData.hours,
     mapEmbedUrl: siteData.mapEmbedUrl,
-    serviceAreas: siteData.serviceAreas,
+    serviceAreas:
+      locale === "ta"
+        ? siteData.serviceAreas.map((a) => AREA_TA[a] ?? a)
+        : siteData.serviceAreas,
     googleReviewsUrl: siteData.googleReviewsUrl,
     whatsappPhone: siteData.whatsappPhone,
   };

@@ -25,6 +25,7 @@ export default async function PrivacyPage() {
   const isAdmin = session?.role?.toUpperCase() === "ADMIN";
   const waPhone =
     siteData.whatsappPhone || siteData.contacts[0]?.phone || "8807920508";
+  const phoneLabel = siteData.contacts[0]?.phoneDisplay || "us";
 
   return (
     <>
@@ -40,13 +41,11 @@ export default async function PrivacyPage() {
       >
         <article className="section-shell bg-white">
           <div className="section-inner max-w-2xl">
-            <p className="text-sm font-semibold text-gold-dim">Legal</p>
+            <p className="text-sm font-semibold text-gold-dim">{dict.privacy.legal}</p>
             <h1 className="mt-2 font-display text-3xl font-bold uppercase tracking-tight text-foreground sm:text-4xl">
               {dict.privacy.title}
             </h1>
-            <p className="mt-4 text-[15px] text-muted">
-              {locale === "ta" ? "கடைசியாக புதுப்பிக்கப்பட்டது: ஆகஸ்ட் 2026" : "Last updated: August 2026"}
-            </p>
+            <p className="mt-4 text-[15px] text-muted">{dict.privacy.updated}</p>
 
             <div className="mt-8 rounded-2xl bg-elevated p-5 text-[16px] leading-relaxed text-muted sm:p-6 sm:text-[17px]">
               <p>{dict.privacy.summary}</p>
@@ -54,53 +53,38 @@ export default async function PrivacyPage() {
 
             <div className="mt-10 space-y-6 text-[16px] leading-relaxed text-muted sm:text-[17px]">
               <p>
-                {siteData.name} (“we”) operates this website to share our metal fabrication
-                services and receive quote requests from customers in {siteData.location} and
-                nearby areas.
+                {dict.privacy.intro
+                  .replace("{name}", siteData.name)
+                  .replace("{location}", siteData.location)}
               </p>
 
               <h2 className="font-display text-xl font-bold uppercase tracking-tight text-foreground">
-                Information we collect
+                {dict.privacy.collectTitle}
               </h2>
-              <p>
-                When you use the quote form, we collect the name, phone number, optional email
-                address, service interest, and message you provide. If you contact us on WhatsApp
-                or by phone, we receive whatever details you choose to share in that conversation.
-              </p>
+              <p>{dict.privacy.collectBody}</p>
 
               <h2 className="font-display text-xl font-bold uppercase tracking-tight text-foreground">
-                How we use it
+                {dict.privacy.useTitle}
               </h2>
-              <p>
-                We use this information only to respond to your enquiry, prepare quotes, schedule
-                site visits or installation, and follow up about your project. We do not sell your
-                personal information.
-              </p>
+              <p>{dict.privacy.useBody}</p>
 
               <h2 className="font-display text-xl font-bold uppercase tracking-tight text-foreground">
-                Email confirmation
+                {dict.privacy.emailTitle}
               </h2>
-              <p>
-                If you provide an email address, we may send a short confirmation that we received
-                your request. We do not use your email for unrelated marketing unless you ask us to.
-              </p>
+              <p>{dict.privacy.emailBody}</p>
 
               <h2 className="font-display text-xl font-bold uppercase tracking-tight text-foreground">
-                Retention
+                {dict.privacy.retentionTitle}
               </h2>
-              <p>
-                Quote emails are kept as long as needed to handle your request and for ordinary
-                business records, then deleted or archived according to our normal practice.
-              </p>
+              <p>{dict.privacy.retentionBody}</p>
 
               <h2 className="font-display text-xl font-bold uppercase tracking-tight text-foreground">
-                Contact
+                {dict.privacy.contactTitle}
               </h2>
               <p>
-                Questions about this policy: call{" "}
-                {siteData.contacts[0] ? siteData.contacts[0].phoneDisplay : "us"} or write via the{" "}
+                {dict.privacy.contactBody.replace("{phone}", phoneLabel)}{" "}
                 <Link href="/#contact" className="text-foreground underline">
-                  contact form
+                  {dict.privacy.contactForm}
                 </Link>
                 .
               </p>

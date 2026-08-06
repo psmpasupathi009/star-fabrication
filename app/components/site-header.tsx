@@ -85,6 +85,7 @@ export function SiteHeader({
               nameEn={nameEn}
               nameTamil={nameTamil}
               locale={locale}
+              showSecondary={false}
             />
           </Link>
 

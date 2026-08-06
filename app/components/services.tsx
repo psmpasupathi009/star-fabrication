@@ -103,7 +103,7 @@ export function Services({ services }: ServicesProps) {
             <button
               type="button"
               className="absolute right-4 top-4 z-10 inline-flex size-9 items-center justify-center rounded-full bg-white/90 text-muted shadow-sm hover:text-foreground"
-              aria-label="Close"
+              aria-label={dict.about.close}
               onClick={() => setActiveSlug(null)}
             >
               <X className="size-4" />

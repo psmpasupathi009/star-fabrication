@@ -16,11 +16,6 @@ type HeroProps = {
   locale: Locale;
 };
 
-function prefersReducedMotion() {
-  if (typeof window === "undefined") return true;
-  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-}
-
 export function Hero({
   hero,
   primaryPhone,
@@ -29,10 +24,17 @@ export function Hero({
   locale,
 }: HeroProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [videoOk, setVideoOk] = useState(false);
+  const [allowVideo, setAllowVideo] = useState(false);
+  const [videoPlaying, setVideoPlaying] = useState(false);
   const videoSrc = hero.videoUrl?.trim() || "/gallery/hero.mp4";
-  const allowVideo = !prefersReducedMotion();
 
+  // Enable video after mount (respect reduced-motion)
+  useEffect(() => {
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    setAllowVideo(!reduce);
+  }, []);
+
+  // Keep background video playing; image is only poster/fallback
   useEffect(() => {
     if (!allowVideo) return;
     const el = videoRef.current;
@@ -40,22 +42,34 @@ export function Hero({
 
     let cancelled = false;
     el.muted = true;
+    el.defaultMuted = true;
+    el.playsInline = true;
 
-    const failTimer = setTimeout(() => {
-      if (!cancelled && el.paused) setVideoOk(false);
-    }, 2500);
+    const markPlaying = () => {
+      if (!cancelled) setVideoPlaying(true);
+    };
 
-    el.play()
-      .then(() => {
-        if (!cancelled) setVideoOk(true);
-      })
-      .catch(() => {
-        if (!cancelled) setVideoOk(false);
-      });
+    const tryPlay = () => {
+      el.play()
+        .then(markPlaying)
+        .catch(() => {
+          // Retry once after a short delay (autoplay policies / buffering)
+          if (cancelled) return;
+          window.setTimeout(() => {
+            if (cancelled) return;
+            el.play().then(markPlaying).catch(() => setVideoPlaying(false));
+          }, 400);
+        });
+    };
+
+    el.addEventListener("playing", markPlaying);
+    el.addEventListener("canplay", tryPlay);
+    tryPlay();
 
     return () => {
       cancelled = true;
-      clearTimeout(failTimer);
+      el.removeEventListener("playing", markPlaying);
+      el.removeEventListener("canplay", tryPlay);
     };
   }, [allowVideo, videoSrc]);
 
@@ -65,31 +79,41 @@ export function Hero({
       className="relative flex min-h-dvh items-end overflow-hidden pb-20 pt-24 sm:items-center sm:pb-28 sm:pt-28 lg:pb-32"
     >
       <div className="absolute inset-0 bg-[#111]">
+        {/* Poster / fallback while video loads or if motion is reduced */}
         <Image
           src={hero.imageUrl}
           alt={
-            videoOk
+            videoPlaying
               ? ""
               : "Star Fabrication metal workshop — welding and steel work"
           }
           fill
           priority
           sizes="100vw"
-          className={`object-cover object-center ${videoOk ? "opacity-0" : "opacity-100 hero-image-zoom"}`}
-          aria-hidden={videoOk}
+          className={`object-cover object-center transition-opacity duration-700 ${
+            videoPlaying ? "opacity-0" : "opacity-100"
+          }`}
+          aria-hidden={videoPlaying}
         />
 
         {allowVideo ? (
           <video
             ref={videoRef}
-            className={`absolute inset-0 h-full w-full object-cover transition-opacity ${videoOk ? "opacity-100" : "opacity-0"}`}
+            key={videoSrc}
+            className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ${
+              videoPlaying ? "opacity-100" : "opacity-0"
+            }`}
             autoPlay
             muted
             loop
             playsInline
-            preload="metadata"
+            preload="auto"
             poster={hero.imageUrl}
-            onError={() => setVideoOk(false)}
+            onPlaying={() => setVideoPlaying(true)}
+            onError={() => {
+              setAllowVideo(false);
+              setVideoPlaying(false);
+            }}
           >
             <source src={videoSrc} type="video/mp4" />
           </video>
