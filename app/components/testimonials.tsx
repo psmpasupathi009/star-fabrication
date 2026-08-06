@@ -1,22 +1,26 @@
+"use client";
+
 import { SectionHeading } from "@/app/components/section-heading";
 import { Button } from "@/app/components/ui/button";
-import { testimonials } from "@/lib/testimonials";
+import { useLocale } from "@/lib/i18n/locale-provider";
 
 type TestimonialsProps = {
   googleReviewsUrl?: string | null;
 };
 
 export function Testimonials({ googleReviewsUrl }: TestimonialsProps) {
+  const { dict } = useLocale();
+
   return (
     <section id="testimonials" className="section-shell bg-elevated">
       <div className="section-inner">
         <SectionHeading
-          eyebrow="Word of mouth"
-          title="What customers say"
-          description="Neighbors and local businesses who trusted us with their metalwork."
+          eyebrow={dict.testimonials.eyebrow}
+          title={dict.testimonials.title}
+          description={dict.testimonials.description}
         />
         <ul className="mx-auto grid max-w-3xl gap-10 md:max-w-none md:grid-cols-3 md:gap-12">
-          {testimonials.map((t) => (
+          {dict.testimonials.items.map((t) => (
             <li key={t.quote} className="text-center md:text-left">
               <blockquote className="text-[17px] leading-relaxed text-muted">
                 “{t.quote}”
@@ -30,7 +34,7 @@ export function Testimonials({ googleReviewsUrl }: TestimonialsProps) {
           <div className="mt-12 flex justify-center">
             <a href={googleReviewsUrl} target="_blank" rel="noopener noreferrer">
               <Button variant="outline" size="lg">
-                See Google reviews
+                {dict.testimonials.seeReviews}
               </Button>
             </a>
           </div>

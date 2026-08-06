@@ -7,17 +7,19 @@ import { X } from "lucide-react";
 import { AppleCarousel, AppleCarouselItem } from "@/app/components/apple-carousel";
 import { SectionHeading } from "@/app/components/section-heading";
 import { Button } from "@/app/components/ui/button";
-import type { ServiceData } from "@/lib/content";
+import type { LocalizedService } from "@/lib/content";
+import { useLocale } from "@/lib/i18n/locale-provider";
 import { resolveServiceImage } from "@/lib/service-images";
 
 const CAROUSEL_CARD =
   "w-[min(85vw,24rem)] sm:w-[26rem] lg:w-[30rem]";
 
 type ServicesProps = {
-  services: ServiceData[];
+  services: LocalizedService[];
 };
 
 export function Services({ services }: ServicesProps) {
+  const { dict } = useLocale();
   const [activeSlug, setActiveSlug] = useState<string | null>(null);
   const active = services.find((s) => s.slug === activeSlug) ?? null;
   const activeImage = active
@@ -41,15 +43,15 @@ export function Services({ services }: ServicesProps) {
     <section id="services" className="section-shell bg-elevated">
       <div className="section-inner">
         <SectionHeading
-          eyebrow="What we make"
-          title="Fabrication services"
-          description="Swipe or use the arrows — open a service for details or visit its page."
+          eyebrow={dict.services.eyebrow}
+          title={dict.services.title}
+          description={dict.services.description}
         />
       </div>
 
       {services.length > 0 ? (
         <div className="section-bleed">
-          <AppleCarousel label="Fabrication services" bleed>
+          <AppleCarousel label={dict.services.title} bleed>
             {services.map((service) => {
               const imageSrc = resolveServiceImage(service.slug, service.imageUrl);
               return (
@@ -75,7 +77,7 @@ export function Services({ services }: ServicesProps) {
                         {service.description}
                       </span>
                       <span className="mt-3 inline-flex items-center gap-1 text-[15px] font-medium text-gold sm:mt-4 sm:text-[16px]">
-                        Learn more <span aria-hidden>›</span>
+                        {dict.services.learnMore} <span aria-hidden>›</span>
                       </span>
                     </span>
                   </button>
@@ -131,12 +133,12 @@ export function Services({ services }: ServicesProps) {
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                 <Link href={`/services/${active.slug}`} onClick={() => setActiveSlug(null)}>
                   <Button size="lg" className="w-full sm:w-auto">
-                    Full page
+                    {dict.services.fullPage}
                   </Button>
                 </Link>
                 <a href="#contact" onClick={() => setActiveSlug(null)}>
                   <Button variant="outline" size="lg" className="w-full sm:w-auto">
-                    Request a quote
+                    {dict.services.requestQuote}
                   </Button>
                 </a>
               </div>

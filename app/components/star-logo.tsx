@@ -1,11 +1,14 @@
 import { cn } from "@/lib/utils/cn";
+import type { Locale } from "@/lib/i18n/config";
 
 type StarLogoProps = {
   className?: string;
-  showTamil?: boolean;
   size?: "sm" | "md" | "lg";
   /** on-dark = over photos; on-light = default public pages */
   tone?: "on-light" | "on-dark";
+  nameEn?: string;
+  nameTamil?: string | null;
+  locale?: Locale;
 };
 
 function StarIcon({ className }: { className?: string }) {
@@ -23,9 +26,11 @@ function StarIcon({ className }: { className?: string }) {
 
 export function StarLogo({
   className,
-  showTamil = false,
   size = "md",
   tone = "on-light",
+  nameEn = "Star Fabrication",
+  nameTamil = "ஸ்டார் பேப்ரிக்கேஷன்",
+  locale = "en",
 }: StarLogoProps) {
   const sizes = {
     sm: { icon: "size-5", word: "text-lg tracking-[0.06em]", tamil: "text-[0.65rem]" },
@@ -38,20 +43,58 @@ export function StarLogo({
   }[size];
 
   const wordColor = tone === "on-dark" ? "text-white" : "text-foreground";
-  const tamilColor = tone === "on-dark" ? "text-white/70" : "text-muted";
+  const secondaryColor = tone === "on-dark" ? "text-white/70" : "text-muted";
+  const tamil = (nameTamil || "ஸ்டார் பேப்ரிக்கேஷன்").trim();
+  const isTa = locale === "ta";
+
+  const englishMark = (
+    <div className="flex items-center gap-2 sm:gap-3">
+      <StarIcon className={sizes.icon} />
+      <span className={cn("font-display font-bold uppercase leading-none", sizes.word)}>
+        <span className="text-gold">Star</span>{" "}
+        <span className={wordColor}>Fabrication</span>
+      </span>
+      <StarIcon className={cn(sizes.icon, "hidden sm:block")} />
+    </div>
+  );
+
+  if (isTa) {
+    return (
+      <div className={cn("flex flex-col", className)}>
+        <div className="flex items-center gap-2 sm:gap-3">
+          <StarIcon className={sizes.icon} />
+          <span
+            className={cn(
+              "font-bold leading-none",
+              sizes.word,
+              wordColor,
+              "font-[family-name:var(--font-tamil)]"
+            )}
+          >
+            {tamil}
+          </span>
+          <StarIcon className={cn(sizes.icon, "hidden sm:block")} />
+        </div>
+        <span className={cn("mt-2 font-display uppercase", sizes.tamil, secondaryColor)}>
+          {nameEn}
+        </span>
+      </div>
+    );
+  }
 
   return (
     <div className={cn("flex flex-col", className)}>
-      <div className="flex items-center gap-2 sm:gap-3">
-        <StarIcon className={sizes.icon} />
-        <span className={cn("font-display font-bold uppercase leading-none", sizes.word)}>
-          <span className="text-gold">Star</span>{" "}
-          <span className={wordColor}>Fabrication</span>
+      {englishMark}
+      {tamil ? (
+        <span
+          className={cn(
+            "mt-2 font-[family-name:var(--font-tamil)]",
+            sizes.tamil,
+            secondaryColor
+          )}
+        >
+          {tamil}
         </span>
-        <StarIcon className={cn(sizes.icon, "hidden sm:block")} />
-      </div>
-      {showTamil ? (
-        <span className={cn("mt-2", sizes.tamil, tamilColor)}>ஸ்டார் பேப்ரிக்கேஷன்</span>
       ) : null}
     </div>
   );

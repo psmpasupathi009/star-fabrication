@@ -10,7 +10,11 @@ import {
   getServiceBySlug,
   getServicesData,
   getSiteData,
+  localizeService,
+  localizeSite,
 } from "@/lib/content";
+import { getDictionary } from "@/lib/i18n/dictionary";
+import { getLocale } from "@/lib/i18n/get-locale";
 import { resolveServiceImage } from "@/lib/service-images";
 import { getServerSession } from "@/lib/session";
 import { getSiteUrl, telHref, whatsappUrl } from "@/lib/site";
@@ -27,8 +31,10 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  const service = await getServiceBySlug(slug);
-  if (!service) return { title: "Service" };
+  const locale = await getLocale();
+  const serviceRaw = await getServiceBySlug(slug);
+  if (!serviceRaw) return { title: "Service" };
+  const service = localizeService(serviceRaw, locale);
   return {
     title: service.title,
     description: service.description,
@@ -44,14 +50,20 @@ export const dynamic = "force-dynamic";
 
 export default async function ServicePage({ params }: PageProps) {
   const { slug } = await params;
-  const [service, services, siteData, session] = await Promise.all([
+  const locale = await getLocale();
+  const dict = getDictionary(locale);
+  const [serviceRaw, servicesRaw, siteRaw, session] = await Promise.all([
     getServiceBySlug(slug),
     getServicesData(),
     getSiteData(),
     getServerSession(),
   ]);
 
-  if (!service) notFound();
+  if (!serviceRaw) notFound();
+
+  const service = localizeService(serviceRaw, locale);
+  const services = servicesRaw.map((s) => localizeService(s, locale));
+  const siteData = localizeSite(siteRaw, locale);
 
   const isAdmin = session?.role?.toUpperCase() === "ADMIN";
   const imageSrc = resolveServiceImage(service.slug, service.imageUrl);
@@ -88,7 +100,12 @@ export default async function ServicePage({ params }: PageProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <SiteHeader contacts={siteData.contacts} />
+      <SiteHeader
+        contacts={siteData.contacts}
+        locale={locale}
+        nameEn={siteRaw.name}
+        nameTamil={siteRaw.nameTamil}
+      />
       <main
         id="main-content"
         className="flex-1 pb-[calc(3.5rem+env(safe-area-inset-bottom))] md:pb-0"
@@ -97,7 +114,7 @@ export default async function ServicePage({ params }: PageProps) {
           <div className="section-inner">
             <p className="text-sm font-semibold text-gold-dim">
               <Link href="/#services" className="hover:underline">
-                Services
+                {dict.servicePage.services}
               </Link>
               <span className="mx-2 text-muted">/</span>
               {service.title}
@@ -128,12 +145,12 @@ export default async function ServicePage({ params }: PageProps) {
                       "w-full sm:w-auto"
                     )}
                   >
-                    Request a quote
+                    {dict.servicePage.requestQuote}
                   </Link>
                   {wa ? (
                     <a
                       href={whatsappUrl(
-                        `Hello Star Fabrication, I’m interested in ${service.title}.`,
+                        `${dict.whatsapp.quoteGreeting}\n\n${service.title}`,
                         wa
                       )}
                       target="_blank"
@@ -143,7 +160,7 @@ export default async function ServicePage({ params }: PageProps) {
                         "w-full sm:w-auto"
                       )}
                     >
-                      WhatsApp
+                      {dict.servicePage.whatsapp}
                     </a>
                   ) : null}
                   {primary ? (
@@ -154,7 +171,7 @@ export default async function ServicePage({ params }: PageProps) {
                         "w-full sm:w-auto"
                       )}
                     >
-                      Call {primary.phoneDisplay}
+                      {dict.servicePage.callNow} {primary.phoneDisplay}
                     </a>
                   ) : null}
                 </div>
@@ -164,7 +181,7 @@ export default async function ServicePage({ params }: PageProps) {
             {related.length > 0 ? (
               <div className="mt-16 border-t border-black/8 pt-12">
                 <h2 className="font-display text-xl font-bold uppercase tracking-tight text-foreground">
-                  Related services
+                  {dict.servicePage.related}
                 </h2>
                 <ul className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                   {related.map((s) => {
@@ -184,14 +201,9 @@ export default async function ServicePage({ params }: PageProps) {
                               className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
                             />
                           </div>
-                          <div className="p-3 sm:p-4">
-                            <span className="block text-[15px] font-medium text-foreground group-hover:text-gold-dim">
-                              {s.title}
-                            </span>
-                            <span className="mt-1 line-clamp-2 block text-sm text-muted">
-                              {s.description}
-                            </span>
-                          </div>
+                          <p className="p-3 text-sm font-semibold tracking-tight text-foreground">
+                            {s.title}
+                          </p>
                         </Link>
                       </li>
                     );
@@ -202,7 +214,14 @@ export default async function ServicePage({ params }: PageProps) {
           </div>
         </article>
       </main>
-      <SiteFooter site={siteData} contacts={siteData.contacts} isAdmin={isAdmin} />
+      <SiteFooter
+        site={siteData}
+        contacts={siteData.contacts}
+        isAdmin={isAdmin}
+        locale={locale}
+        nameEn={siteRaw.name}
+        nameTamil={siteRaw.nameTamil}
+      />
       <MobileCallBar contacts={siteData.contacts} whatsappPhone={wa || ""} />
       <WhatsAppFab phone={wa || ""} />
     </>

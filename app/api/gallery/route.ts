@@ -37,7 +37,9 @@ export async function POST(request: NextRequest) {
       url?: string;
       type?: string;
       caption?: string | null;
+      captionTamil?: string | null;
       alt?: string | null;
+      altTamil?: string | null;
       order?: number;
     };
 
@@ -56,7 +58,9 @@ export async function POST(request: NextRequest) {
         url,
         type,
         caption: body.caption?.trim()?.slice(0, 200) || null,
+        captionTamil: body.captionTamil?.trim()?.slice(0, 200) || null,
         alt: body.alt?.trim()?.slice(0, 200) || null,
+        altTamil: body.altTamil?.trim()?.slice(0, 200) || null,
         order,
       },
     });

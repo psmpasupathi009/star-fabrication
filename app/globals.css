@@ -57,6 +57,7 @@
   --color-border: var(--border);
   --font-sans: var(--font-dm-sans);
   --font-display: var(--font-oswald);
+  --font-tamil: var(--font-tamil);
 }
 
 html {
@@ -93,6 +94,14 @@ body {
 
 .font-display {
   font-family: var(--font-oswald), system-ui, sans-serif;
+}
+
+.font-tamil-ui {
+  font-family: var(--font-tamil), var(--font-dm-sans), system-ui, sans-serif;
+}
+
+.font-tamil-ui .font-display {
+  font-family: var(--font-tamil), var(--font-oswald), system-ui, sans-serif;
 }
 
 .section-rule {

@@ -52,12 +52,49 @@ export const contacts = [
 export const primaryContact = contacts[0];
 
 export const navLinks = [
-  { href: "/#about", label: "About" },
-  { href: "/#services", label: "Services" },
-  { href: "/#gallery", label: "Gallery" },
-  { href: "/#faq", label: "FAQ" },
-  { href: "/#contact", label: "Contact" },
+  { href: "/#about", key: "about" as const },
+  { href: "/#services", key: "services" as const },
+  { href: "/#gallery", key: "gallery" as const },
+  { href: "/#faq", key: "faq" as const },
+  { href: "/#contact", key: "contact" as const },
 ] as const;
+
+export function buildQuoteMessage(
+  input: {
+    name: string;
+    phone: string;
+    service: string;
+    message: string;
+    email?: string;
+  },
+  labels?: {
+    greeting: string;
+    nameLabel: string;
+    phoneLabel: string;
+    emailLabel: string;
+    serviceLabel: string;
+  }
+) {
+  const l = labels ?? {
+    greeting: "Hello Star Fabrication,",
+    nameLabel: "Name",
+    phoneLabel: "Phone",
+    emailLabel: "Email",
+    serviceLabel: "Service",
+  };
+  return [
+    l.greeting,
+    ``,
+    `${l.nameLabel}: ${input.name}`,
+    `${l.phoneLabel}: ${input.phone}`,
+    input.email ? `${l.emailLabel}: ${input.email}` : null,
+    `${l.serviceLabel}: ${input.service}`,
+    ``,
+    input.message,
+  ]
+    .filter((line) => line !== null)
+    .join("\n");
+}
 
 export const services = [
   {
@@ -167,25 +204,4 @@ export function telHref(phone: string) {
 export function whatsappUrl(message: string, phone: string = primaryContact.phone) {
   const text = encodeURIComponent(message);
   return `https://wa.me/91${phone}?text=${text}`;
-}
-
-export function buildQuoteMessage(input: {
-  name: string;
-  phone: string;
-  service: string;
-  message: string;
-  email?: string;
-}) {
-  return [
-    `Hello Star Fabrication,`,
-    ``,
-    `Name: ${input.name}`,
-    `Phone: ${input.phone}`,
-    input.email ? `Email: ${input.email}` : null,
-    `Service: ${input.service}`,
-    ``,
-    input.message,
-  ]
-    .filter((line) => line !== null)
-    .join("\n");
 }

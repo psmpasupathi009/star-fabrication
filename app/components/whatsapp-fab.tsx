@@ -1,6 +1,7 @@
 "use client";
 
 import { MessageCircle } from "lucide-react";
+import { useLocale } from "@/lib/i18n/locale-provider";
 import { whatsappUrl } from "@/lib/site";
 
 type WhatsAppFabProps = {
@@ -10,11 +11,9 @@ type WhatsAppFabProps = {
 };
 
 export function WhatsAppFab({ phone, hideOnMobile = true }: WhatsAppFabProps) {
+  const { dict } = useLocale();
   if (!phone) return null;
-  const href = whatsappUrl(
-    "Hello Star Fabrication, I’d like a quote for metal fabrication work.",
-    phone
-  );
+  const href = whatsappUrl(dict.whatsapp.defaultMessage, phone);
 
   return (
     <a

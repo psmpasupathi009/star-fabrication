@@ -17,20 +17,34 @@ import {
   getHeroData,
   getServicesData,
   getSiteData,
+  localizeAbout,
+  localizeGalleryItem,
+  localizeHero,
+  localizeService,
+  localizeSite,
 } from "@/lib/content";
+import { getLocale } from "@/lib/i18n/get-locale";
 import { getServerSession } from "@/lib/session";
 
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
-  const [siteData, hero, about, services, galleryItems, session] = await Promise.all([
-    getSiteData(),
-    getHeroData(),
-    getAboutData(),
-    getServicesData(),
-    getGalleryData(),
-    getServerSession(),
-  ]);
+  const locale = await getLocale();
+  const [siteRaw, heroRaw, aboutRaw, servicesRaw, galleryRaw, session] =
+    await Promise.all([
+      getSiteData(),
+      getHeroData(),
+      getAboutData(),
+      getServicesData(),
+      getGalleryData(),
+      getServerSession(),
+    ]);
+
+  const siteData = localizeSite(siteRaw, locale);
+  const hero = localizeHero(heroRaw, locale);
+  const about = localizeAbout(aboutRaw, locale);
+  const services = servicesRaw.map((s) => localizeService(s, locale));
+  const galleryItems = galleryRaw.map((g) => localizeGalleryItem(g, locale));
 
   const isAdmin = session?.role?.toUpperCase() === "ADMIN";
   const primaryPhone = siteData.contacts[0]?.phone ?? "8807920508";
@@ -38,10 +52,26 @@ export default async function Home() {
 
   return (
     <>
-      <LocalBusinessJsonLd site={siteData} />
-      <SiteHeader contacts={siteData.contacts} />
+      <LocalBusinessJsonLd
+        site={siteData}
+        nameEn={siteRaw.name}
+        nameTamil={siteRaw.nameTamil}
+        locale={locale}
+      />
+      <SiteHeader
+        contacts={siteData.contacts}
+        locale={locale}
+        nameEn={siteRaw.name}
+        nameTamil={siteRaw.nameTamil}
+      />
       <main id="main-content" className="flex-1 pb-[calc(3.5rem+env(safe-area-inset-bottom))] md:pb-0">
-        <Hero hero={hero} primaryPhone={primaryPhone} nameTamil={siteData.nameTamil} />
+        <Hero
+          hero={hero}
+          primaryPhone={primaryPhone}
+          nameEn={siteRaw.name}
+          nameTamil={siteRaw.nameTamil}
+          locale={locale}
+        />
         <About about={about} />
         <Services services={services} />
         <Gallery items={galleryItems} />
@@ -50,7 +80,14 @@ export default async function Home() {
         <Testimonials googleReviewsUrl={siteData.googleReviewsUrl} />
         <Contact site={siteData} contacts={siteData.contacts} services={services} />
       </main>
-      <SiteFooter site={siteData} contacts={siteData.contacts} isAdmin={isAdmin} />
+      <SiteFooter
+        site={siteData}
+        contacts={siteData.contacts}
+        isAdmin={isAdmin}
+        nameEn={siteRaw.name}
+        nameTamil={siteRaw.nameTamil}
+        locale={locale}
+      />
       <MobileCallBar contacts={siteData.contacts} whatsappPhone={waPhone} />
       <WhatsAppFab phone={waPhone} />
     </>

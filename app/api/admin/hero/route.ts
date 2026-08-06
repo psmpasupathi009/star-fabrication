@@ -30,11 +30,15 @@ export async function PUT(request: NextRequest) {
   try {
     const body = (await request.json()) as {
       tagline?: string;
+      taglineTamil?: string | null;
       subtitle?: string;
+      subtitleTamil?: string | null;
       imageUrl?: string | null;
       videoUrl?: string | null;
       ctaPrimary?: string;
+      ctaPrimaryTamil?: string | null;
       ctaSecondary?: string;
+      ctaSecondaryTamil?: string | null;
     };
 
     const imageUrl = body.imageUrl?.trim() || null;
@@ -46,25 +50,23 @@ export async function PUT(request: NextRequest) {
       return NextResponse.json({ error: "Invalid video URL" }, { status: 400 });
     }
 
+    const data = {
+      tagline: (body.tagline?.trim() || FALLBACK_HERO.tagline).slice(0, 200),
+      taglineTamil: body.taglineTamil?.trim()?.slice(0, 200) || null,
+      subtitle: (body.subtitle?.trim() || FALLBACK_HERO.subtitle).slice(0, 500),
+      subtitleTamil: body.subtitleTamil?.trim()?.slice(0, 500) || null,
+      imageUrl,
+      videoUrl,
+      ctaPrimary: (body.ctaPrimary?.trim() || FALLBACK_HERO.ctaPrimary).slice(0, 80),
+      ctaPrimaryTamil: body.ctaPrimaryTamil?.trim()?.slice(0, 80) || null,
+      ctaSecondary: (body.ctaSecondary?.trim() || FALLBACK_HERO.ctaSecondary).slice(0, 80),
+      ctaSecondaryTamil: body.ctaSecondaryTamil?.trim()?.slice(0, 80) || null,
+    };
+
     const row = await prisma.heroContent.upsert({
       where: { key: "default" },
-      update: {
-        tagline: (body.tagline?.trim() || FALLBACK_HERO.tagline).slice(0, 200),
-        subtitle: (body.subtitle?.trim() || FALLBACK_HERO.subtitle).slice(0, 500),
-        imageUrl,
-        videoUrl,
-        ctaPrimary: (body.ctaPrimary?.trim() || FALLBACK_HERO.ctaPrimary).slice(0, 80),
-        ctaSecondary: (body.ctaSecondary?.trim() || FALLBACK_HERO.ctaSecondary).slice(0, 80),
-      },
-      create: {
-        key: "default",
-        tagline: (body.tagline?.trim() || FALLBACK_HERO.tagline).slice(0, 200),
-        subtitle: (body.subtitle?.trim() || FALLBACK_HERO.subtitle).slice(0, 500),
-        imageUrl,
-        videoUrl,
-        ctaPrimary: (body.ctaPrimary?.trim() || FALLBACK_HERO.ctaPrimary).slice(0, 80),
-        ctaSecondary: (body.ctaSecondary?.trim() || FALLBACK_HERO.ctaSecondary).slice(0, 80),
-      },
+      update: data,
+      create: { key: "default", ...data },
     });
 
     return NextResponse.json(row);

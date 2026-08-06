@@ -5,21 +5,23 @@ import { useEffect, useState } from "react";
 import { X } from "lucide-react";
 import { SectionHeading } from "@/app/components/section-heading";
 import { Button } from "@/app/components/ui/button";
-import type { AboutData } from "@/lib/content";
+import type { LocalizedAbout } from "@/lib/content";
+import { useLocale } from "@/lib/i18n/locale-provider";
 import { telHref } from "@/lib/site";
 
 type AboutProps = {
-  about: AboutData;
+  about: LocalizedAbout;
 };
 
-const PROCESS_STEPS = [
-  { title: "Measure", text: "On-site sizing so the work fits your opening." },
-  { title: "Fabricate", text: "Welded and finished in our Mevani workshop." },
-  { title: "Install", text: "Fitted, adjusted, and handed over ready to use." },
-] as const;
-
 export function About({ about }: AboutProps) {
+  const { dict } = useLocale();
   const [open, setOpen] = useState(false);
+
+  const processSteps = [
+    { title: dict.about.processMeasure, text: dict.about.processMeasureText },
+    { title: dict.about.processFabricate, text: dict.about.processFabricateText },
+    { title: dict.about.processInstall, text: dict.about.processInstallText },
+  ];
 
   useEffect(() => {
     if (!open) return;
@@ -44,7 +46,7 @@ export function About({ about }: AboutProps) {
         />
 
         <ol className="mx-auto grid max-w-3xl gap-8 sm:grid-cols-3 sm:gap-10">
-          {PROCESS_STEPS.map((step, i) => (
+          {processSteps.map((step, i) => (
             <li key={step.title} className="text-center">
               <p className="text-xs font-semibold uppercase tracking-widest text-gold-dim">
                 {String(i + 1).padStart(2, "0")}
@@ -61,7 +63,7 @@ export function About({ about }: AboutProps) {
 
         <div className="mt-10 flex flex-col items-center gap-4 text-center sm:mt-12 sm:gap-5">
           <button type="button" className="apple-link-gold" onClick={() => setOpen(true)}>
-            Learn more <span aria-hidden>›</span>
+            {dict.about.learnMore} <span aria-hidden>›</span>
           </button>
           {about.footerNote ? (
             <p className="max-w-2xl px-1 text-[15px] leading-relaxed text-muted sm:text-[17px]">
@@ -86,7 +88,7 @@ export function About({ about }: AboutProps) {
             <button
               type="button"
               className="absolute right-3 top-3 inline-flex size-9 items-center justify-center rounded-full bg-elevated text-muted hover:text-foreground sm:right-4 sm:top-4"
-              aria-label="Close"
+              aria-label={dict.about.close}
               onClick={() => setOpen(false)}
             >
               <X className="size-4" />
@@ -108,7 +110,7 @@ export function About({ about }: AboutProps) {
 
             {about.people.length > 0 ? (
               <div className="mt-10">
-                <p className="text-sm font-semibold text-foreground">Owners</p>
+                <p className="text-sm font-semibold text-foreground">{dict.about.owners}</p>
                 <div className="mt-4 grid gap-4 sm:grid-cols-2">
                   {about.people.map((p) => (
                     <div
@@ -158,7 +160,7 @@ export function About({ about }: AboutProps) {
 
             <div className="mt-8">
               <Button type="button" variant="outline" onClick={() => setOpen(false)}>
-                Close
+                {dict.about.close}
               </Button>
             </div>
           </div>

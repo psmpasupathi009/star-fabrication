@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
-import { DM_Sans, Oswald } from "next/font/google";
+import { DM_Sans, Noto_Sans_Tamil, Oswald } from "next/font/google";
 import "./globals.css";
+import { getLocale } from "@/lib/i18n/get-locale";
+import { getDictionary } from "@/lib/i18n/dictionary";
+import { LocaleProvider } from "@/lib/i18n/locale-provider";
 import { getSiteUrl, site } from "@/lib/site";
 
 const dmSans = DM_Sans({
@@ -12,6 +15,13 @@ const dmSans = DM_Sans({
 const oswald = Oswald({
   variable: "--font-oswald",
   subsets: ["latin"],
+  display: "swap",
+});
+
+const notoTamil = Noto_Sans_Tamil({
+  variable: "--font-tamil",
+  subsets: ["tamil"],
+  weight: ["400", "500", "600", "700"],
   display: "swap",
 });
 
@@ -31,20 +41,26 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default async function RootLayout({ children }: LayoutProps<"/">) {
+  const locale = await getLocale();
+  const dict = getDictionary(locale);
+
   return (
     <html
-      lang="en"
-      className={`${dmSans.variable} ${oswald.variable} h-full antialiased`}
+      lang={locale === "ta" ? "ta" : "en"}
+      className={`${dmSans.variable} ${oswald.variable} ${notoTamil.variable} h-full antialiased`}
     >
-      <body id="top" className="flex min-h-full flex-col font-sans">
+      <body
+        id="top"
+        className={`flex min-h-full flex-col font-sans ${locale === "ta" ? "font-tamil-ui" : ""}`}
+      >
         <a
           href="#main-content"
           className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-100 focus:rounded-full focus:bg-white focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:shadow-lg"
         >
-          Skip to content
+          {dict.skipToContent}
         </a>
-        {children}
+        <LocaleProvider locale={locale}>{children}</LocaleProvider>
       </body>
     </html>
   );

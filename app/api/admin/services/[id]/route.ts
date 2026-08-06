@@ -13,8 +13,11 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
     const { id } = await context.params;
     const body = (await request.json()) as {
       title?: string;
+      titleTamil?: string | null;
       description?: string;
+      descriptionTamil?: string | null;
       details?: string | null;
+      detailsTamil?: string | null;
       icon?: string;
       imageUrl?: string | null;
       order?: number;
@@ -29,9 +32,18 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
       where: { id },
       data: {
         ...(body.title !== undefined ? { title: body.title.trim() } : {}),
+        ...(body.titleTamil !== undefined
+          ? { titleTamil: body.titleTamil?.trim() || null }
+          : {}),
         ...(body.description !== undefined ? { description: body.description.trim() } : {}),
+        ...(body.descriptionTamil !== undefined
+          ? { descriptionTamil: body.descriptionTamil?.trim() || null }
+          : {}),
         ...(body.details !== undefined
           ? { details: body.details?.trim() || null }
+          : {}),
+        ...(body.detailsTamil !== undefined
+          ? { detailsTamil: body.detailsTamil?.trim() || null }
           : {}),
         ...(body.icon !== undefined ? { icon: body.icon.trim() } : {}),
         ...(body.imageUrl !== undefined

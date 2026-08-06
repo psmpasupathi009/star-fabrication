@@ -1,4 +1,7 @@
+"use client";
+
 import { SectionHeading } from "@/app/components/section-heading";
+import { useLocale } from "@/lib/i18n/locale-provider";
 
 type ServiceAreasProps = {
   areas: string[];
@@ -6,15 +9,17 @@ type ServiceAreasProps = {
 };
 
 export function ServiceAreas({ areas, location }: ServiceAreasProps) {
+  const { dict } = useLocale();
+
   if (!areas.length) return null;
 
   return (
     <section id="areas" className="section-shell bg-elevated">
       <div className="section-inner">
         <SectionHeading
-          eyebrow="Where we work"
-          title="Service areas"
-          description={`Based in ${location} — we fabricate and install across these towns and nearby villages.`}
+          eyebrow={dict.areas.eyebrow}
+          title={dict.areas.title}
+          description={dict.areas.description.replace("{location}", location)}
         />
         <ul className="mx-auto flex max-w-3xl flex-wrap justify-center gap-x-8 gap-y-3 md:max-w-none">
           {areas.map((area) => (

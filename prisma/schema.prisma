@@ -25,9 +25,11 @@ model SiteSettings {
   name             String
   nameTamil        String?
   tagline          String
+  taglineTamil     String?
   location         String
   locationTamil    String?
   description      String?
+  descriptionTamil String?
   contactsJson     String
   address          String?
   addressTamil     String?
@@ -40,47 +42,61 @@ model SiteSettings {
 }
 
 model HeroContent {
-  id           String  @id @default(auto()) @map("_id") @db.ObjectId
-  key          String  @unique
-  tagline      String
-  subtitle     String
-  imageUrl     String?
-  videoUrl     String?
-  ctaPrimary   String  @default("Get a Quote")
-  ctaSecondary String  @default("Call Now")
+  id                 String  @id @default(auto()) @map("_id") @db.ObjectId
+  key                String  @unique
+  tagline            String
+  taglineTamil       String?
+  subtitle           String
+  subtitleTamil      String?
+  imageUrl           String?
+  videoUrl           String?
+  ctaPrimary         String  @default("Get a Quote")
+  ctaPrimaryTamil    String?
+  ctaSecondary       String  @default("Call Now")
+  ctaSecondaryTamil  String?
 }
 
 model AboutContent {
-  id          String  @id @default(auto()) @map("_id") @db.ObjectId
-  key         String  @unique
-  eyebrow     String
-  title       String
-  description String
-  details     String?
-  footerNote  String?
-  imageOneUrl String?
-  imageTwoUrl String?
-  peopleJson  String?
+  id                 String  @id @default(auto()) @map("_id") @db.ObjectId
+  key                String  @unique
+  eyebrow            String
+  eyebrowTamil       String?
+  title              String
+  titleTamil         String?
+  description        String
+  descriptionTamil   String?
+  details            String?
+  detailsTamil       String?
+  footerNote         String?
+  footerNoteTamil    String?
+  imageOneUrl        String?
+  imageTwoUrl        String?
+  peopleJson         String?
 }
 
 model ServiceItem {
-  id          String  @id @default(auto()) @map("_id") @db.ObjectId
-  slug        String  @unique
-  title       String
-  description String
-  details     String?
-  icon        String
-  imageUrl    String?
-  order       Int     @default(0)
+  id               String  @id @default(auto()) @map("_id") @db.ObjectId
+  slug             String  @unique
+  title            String
+  titleTamil       String?
+  description      String
+  descriptionTamil String?
+  details          String?
+  detailsTamil     String?
+  icon             String
+  imageUrl         String?
+  order            Int     @default(0)
 }
 
 model GalleryMedia {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  url       String
-  type      String
-  caption   String?
-  alt       String?
-  order     Int      @default(0)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  url          String
+  type         String
+  caption      String?
+  captionTamil String?
+  alt          String?
+  altTamil     String?
+  order        Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }

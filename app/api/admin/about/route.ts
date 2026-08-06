@@ -59,10 +59,15 @@ export async function PUT(request: NextRequest) {
   try {
     const body = (await request.json()) as {
       eyebrow?: string;
+      eyebrowTamil?: string | null;
       title?: string;
+      titleTamil?: string | null;
       description?: string;
+      descriptionTamil?: string | null;
       details?: string | null;
+      detailsTamil?: string | null;
       footerNote?: string | null;
+      footerNoteTamil?: string | null;
       imageOneUrl?: string | null;
       imageTwoUrl?: string | null;
       people?: AboutPerson[];
@@ -85,10 +90,15 @@ export async function PUT(request: NextRequest) {
 
     const data = {
       eyebrow: body.eyebrow?.trim() || FALLBACK_ABOUT.eyebrow,
+      eyebrowTamil: body.eyebrowTamil?.trim() || null,
       title: body.title?.trim() || FALLBACK_ABOUT.title,
+      titleTamil: body.titleTamil?.trim() || null,
       description: body.description?.trim() || FALLBACK_ABOUT.description,
+      descriptionTamil: body.descriptionTamil?.trim() || null,
       details: body.details?.trim() || FALLBACK_ABOUT.details,
+      detailsTamil: body.detailsTamil?.trim() || null,
       footerNote: body.footerNote?.trim() || null,
+      footerNoteTamil: body.footerNoteTamil?.trim() || null,
       imageOneUrl,
       imageTwoUrl,
       peopleJson,

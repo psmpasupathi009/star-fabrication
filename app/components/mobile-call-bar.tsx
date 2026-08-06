@@ -2,6 +2,7 @@
 
 import { MessageCircle, Phone } from "lucide-react";
 import type { ContactPerson } from "@/lib/content";
+import { useLocale } from "@/lib/i18n/locale-provider";
 import { telHref, whatsappUrl } from "@/lib/site";
 
 type MobileCallBarProps = {
@@ -10,6 +11,7 @@ type MobileCallBarProps = {
 };
 
 export function MobileCallBar({ contacts, whatsappPhone }: MobileCallBarProps) {
+  const { dict } = useLocale();
   const primary = contacts[0];
   if (!primary && !whatsappPhone) return null;
 
@@ -25,23 +27,22 @@ export function MobileCallBar({ contacts, whatsappPhone }: MobileCallBarProps) {
             className="flex h-14 items-center justify-center gap-2 border-r border-black/5 text-sm font-medium text-foreground active:bg-elevated"
           >
             <Phone className="size-3.5 text-gold-dim" />
-            Call
+            {dict.mobileBar.call}
           </a>
         ) : (
-          <span className="flex h-14 items-center justify-center text-sm text-muted">Call</span>
+          <span className="flex h-14 items-center justify-center text-sm text-muted">
+            {dict.mobileBar.call}
+          </span>
         )}
         {wa ? (
           <a
-            href={whatsappUrl(
-              "Hello Star Fabrication, I’d like a quote for metal fabrication work.",
-              wa
-            )}
+            href={whatsappUrl(dict.whatsapp.defaultMessage, wa)}
             target="_blank"
             rel="noopener noreferrer"
             className="flex h-14 items-center justify-center gap-2 text-sm font-medium text-foreground active:bg-elevated"
           >
             <MessageCircle className="size-3.5 text-[#25D366]" />
-            WhatsApp
+            {dict.mobileBar.whatsapp}
           </a>
         ) : null}
       </div>

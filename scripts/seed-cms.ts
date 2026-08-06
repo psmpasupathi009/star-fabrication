@@ -1,26 +1,17 @@
 import path from "path";
 import { config } from "dotenv";
 import { PrismaClient } from "@prisma/client";
+import {
+  FALLBACK_ABOUT,
+  FALLBACK_HERO,
+  FALLBACK_SERVICES,
+  FALLBACK_SITE,
+} from "../lib/content";
 import { services as defaultServices } from "../lib/site";
 
 config({ path: path.join(process.cwd(), ".env"), override: true });
 
 const prisma = new PrismaClient();
-
-const contacts = [
-  {
-    name: "Boopalan",
-    title: "DME",
-    phone: "8807920508",
-    phoneDisplay: "88079 20508",
-  },
-  {
-    name: "Silambarasan",
-    title: "DMET",
-    phone: "7708468506",
-    phoneDisplay: "770846 8506",
-  },
-];
 
 async function main() {
   const { DEFAULT_HOURS } = await import("../lib/hours");
@@ -28,89 +19,102 @@ async function main() {
   await prisma.siteSettings.upsert({
     where: { key: "default" },
     update: {
-      address: "Mevani, Namakkal District, Tamil Nadu",
-      addressTamil: "மேவாணி, நாமக்கல் மாவட்டம், தமிழ்நாடு",
+      nameTamil: FALLBACK_SITE.nameTamil,
+      taglineTamil: FALLBACK_SITE.taglineTamil,
+      locationTamil: FALLBACK_SITE.locationTamil,
+      descriptionTamil: FALLBACK_SITE.descriptionTamil,
+      address: FALLBACK_SITE.address,
+      addressTamil: FALLBACK_SITE.addressTamil,
       hoursJson: JSON.stringify(DEFAULT_HOURS),
-      mapEmbedUrl:
-        "https://maps.google.com/maps?q=Mevani,+Namakkal,+Tamil+Nadu&z=14&output=embed",
-      serviceAreasJson: JSON.stringify([
-        "Mevani",
-        "Rasipuram",
-        "Namakkal",
-        "Tiruchengode",
-        "Paramathi",
-        "Nearby villages",
-      ]),
-      whatsappPhone: "8807920508",
+      mapEmbedUrl: FALLBACK_SITE.mapEmbedUrl,
+      serviceAreasJson: JSON.stringify(FALLBACK_SITE.serviceAreas),
+      whatsappPhone: FALLBACK_SITE.whatsappPhone,
     },
     create: {
       key: "default",
-      name: "Star Fabrication",
-      nameTamil: "ஸ்டார் பேப்ரிக்கேஷன்",
-      tagline: "Our Motive Your Satisfaction",
-      location: "Mevani",
-      locationTamil: "மேவாணி",
-      description:
-        "Custom metal fabrication in Mevani — gates, grills, roofing, doors, and industrial structures built with craftsmanship.",
-      contactsJson: JSON.stringify(contacts),
-      address: "Mevani, Namakkal District, Tamil Nadu",
-      addressTamil: "மேவாணி, நாமக்கல் மாவட்டம், தமிழ்நாடு",
+      name: FALLBACK_SITE.name,
+      nameTamil: FALLBACK_SITE.nameTamil,
+      tagline: FALLBACK_SITE.tagline,
+      taglineTamil: FALLBACK_SITE.taglineTamil,
+      location: FALLBACK_SITE.location,
+      locationTamil: FALLBACK_SITE.locationTamil,
+      description: FALLBACK_SITE.description,
+      descriptionTamil: FALLBACK_SITE.descriptionTamil,
+      contactsJson: JSON.stringify(FALLBACK_SITE.contacts),
+      address: FALLBACK_SITE.address,
+      addressTamil: FALLBACK_SITE.addressTamil,
       hoursJson: JSON.stringify(DEFAULT_HOURS),
-      mapEmbedUrl:
-        "https://maps.google.com/maps?q=Mevani,+Namakkal,+Tamil+Nadu&z=14&output=embed",
-      serviceAreasJson: JSON.stringify([
-        "Mevani",
-        "Rasipuram",
-        "Namakkal",
-        "Tiruchengode",
-        "Paramathi",
-        "Nearby villages",
-      ]),
-      whatsappPhone: "8807920508",
+      mapEmbedUrl: FALLBACK_SITE.mapEmbedUrl,
+      serviceAreasJson: JSON.stringify(FALLBACK_SITE.serviceAreas),
+      whatsappPhone: FALLBACK_SITE.whatsappPhone,
     },
   });
 
   await prisma.heroContent.upsert({
     where: { key: "default" },
     update: {
-      imageUrl: "/gallery/hero.jpg",
-      videoUrl: "/gallery/hero.mp4",
+      tagline: FALLBACK_HERO.tagline,
+      taglineTamil: FALLBACK_HERO.taglineTamil,
+      subtitle: FALLBACK_HERO.subtitle,
+      subtitleTamil: FALLBACK_HERO.subtitleTamil,
+      ctaPrimary: FALLBACK_HERO.ctaPrimary,
+      ctaPrimaryTamil: FALLBACK_HERO.ctaPrimaryTamil,
+      ctaSecondary: FALLBACK_HERO.ctaSecondary,
+      ctaSecondaryTamil: FALLBACK_HERO.ctaSecondaryTamil,
+      imageUrl: FALLBACK_HERO.imageUrl,
+      videoUrl: FALLBACK_HERO.videoUrl,
     },
     create: {
       key: "default",
-      tagline: "Our Motive Your Satisfaction",
-      subtitle:
-        "Gates, grills, roofing, and industrial structures — welded with precision in Mevani.",
-      imageUrl: "/gallery/hero.jpg",
-      videoUrl: "/gallery/hero.mp4",
-      ctaPrimary: "Get a Quote",
-      ctaSecondary: "Call Now",
+      tagline: FALLBACK_HERO.tagline,
+      taglineTamil: FALLBACK_HERO.taglineTamil,
+      subtitle: FALLBACK_HERO.subtitle,
+      subtitleTamil: FALLBACK_HERO.subtitleTamil,
+      imageUrl: FALLBACK_HERO.imageUrl,
+      videoUrl: FALLBACK_HERO.videoUrl,
+      ctaPrimary: FALLBACK_HERO.ctaPrimary,
+      ctaPrimaryTamil: FALLBACK_HERO.ctaPrimaryTamil,
+      ctaSecondary: FALLBACK_HERO.ctaSecondary,
+      ctaSecondaryTamil: FALLBACK_HERO.ctaSecondaryTamil,
     },
   });
-
-  const aboutDetails = `Star Fabrication is a metal fabrication workshop in Mevani (மேவாணி), serving Namakkal district for years. We fabricate in mild steel (MS) and stainless steel (SS) — gates, grills, roofing, doors, railings, sheds, and custom welding for homes and businesses.
-
-Our process is simple: measure on site → fabricate in the workshop → install and finish. Every job is built for strength, Tamil Nadu weather, and daily use. Our motive is your satisfaction — clear communication, solid workmanship, and on-time delivery.`;
 
   await prisma.aboutContent.upsert({
     where: { key: "default" },
     update: {
-      details: aboutDetails,
-      imageOneUrl: "/gallery/workshop.jpg",
-      imageTwoUrl: "/gallery/welder.jpg",
-      peopleJson: JSON.stringify(contacts.map((c) => ({ ...c, imageUrl: null, extra: null }))),
+      eyebrow: FALLBACK_ABOUT.eyebrow,
+      eyebrowTamil: FALLBACK_ABOUT.eyebrowTamil,
+      title: FALLBACK_ABOUT.title,
+      titleTamil: FALLBACK_ABOUT.titleTamil,
+      description: FALLBACK_ABOUT.description,
+      descriptionTamil: FALLBACK_ABOUT.descriptionTamil,
+      details: FALLBACK_ABOUT.details,
+      detailsTamil: FALLBACK_ABOUT.detailsTamil,
+      footerNote: FALLBACK_ABOUT.footerNote,
+      footerNoteTamil: FALLBACK_ABOUT.footerNoteTamil,
+      imageOneUrl: FALLBACK_ABOUT.imageOneUrl,
+      imageTwoUrl: FALLBACK_ABOUT.imageTwoUrl,
+      peopleJson: JSON.stringify(
+        FALLBACK_ABOUT.people.map((c) => ({ ...c, imageUrl: null, extra: null }))
+      ),
     },
     create: {
       key: "default",
-      eyebrow: "About us",
-      title: "Built on craft, driven by satisfaction",
-      description:
-        "From designer gates to industrial sheds, Star Fabrication delivers durable metalwork for homes and businesses across Mevani and nearby towns.",
-      details: aboutDetails,
-      footerNote: "Based in Mevani (மேவாணி) — ஸ்டார் பேப்ரிக்கேஷன்.",
-      imageOneUrl: "/gallery/workshop.jpg",
-      imageTwoUrl: "/gallery/welder.jpg",
-      peopleJson: JSON.stringify(contacts.map((c) => ({ ...c, imageUrl: null, extra: null }))),
+      eyebrow: FALLBACK_ABOUT.eyebrow,
+      eyebrowTamil: FALLBACK_ABOUT.eyebrowTamil,
+      title: FALLBACK_ABOUT.title,
+      titleTamil: FALLBACK_ABOUT.titleTamil,
+      description: FALLBACK_ABOUT.description,
+      descriptionTamil: FALLBACK_ABOUT.descriptionTamil,
+      details: FALLBACK_ABOUT.details,
+      detailsTamil: FALLBACK_ABOUT.detailsTamil,
+      footerNote: FALLBACK_ABOUT.footerNote,
+      footerNoteTamil: FALLBACK_ABOUT.footerNoteTamil,
+      imageOneUrl: FALLBACK_ABOUT.imageOneUrl,
+      imageTwoUrl: FALLBACK_ABOUT.imageTwoUrl,
+      peopleJson: JSON.stringify(
+        FALLBACK_ABOUT.people.map((c) => ({ ...c, imageUrl: null, extra: null }))
+      ),
     },
   });
 
@@ -120,13 +124,17 @@ Our process is simple: measure on site → fabricate in the workshop → install
 
   for (let i = 0; i < defaultServices.length; i++) {
     const s = defaultServices[i];
+    const fb = FALLBACK_SERVICES.find((x) => x.slug === s.id);
     const imageUrl = SERVICE_IMAGE_BY_SLUG[s.id] ?? DEFAULT_SERVICE_IMAGE;
     await prisma.serviceItem.upsert({
       where: { slug: s.id },
       update: {
         title: s.title,
+        titleTamil: fb?.titleTamil ?? null,
         description: s.description,
+        descriptionTamil: fb?.descriptionTamil ?? null,
         details: s.details,
+        detailsTamil: fb?.detailsTamil ?? null,
         icon: s.id,
         imageUrl,
         order: i,
@@ -134,8 +142,11 @@ Our process is simple: measure on site → fabricate in the workshop → install
       create: {
         slug: s.id,
         title: s.title,
+        titleTamil: fb?.titleTamil ?? null,
         description: s.description,
+        descriptionTamil: fb?.descriptionTamil ?? null,
         details: s.details,
+        detailsTamil: fb?.detailsTamil ?? null,
         icon: s.id,
         imageUrl,
         order: i,
@@ -143,7 +154,7 @@ Our process is simple: measure on site → fabricate in the workshop → install
     });
   }
 
-  console.log("CMS defaults seeded.");
+  console.log("CMS defaults seeded (EN + TA).");
 }
 
 main()

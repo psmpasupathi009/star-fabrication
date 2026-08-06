@@ -4,13 +4,16 @@ import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { StarLogo } from "@/app/components/star-logo";
 import { Button } from "@/app/components/ui/button";
-import type { ContactPerson, HeroData } from "@/lib/content";
+import type { Locale } from "@/lib/i18n/config";
+import type { LocalizedHero } from "@/lib/content";
 import { telHref } from "@/lib/site";
 
 type HeroProps = {
-  hero: HeroData;
+  hero: LocalizedHero;
   primaryPhone: string;
+  nameEn: string;
   nameTamil?: string | null;
+  locale: Locale;
 };
 
 function prefersReducedMotion() {
@@ -18,7 +21,13 @@ function prefersReducedMotion() {
   return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 }
 
-export function Hero({ hero, primaryPhone, nameTamil }: HeroProps) {
+export function Hero({
+  hero,
+  primaryPhone,
+  nameEn,
+  nameTamil,
+  locale,
+}: HeroProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [videoOk, setVideoOk] = useState(false);
   const videoSrc = hero.videoUrl?.trim() || "/gallery/hero.mp4";
@@ -96,7 +105,13 @@ export function Hero({ hero, primaryPhone, nameTamil }: HeroProps) {
           </p>
 
           <div className="flex justify-center">
-            <StarLogo size="lg" showTamil={Boolean(nameTamil)} tone="on-dark" />
+            <StarLogo
+              size="lg"
+              tone="on-dark"
+              nameEn={nameEn}
+              nameTamil={nameTamil}
+              locale={locale}
+            />
           </div>
 
           <p className="mx-auto mt-5 max-w-2xl text-[17px] leading-snug text-white/90 sm:mt-7 sm:text-[21px] lg:text-[22px]">
@@ -120,5 +135,3 @@ export function Hero({ hero, primaryPhone, nameTamil }: HeroProps) {
     </section>
   );
 }
-
-export type { ContactPerson };

@@ -8,17 +8,19 @@ import { Button } from "@/app/components/ui/button";
 import { Input } from "@/app/components/ui/input";
 import { Label } from "@/app/components/ui/label";
 import { Textarea } from "@/app/components/ui/textarea";
-import type { ContactPerson, ServiceData, SiteData } from "@/lib/content";
+import type { ContactPerson, LocalizedService, LocalizedSite } from "@/lib/content";
 import { formatHoursLines } from "@/lib/hours";
+import { useLocale } from "@/lib/i18n/locale-provider";
 import { buildQuoteMessage, telHref, whatsappUrl } from "@/lib/site";
 
 type ContactProps = {
-  site: SiteData;
+  site: LocalizedSite;
   contacts: ContactPerson[];
-  services: ServiceData[];
+  services: LocalizedService[];
 };
 
 export function Contact({ site, contacts, services }: ContactProps) {
+  const { dict } = useLocale();
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
@@ -29,7 +31,11 @@ export function Contact({ site, contacts, services }: ContactProps) {
   const [loading, setLoading] = useState(false);
   const primary = contacts[0];
   const waPhone = site.whatsappPhone || primary?.phone;
-  const hoursLines = formatHoursLines(site.hours);
+  const hoursLines = formatHoursLines(site.hours, {
+    weekdays: dict.hours.weekdays,
+    short: dict.hours.short,
+    closed: dict.hours.closed,
+  });
   const mapsLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
     site.address + (site.pincode ? ` ${site.pincode}` : "")
   )}`;
@@ -47,7 +53,7 @@ export function Contact({ site, contacts, services }: ContactProps) {
       });
       const data = (await res.json()) as { message?: string; error?: string };
       if (!res.ok) {
-        setError(data.error || "Could not send message");
+        setError(data.error || dict.contact.sendFailed);
         return;
       }
       setSuccess(data.message || "Message sent.");
@@ -57,7 +63,7 @@ export function Contact({ site, contacts, services }: ContactProps) {
       setMessage("");
       setService(services[0]?.title ?? "General Fabrication");
     } catch {
-      setError("Could not send message. Please try WhatsApp or call us.");
+      setError(dict.contact.sendFailed);
     } finally {
       setLoading(false);
     }
@@ -65,10 +71,19 @@ export function Contact({ site, contacts, services }: ContactProps) {
 
   function openWhatsApp() {
     if (!name.trim() || !phone.trim() || !message.trim()) {
-      setError("Please fill name, phone, and message before WhatsApp.");
+      setError(dict.contact.fillRequired);
       return;
     }
-    const text = buildQuoteMessage({ name, phone, email, service, message });
+    const text = buildQuoteMessage(
+      { name, phone, email, service, message },
+      {
+        greeting: dict.whatsapp.quoteGreeting,
+        nameLabel: dict.whatsapp.nameLabel,
+        phoneLabel: dict.whatsapp.phoneLabel,
+        emailLabel: dict.whatsapp.emailLabel,
+        serviceLabel: dict.whatsapp.serviceLabel,
+      }
+    );
     window.open(whatsappUrl(text, waPhone), "_blank", "noopener,noreferrer");
   }
 
@@ -76,9 +91,9 @@ export function Contact({ site, contacts, services }: ContactProps) {
     <section id="contact" className="section-shell bg-elevated">
       <div className="section-inner">
         <SectionHeading
-          eyebrow="Get in touch"
-          title="Request a quote"
-          description={`Send your project details to ${site.name} by email — or continue on WhatsApp.`}
+          eyebrow={dict.contact.eyebrow}
+          title={dict.contact.title}
+          description={dict.contact.description.replace("{name}", site.name)}
         />
 
         <div className="grid gap-10 md:gap-12 lg:grid-cols-5">
@@ -112,16 +127,13 @@ export function Contact({ site, contacts, services }: ContactProps) {
                   {site.pincode ? (
                     <p className="mt-0.5 text-sm text-muted">PIN {site.pincode}</p>
                   ) : null}
-                  {site.addressTamil ? (
-                    <p className="mt-1 text-sm text-muted">{site.addressTamil}</p>
-                  ) : null}
                   <a
                     href={mapsLink}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="mt-2 inline-block text-sm font-medium text-gold-dim hover:underline"
                   >
-                    Open in Google Maps
+                    {dict.contact.openMaps}
                   </a>
                 </div>
               </div>
@@ -156,7 +168,7 @@ export function Contact({ site, contacts, services }: ContactProps) {
             >
               <div className="grid gap-4 sm:grid-cols-2 sm:gap-5">
                 <div>
-                  <Label htmlFor="name">Name</Label>
+                  <Label htmlFor="name">{dict.contact.name}</Label>
                   <Input
                     id="name"
                     name="name"
@@ -164,11 +176,11 @@ export function Contact({ site, contacts, services }: ContactProps) {
                     autoComplete="name"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    placeholder="Your name"
+                    placeholder={dict.contact.namePlaceholder}
                   />
                 </div>
                 <div>
-                  <Label htmlFor="phone">Phone</Label>
+                  <Label htmlFor="phone">{dict.contact.phone}</Label>
                   <Input
                     id="phone"
                     name="phone"
@@ -177,12 +189,12 @@ export function Contact({ site, contacts, services }: ContactProps) {
                     autoComplete="tel"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
-                    placeholder="Your phone number"
+                    placeholder={dict.contact.phonePlaceholder}
                   />
                 </div>
               </div>
               <div>
-                <Label htmlFor="email">Email (optional)</Label>
+                <Label htmlFor="email">{dict.contact.email}</Label>
                 <Input
                   id="email"
                   name="email"
@@ -190,11 +202,11 @@ export function Contact({ site, contacts, services }: ContactProps) {
                   autoComplete="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="For a confirmation reply"
+                  placeholder={dict.contact.emailPlaceholder}
                 />
               </div>
               <div>
-                <Label htmlFor="service">Service</Label>
+                <Label htmlFor="service">{dict.contact.service}</Label>
                 <select
                   id="service"
                   name="service"
@@ -210,14 +222,14 @@ export function Contact({ site, contacts, services }: ContactProps) {
                 </select>
               </div>
               <div>
-                <Label htmlFor="message">Message</Label>
+                <Label htmlFor="message">{dict.contact.message}</Label>
                 <Textarea
                   id="message"
                   name="message"
                   required
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
-                  placeholder="Describe your project, size, and timeline"
+                  placeholder={dict.contact.messagePlaceholder}
                 />
               </div>
               {error ? (
@@ -233,7 +245,7 @@ export function Contact({ site, contacts, services }: ContactProps) {
               <div className="flex flex-col gap-3 pt-1 sm:flex-row sm:items-center">
                 <Button type="submit" size="lg" className="w-full sm:w-auto" disabled={loading}>
                   <Send className="size-4" />
-                  {loading ? "Sending…" : "Send message"}
+                  {loading ? dict.contact.sending : dict.contact.send}
                 </Button>
                 <Button
                   type="button"
@@ -244,13 +256,13 @@ export function Contact({ site, contacts, services }: ContactProps) {
                   disabled={loading}
                 >
                   <MessageCircle className="size-4" />
-                  WhatsApp
+                  {dict.contact.whatsapp}
                 </Button>
               </div>
               <p className="text-[12px] text-muted">
-                By submitting, you agree to our{" "}
+                {dict.contact.privacyAgree}{" "}
                 <Link href="/privacy" className="underline hover:text-foreground">
-                  Privacy Policy
+                  {dict.contact.privacyLink}
                 </Link>
                 .
               </p>

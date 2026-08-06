@@ -44,9 +44,11 @@ export async function PUT(request: NextRequest) {
       name?: string;
       nameTamil?: string | null;
       tagline?: string;
+      taglineTamil?: string | null;
       location?: string;
       locationTamil?: string | null;
       description?: string | null;
+      descriptionTamil?: string | null;
       contacts?: ContactPerson[];
       address?: string | null;
       addressTamil?: string | null;
@@ -95,9 +97,11 @@ export async function PUT(request: NextRequest) {
       name: (body.name?.trim() || FALLBACK_SITE.name).slice(0, 120),
       nameTamil: body.nameTamil?.trim()?.slice(0, 120) || null,
       tagline: (body.tagline?.trim() || FALLBACK_SITE.tagline).slice(0, 200),
+      taglineTamil: body.taglineTamil?.trim()?.slice(0, 200) || null,
       location: (body.location?.trim() || FALLBACK_SITE.location).slice(0, 120),
       locationTamil: body.locationTamil?.trim()?.slice(0, 120) || null,
       description: body.description?.trim()?.slice(0, 1000) || null,
+      descriptionTamil: body.descriptionTamil?.trim()?.slice(0, 1000) || null,
       contactsJson: JSON.stringify(contacts),
       address: (body.address?.trim() || FALLBACK_SITE.address).slice(0, 240),
       addressTamil: body.addressTamil?.trim()?.slice(0, 240) || null,

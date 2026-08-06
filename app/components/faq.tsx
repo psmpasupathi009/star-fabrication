@@ -3,22 +3,23 @@
 import { useState } from "react";
 import { ChevronDown } from "lucide-react";
 import { SectionHeading } from "@/app/components/section-heading";
-import { faqItems } from "@/lib/faq";
+import { useLocale } from "@/lib/i18n/locale-provider";
 import { cn } from "@/lib/utils/cn";
 
 export function Faq() {
+  const { dict } = useLocale();
   const [open, setOpen] = useState<number | null>(0);
 
   return (
     <section id="faq" className="section-shell bg-white">
       <div className="section-inner">
         <SectionHeading
-          eyebrow="FAQ"
-          title="Common questions"
-          description="Site visits, materials, timelines, and payment — answered briefly."
+          eyebrow={dict.faq.eyebrow}
+          title={dict.faq.title}
+          description={dict.faq.description}
         />
         <ul className="mx-auto max-w-3xl divide-y divide-black/8 border-y border-black/8">
-          {faqItems.map((item, i) => {
+          {dict.faq.items.map((item, i) => {
             const isOpen = open === i;
             return (
               <li key={item.question}>

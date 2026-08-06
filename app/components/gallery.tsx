@@ -5,23 +5,20 @@ import { useCallback, useEffect, useState } from "react";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { AppleCarousel, AppleCarouselItem } from "@/app/components/apple-carousel";
 import { SectionHeading } from "@/app/components/section-heading";
+import type { LocalizedGalleryItem } from "@/lib/content";
+import { useLocale } from "@/lib/i18n/locale-provider";
 
-export type GalleryViewItem = {
-  id: string;
-  url: string;
-  type: string;
-  caption: string | null;
-  alt: string | null;
-};
+export type { LocalizedGalleryItem as GalleryViewItem };
 
 const CAROUSEL_CARD =
   "w-[min(85vw,24rem)] sm:w-[26rem] lg:w-[30rem]";
 
 type GalleryProps = {
-  items: GalleryViewItem[];
+  items: LocalizedGalleryItem[];
 };
 
 export function Gallery({ items }: GalleryProps) {
+  const { dict } = useLocale();
   const [active, setActive] = useState<number | null>(null);
 
   const goPrev = useCallback(() => {
@@ -55,16 +52,16 @@ export function Gallery({ items }: GalleryProps) {
     <section id="gallery" className="section-shell bg-white">
       <div className="section-inner">
         <SectionHeading
-          eyebrow="Our work"
-          title="Project gallery"
-          description="Swipe the rail or use the arrows — tap a photo to open it full screen."
+          eyebrow={dict.gallery.eyebrow}
+          title={dict.gallery.title}
+          description={dict.gallery.description}
         />
 
         {items.length === 0 ? (
           <div className="rounded-3xl bg-elevated px-5 py-16 text-center sm:px-6 sm:py-20">
-            <p className="text-sm font-semibold text-foreground">Projects coming soon</p>
+            <p className="text-sm font-semibold text-foreground">{dict.gallery.emptyTitle}</p>
             <p className="mx-auto mt-2 max-w-sm text-[15px] text-muted sm:text-[17px]">
-              New fabrication work will appear here shortly.
+              {dict.gallery.emptyBody}
             </p>
           </div>
         ) : null}
@@ -72,7 +69,7 @@ export function Gallery({ items }: GalleryProps) {
 
       {items.length > 0 ? (
         <div className="section-bleed">
-          <AppleCarousel label="Project gallery" bleed>
+          <AppleCarousel label={dict.gallery.title} bleed>
             {items.map((g, i) => (
               <AppleCarouselItem key={g.id} className={CAROUSEL_CARD}>
                 <button
@@ -90,7 +87,7 @@ export function Gallery({ items }: GalleryProps) {
                   ) : (
                     <Image
                       src={g.url}
-                      alt={g.alt || g.caption || "Gallery project"}
+                      alt={g.alt || g.caption || dict.gallery.project}
                       fill
                       sizes="(max-width: 640px) 85vw, (max-width: 1024px) 26rem, 30rem"
                       className="object-cover"
@@ -114,12 +111,12 @@ export function Gallery({ items }: GalleryProps) {
           onClick={() => setActive(null)}
           role="dialog"
           aria-modal="true"
-          aria-label={item.alt || item.caption || "Gallery image"}
+          aria-label={item.alt || item.caption || dict.gallery.project}
         >
           <button
             type="button"
             className="absolute right-4 top-4 z-20 inline-flex size-10 items-center justify-center rounded-full bg-white text-foreground"
-            aria-label="Close gallery"
+            aria-label={dict.gallery.close}
             onClick={() => setActive(null)}
           >
             <X className="size-5" />
@@ -130,7 +127,7 @@ export function Gallery({ items }: GalleryProps) {
               <button
                 type="button"
                 className="absolute left-3 top-1/2 z-20 inline-flex size-11 -translate-y-1/2 items-center justify-center rounded-full bg-white text-foreground sm:left-6"
-                aria-label="Previous image"
+                aria-label={dict.gallery.prev}
                 onClick={(e) => {
                   e.stopPropagation();
                   goPrev();
@@ -141,7 +138,7 @@ export function Gallery({ items }: GalleryProps) {
               <button
                 type="button"
                 className="absolute right-3 top-1/2 z-20 inline-flex size-11 -translate-y-1/2 items-center justify-center rounded-full bg-white text-foreground sm:right-6"
-                aria-label="Next image"
+                aria-label={dict.gallery.next}
                 onClick={(e) => {
                   e.stopPropagation();
                   goNext();
@@ -167,7 +164,7 @@ export function Gallery({ items }: GalleryProps) {
               ) : (
                 <Image
                   src={item.url}
-                  alt={item.alt || item.caption || "Gallery image"}
+                  alt={item.alt || item.caption || dict.gallery.project}
                   fill
                   sizes="100vw"
                   className="object-contain"
@@ -178,7 +175,7 @@ export function Gallery({ items }: GalleryProps) {
 
             <div className="mt-3 flex items-center justify-between gap-4 rounded-2xl bg-white px-4 py-3">
               <p className="min-w-0 truncate text-sm font-medium text-foreground">
-                {item.caption || item.alt || "Project"}
+                {item.caption || item.alt || dict.gallery.project}
               </p>
               <p className="shrink-0 text-sm text-muted">
                 {active + 1} / {items.length}

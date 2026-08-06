@@ -87,7 +87,17 @@ function formatTime(t: string) {
 }
 
 /** Compact lines for footer/contact, e.g. "Mon–Sat: 9:00 AM – 6:00 PM" */
-export function formatHoursLines(hours: BusinessHours): string[] {
+export function formatHoursLines(
+  hours: BusinessHours,
+  labels?: {
+    weekdays: Record<Weekday, string>;
+    short: Record<Weekday, string>;
+    closed: string;
+  }
+): string[] {
+  const weekdayLabels = labels?.weekdays ?? WEEKDAY_LABELS;
+  const shortLabels = labels?.short;
+  const closedLabel = labels?.closed ?? "Closed";
   const groups: { label: string; text: string }[] = [];
   let i = 0;
   while (i < WEEKDAYS.length) {
@@ -98,11 +108,13 @@ export function formatHoursLines(hours: BusinessHours): string[] {
     while (j < WEEKDAYS.length && JSON.stringify(hours[WEEKDAYS[j]]) === key) {
       j += 1;
     }
-    const start = WEEKDAY_LABELS[WEEKDAYS[i]];
-    const end = WEEKDAY_LABELS[WEEKDAYS[j - 1]];
-    const label = i === j - 1 ? start.slice(0, 3) : `${start.slice(0, 3)}–${end.slice(0, 3)}`;
+    const startDay = WEEKDAYS[i];
+    const endDay = WEEKDAYS[j - 1];
+    const start = shortLabels?.[startDay] ?? weekdayLabels[startDay].slice(0, 3);
+    const end = shortLabels?.[endDay] ?? weekdayLabels[endDay].slice(0, 3);
+    const label = i === j - 1 ? start : `${start}–${end}`;
     const text = isClosedDay(schedule)
-      ? "Closed"
+      ? closedLabel
       : `${formatTime(schedule.open)} – ${formatTime(schedule.close)}`;
     groups.push({ label, text });
     i = j;

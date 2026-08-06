@@ -28,8 +28,11 @@ type ServiceItem = {
   id: string;
   slug: string;
   title: string;
+  titleTamil?: string | null;
   description: string;
+  descriptionTamil?: string | null;
   details: string | null;
+  detailsTamil?: string | null;
   icon: string;
   imageUrl: string | null;
   order: number;
@@ -61,11 +64,15 @@ export function AdminDashboardClient({ email }: { email: string }) {
   // Hero
   const [hero, setHero] = useState({
     tagline: "",
+    taglineTamil: "",
     subtitle: "",
+    subtitleTamil: "",
     imageUrl: "",
     videoUrl: "",
     ctaPrimary: "",
+    ctaPrimaryTamil: "",
     ctaSecondary: "",
+    ctaSecondaryTamil: "",
   });
   const [heroFile, setHeroFile] = useState<File | null>(null);
   const [heroVideoFile, setHeroVideoFile] = useState<File | null>(null);
@@ -73,10 +80,15 @@ export function AdminDashboardClient({ email }: { email: string }) {
   // About
   const [about, setAbout] = useState({
     eyebrow: "",
+    eyebrowTamil: "",
     title: "",
+    titleTamil: "",
     description: "",
+    descriptionTamil: "",
     details: "",
+    detailsTamil: "",
     footerNote: "",
+    footerNoteTamil: "",
     imageOneUrl: "",
     imageTwoUrl: "",
   });
@@ -90,9 +102,11 @@ export function AdminDashboardClient({ email }: { email: string }) {
     name: "",
     nameTamil: "",
     tagline: "",
+    taglineTamil: "",
     location: "",
     locationTamil: "",
     description: "",
+    descriptionTamil: "",
     address: "",
     addressTamil: "",
     pincode: "",
@@ -139,21 +153,30 @@ export function AdminDashboardClient({ email }: { email: string }) {
         const h = await heroRes.json();
         setHero({
           tagline: h.tagline ?? "",
+          taglineTamil: h.taglineTamil ?? "",
           subtitle: h.subtitle ?? "",
+          subtitleTamil: h.subtitleTamil ?? "",
           imageUrl: h.imageUrl ?? "",
           videoUrl: h.videoUrl ?? "",
           ctaPrimary: h.ctaPrimary ?? "",
+          ctaPrimaryTamil: h.ctaPrimaryTamil ?? "",
           ctaSecondary: h.ctaSecondary ?? "",
+          ctaSecondaryTamil: h.ctaSecondaryTamil ?? "",
         });
       }
       if (aboutRes.ok) {
         const a = await aboutRes.json();
         setAbout({
           eyebrow: a.eyebrow ?? "",
+          eyebrowTamil: a.eyebrowTamil ?? "",
           title: a.title ?? "",
+          titleTamil: a.titleTamil ?? "",
           description: a.description ?? "",
+          descriptionTamil: a.descriptionTamil ?? "",
           details: a.details ?? "",
+          detailsTamil: a.detailsTamil ?? "",
           footerNote: a.footerNote ?? "",
+          footerNoteTamil: a.footerNoteTamil ?? "",
           imageOneUrl: a.imageOneUrl ?? "",
           imageTwoUrl: a.imageTwoUrl ?? "",
         });
@@ -190,9 +213,11 @@ export function AdminDashboardClient({ email }: { email: string }) {
           name: s.name ?? "",
           nameTamil: s.nameTamil ?? "",
           tagline: s.tagline ?? "",
+          taglineTamil: s.taglineTamil ?? "",
           location: s.location ?? "",
           locationTamil: s.locationTamil ?? "",
           description: s.description ?? "",
+          descriptionTamil: s.descriptionTamil ?? "",
           address: s.address ?? "",
           addressTamil: s.addressTamil ?? "",
           pincode: s.pincode ?? "",
@@ -302,10 +327,15 @@ export function AdminDashboardClient({ email }: { email: string }) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           eyebrow: about.eyebrow,
+          eyebrowTamil: about.eyebrowTamil || null,
           title: about.title,
+          titleTamil: about.titleTamil || null,
           description: about.description,
+          descriptionTamil: about.descriptionTamil || null,
           details: about.details,
+          detailsTamil: about.detailsTamil || null,
           footerNote: about.footerNote,
+          footerNoteTamil: about.footerNoteTamil || null,
           imageOneUrl: about.imageOneUrl || null,
           imageTwoUrl: about.imageTwoUrl || null,
           people,
@@ -354,9 +384,11 @@ export function AdminDashboardClient({ email }: { email: string }) {
           name: siteForm.name,
           nameTamil: siteForm.nameTamil,
           tagline: siteForm.tagline,
+          taglineTamil: siteForm.taglineTamil,
           location: siteForm.location,
           locationTamil: siteForm.locationTamil,
           description: siteForm.description,
+          descriptionTamil: siteForm.descriptionTamil,
           address: siteForm.address,
           addressTamil: siteForm.addressTamil,
           pincode: siteForm.pincode,
@@ -531,25 +563,43 @@ export function AdminDashboardClient({ email }: { email: string }) {
 
       {tab === "hero" ? (
         <form onSubmit={saveHero} className="admin-panel space-y-4">
-          <div>
-            <Label htmlFor="tagline">Tagline</Label>
-            <Input
-              id="tagline"
-              value={hero.tagline}
-              onChange={(e) => setHero({ ...hero, tagline: e.target.value })}
-            />
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div>
+              <Label htmlFor="tagline">Tagline (EN)</Label>
+              <Input
+                id="tagline"
+                value={hero.tagline}
+                onChange={(e) => setHero({ ...hero, tagline: e.target.value })}
+              />
+            </div>
+            <div>
+              <Label htmlFor="taglineTamil">Tagline (TA)</Label>
+              <Input
+                id="taglineTamil"
+                value={hero.taglineTamil}
+                onChange={(e) => setHero({ ...hero, taglineTamil: e.target.value })}
+              />
+            </div>
           </div>
           <div>
-            <Label htmlFor="subtitle">Subtitle</Label>
+            <Label htmlFor="subtitle">Subtitle (EN)</Label>
             <Textarea
               id="subtitle"
               value={hero.subtitle}
               onChange={(e) => setHero({ ...hero, subtitle: e.target.value })}
             />
           </div>
+          <div>
+            <Label htmlFor="subtitleTamil">Subtitle (TA)</Label>
+            <Textarea
+              id="subtitleTamil"
+              value={hero.subtitleTamil}
+              onChange={(e) => setHero({ ...hero, subtitleTamil: e.target.value })}
+            />
+          </div>
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <Label htmlFor="ctaPrimary">Primary CTA</Label>
+              <Label htmlFor="ctaPrimary">Primary CTA (EN)</Label>
               <Input
                 id="ctaPrimary"
                 value={hero.ctaPrimary}
@@ -557,11 +607,29 @@ export function AdminDashboardClient({ email }: { email: string }) {
               />
             </div>
             <div>
-              <Label htmlFor="ctaSecondary">Secondary CTA</Label>
+              <Label htmlFor="ctaPrimaryTamil">Primary CTA (TA)</Label>
+              <Input
+                id="ctaPrimaryTamil"
+                value={hero.ctaPrimaryTamil}
+                onChange={(e) => setHero({ ...hero, ctaPrimaryTamil: e.target.value })}
+              />
+            </div>
+            <div>
+              <Label htmlFor="ctaSecondary">Secondary CTA (EN)</Label>
               <Input
                 id="ctaSecondary"
                 value={hero.ctaSecondary}
                 onChange={(e) => setHero({ ...hero, ctaSecondary: e.target.value })}
+              />
+            </div>
+            <div>
+              <Label htmlFor="ctaSecondaryTamil">Secondary CTA (TA)</Label>
+              <Input
+                id="ctaSecondaryTamil"
+                value={hero.ctaSecondaryTamil}
+                onChange={(e) =>
+                  setHero({ ...hero, ctaSecondaryTamil: e.target.value })
+                }
               />
             </div>
           </div>
@@ -607,24 +675,44 @@ export function AdminDashboardClient({ email }: { email: string }) {
 
       {tab === "about" ? (
         <form onSubmit={saveAbout} className="admin-panel space-y-4">
-          <div>
-            <Label htmlFor="eyebrow">Eyebrow</Label>
-            <Input
-              id="eyebrow"
-              value={about.eyebrow}
-              onChange={(e) => setAbout({ ...about, eyebrow: e.target.value })}
-            />
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div>
+              <Label htmlFor="eyebrow">Eyebrow (EN)</Label>
+              <Input
+                id="eyebrow"
+                value={about.eyebrow}
+                onChange={(e) => setAbout({ ...about, eyebrow: e.target.value })}
+              />
+            </div>
+            <div>
+              <Label htmlFor="eyebrowTamil">Eyebrow (TA)</Label>
+              <Input
+                id="eyebrowTamil"
+                value={about.eyebrowTamil}
+                onChange={(e) => setAbout({ ...about, eyebrowTamil: e.target.value })}
+              />
+            </div>
+          </div>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div>
+              <Label htmlFor="aboutTitle">Title (EN)</Label>
+              <Input
+                id="aboutTitle"
+                value={about.title}
+                onChange={(e) => setAbout({ ...about, title: e.target.value })}
+              />
+            </div>
+            <div>
+              <Label htmlFor="aboutTitleTamil">Title (TA)</Label>
+              <Input
+                id="aboutTitleTamil"
+                value={about.titleTamil}
+                onChange={(e) => setAbout({ ...about, titleTamil: e.target.value })}
+              />
+            </div>
           </div>
           <div>
-            <Label htmlFor="aboutTitle">Title</Label>
-            <Input
-              id="aboutTitle"
-              value={about.title}
-              onChange={(e) => setAbout({ ...about, title: e.target.value })}
-            />
-          </div>
-          <div>
-            <Label htmlFor="aboutDesc">Short description (on page)</Label>
+            <Label htmlFor="aboutDesc">Short description EN (on page)</Label>
             <Textarea
               id="aboutDesc"
               value={about.description}
@@ -632,7 +720,17 @@ export function AdminDashboardClient({ email }: { email: string }) {
             />
           </div>
           <div>
-            <Label htmlFor="aboutDetails">Full details (opens on button click)</Label>
+            <Label htmlFor="aboutDescTamil">Short description (TA)</Label>
+            <Textarea
+              id="aboutDescTamil"
+              value={about.descriptionTamil}
+              onChange={(e) =>
+                setAbout({ ...about, descriptionTamil: e.target.value })
+              }
+            />
+          </div>
+          <div>
+            <Label htmlFor="aboutDetails">Full details EN (opens on button click)</Label>
             <Textarea
               id="aboutDetails"
               className="min-h-36"
@@ -641,12 +739,33 @@ export function AdminDashboardClient({ email }: { email: string }) {
             />
           </div>
           <div>
-            <Label htmlFor="footerNote">Footer note</Label>
+            <Label htmlFor="aboutDetailsTamil">Full details (TA)</Label>
             <Textarea
-              id="footerNote"
-              value={about.footerNote}
-              onChange={(e) => setAbout({ ...about, footerNote: e.target.value })}
+              id="aboutDetailsTamil"
+              className="min-h-36"
+              value={about.detailsTamil}
+              onChange={(e) => setAbout({ ...about, detailsTamil: e.target.value })}
             />
+          </div>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div>
+              <Label htmlFor="footerNote">Footer note (EN)</Label>
+              <Textarea
+                id="footerNote"
+                value={about.footerNote}
+                onChange={(e) => setAbout({ ...about, footerNote: e.target.value })}
+              />
+            </div>
+            <div>
+              <Label htmlFor="footerNoteTamil">Footer note (TA)</Label>
+              <Textarea
+                id="footerNoteTamil"
+                value={about.footerNoteTamil}
+                onChange={(e) =>
+                  setAbout({ ...about, footerNoteTamil: e.target.value })
+                }
+              />
+            </div>
           </div>
 
           <p className="text-sm font-semibold text-foreground">Workshop images</p>
@@ -786,13 +905,25 @@ export function AdminDashboardClient({ email }: { email: string }) {
               />
             </div>
           </div>
-          <div>
-            <Label htmlFor="siteTagline">Tagline</Label>
-            <Input
-              id="siteTagline"
-              value={siteForm.tagline}
-              onChange={(e) => setSiteForm({ ...siteForm, tagline: e.target.value })}
-            />
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div>
+              <Label htmlFor="siteTagline">Tagline (EN)</Label>
+              <Input
+                id="siteTagline"
+                value={siteForm.tagline}
+                onChange={(e) => setSiteForm({ ...siteForm, tagline: e.target.value })}
+              />
+            </div>
+            <div>
+              <Label htmlFor="siteTaglineTamil">Tagline (TA)</Label>
+              <Input
+                id="siteTaglineTamil"
+                value={siteForm.taglineTamil}
+                onChange={(e) =>
+                  setSiteForm({ ...siteForm, taglineTamil: e.target.value })
+                }
+              />
+            </div>
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
@@ -913,11 +1044,21 @@ export function AdminDashboardClient({ email }: { email: string }) {
             </div>
           </div>
           <div>
-            <Label htmlFor="siteDesc">Description</Label>
+            <Label htmlFor="siteDesc">Description (EN)</Label>
             <Textarea
               id="siteDesc"
               value={siteForm.description}
               onChange={(e) => setSiteForm({ ...siteForm, description: e.target.value })}
+            />
+          </div>
+          <div>
+            <Label htmlFor="siteDescTamil">Description (TA)</Label>
+            <Textarea
+              id="siteDescTamil"
+              value={siteForm.descriptionTamil}
+              onChange={(e) =>
+                setSiteForm({ ...siteForm, descriptionTamil: e.target.value })
+              }
             />
           </div>
           <p className="text-sm font-semibold text-foreground">Contacts</p>
@@ -1052,6 +1193,20 @@ export function AdminDashboardClient({ email }: { email: string }) {
                           )
                         )
                       }
+                      placeholder="Title (EN)"
+                    />
+                    <Input
+                      value={item.titleTamil ?? ""}
+                      onChange={(e) =>
+                        setServices((prev) =>
+                          prev.map((s) =>
+                            s.id === item.id
+                              ? { ...s, titleTamil: e.target.value }
+                              : s
+                          )
+                        )
+                      }
+                      placeholder="Title (TA)"
                     />
                     <Input
                       value={item.icon}
@@ -1075,7 +1230,20 @@ export function AdminDashboardClient({ email }: { email: string }) {
                       )
                     )
                   }
-                  placeholder="Short description"
+                  placeholder="Short description (EN)"
+                />
+                <Textarea
+                  value={item.descriptionTamil ?? ""}
+                  onChange={(e) =>
+                    setServices((prev) =>
+                      prev.map((s) =>
+                        s.id === item.id
+                          ? { ...s, descriptionTamil: e.target.value }
+                          : s
+                      )
+                    )
+                  }
+                  placeholder="Short description (TA)"
                 />
                 <Textarea
                   value={item.details ?? ""}
@@ -1086,7 +1254,20 @@ export function AdminDashboardClient({ email }: { email: string }) {
                       )
                     )
                   }
-                  placeholder="Full details"
+                  placeholder="Full details (EN)"
+                />
+                <Textarea
+                  value={item.detailsTamil ?? ""}
+                  onChange={(e) =>
+                    setServices((prev) =>
+                      prev.map((s) =>
+                        s.id === item.id
+                          ? { ...s, detailsTamil: e.target.value }
+                          : s
+                      )
+                    )
+                  }
+                  placeholder="Full details (TA)"
                 />
                 <div>
                   <Label htmlFor={`service-img-${item.id}`}>Replace image</Label>
