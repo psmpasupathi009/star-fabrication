@@ -15,7 +15,7 @@
   --ring: rgba(245, 197, 24, 0.45);
   --page-max: 72rem;
   --page-gutter: clamp(1.25rem, 4vw, 2.5rem);
-  --section-y: clamp(4rem, 9vw, 7.5rem);
+  --section-y: clamp(2.5rem, 5vw, 4rem);
   --rail-inset: max(
     var(--page-gutter),
     calc((100vw - min(100vw, var(--page-max))) / 2 + var(--page-gutter))
