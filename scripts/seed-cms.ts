@@ -21,7 +21,9 @@ async function main() {
     update: {
       nameTamil: FALLBACK_SITE.nameTamil,
       taglineTamil: FALLBACK_SITE.taglineTamil,
+      location: FALLBACK_SITE.location,
       locationTamil: FALLBACK_SITE.locationTamil,
+      description: FALLBACK_SITE.description,
       descriptionTamil: FALLBACK_SITE.descriptionTamil,
       address: FALLBACK_SITE.address,
       addressTamil: FALLBACK_SITE.addressTamil,

@@ -190,7 +190,7 @@ const en: Dictionary = {
     processMeasure: "Measure",
     processMeasureText: "On-site sizing so the work fits your opening.",
     processFabricate: "Fabricate",
-    processFabricateText: "Welded and finished in our Mevani workshop.",
+    processFabricateText: "Welded and finished in our Andhiyur, Mevani workshop.",
     processInstall: "Install",
     processInstallText: "Fitted, adjusted, and handed over ready to use.",
     learnMore: "Learn more",
@@ -219,7 +219,8 @@ const en: Dictionary = {
   areas: {
     eyebrow: "Where we work",
     title: "Service areas",
-    description: "Based in {location} — we fabricate and install across these towns and nearby villages.",
+    description:
+      "Workshop in {location} — we fabricate and install across Tamil Nadu, Kerala, and Karnataka.",
   },
   faq: {
     eyebrow: "FAQ",
@@ -399,7 +400,7 @@ const ta: Dictionary = {
     processMeasure: "அளவீடு",
     processMeasureText: "உங்கள் இடத்திலேயே அளந்து, சரியான அளவுக்கு ஏற்ப தயாரிக்கிறோம்.",
     processFabricate: "தயாரிப்பு",
-    processFabricateText: "மேவாணி பட்டறையில் வெல்டிங் செய்து உறுதியாக முடிக்கிறோம்.",
+    processFabricateText: "அந்தியூர், மேவாணி பட்டறையில் வெல்டிங் செய்து உறுதியாக முடிக்கிறோம்.",
     processInstall: "பொருத்துதல்",
     processInstallText: "இடத்தில் பொருத்தி, சரிசெய்து, பயன்படுத்தத் தயார் செய்து தருகிறோம்.",
     learnMore: "மேலும் தெரிந்துகொள்ள",
@@ -429,7 +430,7 @@ const ta: Dictionary = {
     eyebrow: "நாங்கள் செல்லும் இடங்கள்",
     title: "சேவைப் பகுதிகள்",
     description:
-      "{location} மையமாகக் கொண்டு அருகிலுள்ள ஊர்களிலும் அளந்து பொருத்தித் தருகிறோம்.",
+      "பட்டறை {location} — தமிழ்நாடு, கேரளா, கர்நாடகா முழுவதும் அளந்து பொருத்தித் தருகிறோம்.",
   },
   faq: {
     eyebrow: "கேள்வி பதில்",

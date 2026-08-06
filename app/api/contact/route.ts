@@ -86,7 +86,7 @@ export async function POST(request: NextRequest) {
             ``,
             `Thanks for contacting Star Fabrication. We received your request about ${service || "fabrication work"} and will get back to you soon on ${phone}${email ? ` or ${email}` : ""}.`,
             ``,
-            `— Star Fabrication, Mevani`,
+            `— Star Fabrication, Andhiyur, Mevani`,
           ].join("\n"),
         });
       } catch (err) {

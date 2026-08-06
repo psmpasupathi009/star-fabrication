@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { BackToTopFab } from "@/app/components/back-to-top-fab";
 import { MobileCallBar } from "@/app/components/mobile-call-bar";
 import { SiteFooter } from "@/app/components/site-footer";
 import { SiteHeader } from "@/app/components/site-header";
@@ -224,6 +225,7 @@ export default async function ServicePage({ params }: PageProps) {
       />
       <MobileCallBar contacts={siteData.contacts} whatsappPhone={wa || ""} />
       <WhatsAppFab phone={wa || ""} />
+      <BackToTopFab />
     </>
   );
 }

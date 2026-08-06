@@ -1,4 +1,5 @@
 import { About } from "@/app/components/about";
+import { BackToTopFab } from "@/app/components/back-to-top-fab";
 import { Contact } from "@/app/components/contact";
 import { Faq } from "@/app/components/faq";
 import { Gallery } from "@/app/components/gallery";
@@ -90,6 +91,7 @@ export default async function Home() {
       />
       <MobileCallBar contacts={siteData.contacts} whatsappPhone={waPhone} />
       <WhatsAppFab phone={waPhone} />
+      <BackToTopFab />
     </>
   );
 }

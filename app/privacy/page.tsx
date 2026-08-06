@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { BackToTopFab } from "@/app/components/back-to-top-fab";
 import { MobileCallBar } from "@/app/components/mobile-call-bar";
 import { SiteFooter } from "@/app/components/site-footer";
 import { SiteHeader } from "@/app/components/site-header";
@@ -108,6 +109,7 @@ export default async function PrivacyPage() {
       />
       <MobileCallBar contacts={siteData.contacts} whatsappPhone={waPhone} />
       <WhatsAppFab phone={waPhone} />
+      <BackToTopFab />
     </>
   );
 }

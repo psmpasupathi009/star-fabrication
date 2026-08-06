@@ -159,7 +159,7 @@ export const FALLBACK_SITE: SiteData = {
   locationTamil: site.locationTamil,
   description: site.description,
   descriptionTamil:
-    "மேவாணியில் தனிப்பயன் உலோக வேலைகள் — கதவு, சாளரக் கிரில், கூரை, கைப்பிடி, ஷெட் மற்றும் தொழிற்சாலை கட்டமைப்புகள்.",
+    "அந்தியூர், மேவாணியில் தனிப்பயன் உலோக வேலைகள் — கதவு, சாளரக் கிரில், கூரை, கைப்பிடி, ஷெட். தமிழ்நாடு, கேரளா, கர்நாடகா முழுவதும் சேவை.",
   contacts: defaultContacts.map((c) => ({ ...c })),
   address: site.address,
   addressTamil: site.addressTamil,
@@ -189,14 +189,14 @@ export const FALLBACK_ABOUT: AboutData = {
   eyebrowTamil: "எங்களைப் பற்றி",
   title: "Built on craft, driven by satisfaction",
   titleTamil: "நுணுக்கமான வேலை, உங்கள் திருப்தியே எங்கள் இலக்கு",
-  description: `From designer gates to industrial sheds, ${site.name} delivers durable metalwork for homes and businesses across ${site.location} and nearby towns.`,
-  descriptionTamil: `அலங்கார கதவு முதல் தொழிற்சாலை ஷெட் வரை, ${site.nameTamil} ${site.locationTamil} மற்றும் அருகிலுள்ள ஊர்களில் வீடுகள் மற்றும் கடைகளுக்கு உறுதியான உலோக வேலைகளைச் செய்கிறது.`,
-  details: `${site.name} is a metal fabrication workshop in ${site.location} (${site.locationTamil}), serving Namakkal district for years. We fabricate in mild steel (MS) and stainless steel (SS) — gates, grills, roofing, doors, railings, sheds, and custom welding for homes and businesses.
+  description: `From designer gates to industrial sheds, ${site.name} delivers durable metalwork for homes and businesses across Tamil Nadu, Kerala, and Karnataka — from our workshop in ${site.location}.`,
+  descriptionTamil: `அலங்கார கதவு முதல் தொழிற்சாலை ஷெட் வரை, ${site.nameTamil} தமிழ்நாடு, கேரளா, கர்நாடகா முழுவதும் வீடுகள் மற்றும் கடைகளுக்கு உறுதியான உலோக வேலைகளைச் செய்கிறது — எங்கள் பட்டறை ${site.locationTamil}-ல்.`,
+  details: `${site.name} is a metal fabrication workshop in ${site.location} (${site.locationTamil}). We fabricate and install across Tamil Nadu, Kerala, and Karnataka. We work in mild steel (MS) and stainless steel (SS) — gates, grills, roofing, doors, railings, sheds, and custom welding for homes and businesses.
 
-Our process is simple: measure on site → fabricate in the workshop → install and finish. Every job is built for strength, Tamil Nadu weather, and daily use. Our motive is your satisfaction — clear communication, solid workmanship, and on-time delivery.`,
-  detailsTamil: `${site.nameTamil} ${site.locationTamil}-ல் இயங்கும் உலோக வேலைப் பட்டறை. பல ஆண்டுகளாக நாமக்கல் மாவட்டத்திற்கு சேவை செய்கிறோம். மைல்டு ஸ்டீல் (MS) மற்றும் ஸ்டெயின்லெஸ் ஸ்டீல் (SS)-ல் கதவு, சாளரக் கிரில், கூரை, கைப்பிடி, ஷெட் மற்றும் தனிப்பயன் வெல்டிங் செய்கிறோம்.
+Our process is simple: measure on site → fabricate in the workshop → install and finish. Every job is built for strength, local weather, and daily use. Our motive is your satisfaction — clear communication, solid workmanship, and on-time delivery.`,
+  detailsTamil: `${site.nameTamil} ${site.locationTamil}-ல் இயங்கும் உலோக வேலைப் பட்டறை. தமிழ்நாடு, கேரளா, கர்நாடகா முழுவதும் அளந்து பொருத்தித் தருகிறோம். மைல்டு ஸ்டீல் (MS) மற்றும் ஸ்டெயின்லெஸ் ஸ்டீல் (SS)-ல் கதவு, சாளரக் கிரில், கூரை, கைப்பிடி, ஷெட் மற்றும் தனிப்பயன் வெல்டிங் செய்கிறோம்.
 
-எங்கள் முறை எளிது: இடத்தில் அளவு → பட்டறையில் தயாரிப்பு → பொருத்தி முடித்தல். ஒவ்வொரு பணியும் வலிமை, தமிழ்நாட்டு வானிலை, தினசரி பயன்பாடு ஆகியவற்றுக்கு ஏற்றது. எங்கள் நோக்கம் உங்கள் திருப்தி — தெளிவான பேச்சு, உறுதியான வேலை, சரியான நேரத்தில் ஒப்படைப்பு.`,
+எங்கள் முறை எளிது: இடத்தில் அளவு → பட்டறையில் தயாரிப்பு → பொருத்தி முடித்தல். ஒவ்வொரு பணியும் வலிமை, உள்ளூர் வானிலை, தினசரி பயன்பாடு ஆகியவற்றுக்கு ஏற்றது. எங்கள் நோக்கம் உங்கள் திருப்தி — தெளிவான பேச்சு, உறுதியான வேலை, சரியான நேரத்தில் ஒப்படைப்பு.`,
   footerNote: `Based in ${site.location} (${site.locationTamil}) — ${site.nameTamil}.`,
   footerNoteTamil: `${site.locationTamil}-ல் அமைந்துள்ளது — ${site.nameTamil}.`,
   imageOneUrl: "/gallery/workshop.jpg",
@@ -294,12 +294,16 @@ const SERVICE_TA: Record<string, { title: string; description: string; details: 
     title: "பொது உலோக வேலைகள்",
     description: "தனிப்பயன் வெல்டிங் மற்றும் அனைத்து வகை இரும்பு வேலைகள்.",
     details:
-      "பிராக்கெட், சட்டம், பழுது, தனிப்பட்ட உலோக வேலைகள். அளவு அல்லது ஸ்கெட்ச் கொடுங்கள் — மேவாணி மற்றும் அருகில் தயாரித்துத் தருகிறோம்.",
+      "பிராக்கெட், சட்டம், பழுது, தனிப்பட்ட உலோக வேலைகள். அளவு அல்லது ஸ்கெட்ச் கொடுங்கள் — தமிழ்நாடு, கேரளா, கர்நாடகா முழுவதும் தயாரித்துத் தருகிறோம்.",
   },
 };
 
 const AREA_TA: Record<string, string> = {
+  "Tamil Nadu": "தமிழ்நாடு",
+  Kerala: "கேரளா",
+  Karnataka: "கர்நாடகா",
   Mevani: "மேவாணி",
+  "Andhiyur, Mevani": "அந்தியூர், மேவாணி",
   Rasipuram: "ராசிபுரம்",
   Namakkal: "நாமக்கல்",
   Tiruchengode: "திருச்செங்கோடு",

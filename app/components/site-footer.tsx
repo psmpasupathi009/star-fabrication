@@ -105,9 +105,6 @@ export function SiteFooter({
             >
               {dict.footer.admin}
             </Link>
-            <Link href="/#top" className="hover:text-foreground hover:underline">
-              {dict.footer.backToTop}
-            </Link>
           </div>
         </div>
       </div>

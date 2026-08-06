@@ -107,15 +107,14 @@ export function Gallery({ items }: GalleryProps) {
 
       {item && active !== null ? (
         <div
-          className="fixed inset-0 z-60 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm"
-          onClick={() => setActive(null)}
+          className="fixed inset-0 z-60 bg-black"
           role="dialog"
           aria-modal="true"
           aria-label={item.alt || item.caption || dict.gallery.project}
         >
           <button
             type="button"
-            className="absolute right-4 top-4 z-20 inline-flex size-10 items-center justify-center rounded-full bg-white text-foreground"
+            className="absolute right-4 top-4 z-20 inline-flex size-11 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur-sm hover:bg-white/25"
             aria-label={dict.gallery.close}
             onClick={() => setActive(null)}
           >
@@ -126,34 +125,25 @@ export function Gallery({ items }: GalleryProps) {
             <>
               <button
                 type="button"
-                className="absolute left-3 top-1/2 z-20 inline-flex size-11 -translate-y-1/2 items-center justify-center rounded-full bg-white text-foreground sm:left-6"
+                className="absolute left-3 top-1/2 z-20 inline-flex size-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur-sm hover:bg-white/25 sm:left-6"
                 aria-label={dict.gallery.prev}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  goPrev();
-                }}
+                onClick={goPrev}
               >
                 <ChevronLeft className="size-6" />
               </button>
               <button
                 type="button"
-                className="absolute right-3 top-1/2 z-20 inline-flex size-11 -translate-y-1/2 items-center justify-center rounded-full bg-white text-foreground sm:right-6"
+                className="absolute right-3 top-1/2 z-20 inline-flex size-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/15 text-white backdrop-blur-sm hover:bg-white/25 sm:right-6"
                 aria-label={dict.gallery.next}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  goNext();
-                }}
+                onClick={goNext}
               >
                 <ChevronRight className="size-6" />
               </button>
             </>
           ) : null}
 
-          <div
-            className="relative flex h-[min(82dvh,760px)] w-full max-w-5xl flex-col"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="relative min-h-0 flex-1 overflow-hidden rounded-3xl bg-black">
+          <div className="absolute inset-0 pb-14">
+            <div className="relative size-full">
               {item.type === "video" ? (
                 <video
                   src={item.url}
@@ -172,15 +162,15 @@ export function Gallery({ items }: GalleryProps) {
                 />
               )}
             </div>
+          </div>
 
-            <div className="mt-3 flex items-center justify-between gap-4 rounded-2xl bg-white px-4 py-3">
-              <p className="min-w-0 truncate text-sm font-medium text-foreground">
-                {item.caption || item.alt || dict.gallery.project}
-              </p>
-              <p className="shrink-0 text-sm text-muted">
-                {active + 1} / {items.length}
-              </p>
-            </div>
+          <div className="absolute inset-x-0 bottom-0 z-10 flex h-14 items-center justify-between gap-4 bg-black/80 px-5 text-white backdrop-blur-sm sm:px-8">
+            <p className="min-w-0 truncate text-sm font-medium sm:text-[15px]">
+              {item.caption || item.alt || dict.gallery.project}
+            </p>
+            <p className="shrink-0 text-sm text-white/70">
+              {active + 1} / {items.length}
+            </p>
           </div>
         </div>
       ) : null}

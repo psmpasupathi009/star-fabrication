@@ -90,47 +90,43 @@ export function Services({ services }: ServicesProps) {
 
       {active && activeImage ? (
         <div
-          className="fixed inset-0 z-60 flex items-end justify-center bg-black/40 p-4 backdrop-blur-sm sm:items-center"
-          onClick={() => setActiveSlug(null)}
+          className="fixed inset-0 z-60 flex flex-col bg-white"
           role="dialog"
           aria-modal="true"
           aria-labelledby="service-detail-title"
         >
-          <div
-            className="relative max-h-[88dvh] w-full max-w-lg overflow-y-auto rounded-3xl bg-white shadow-2xl"
-            onClick={(e) => e.stopPropagation()}
+          <button
+            type="button"
+            className="absolute right-4 top-4 z-10 inline-flex size-10 items-center justify-center rounded-full bg-black/5 text-muted hover:bg-black/10 hover:text-foreground"
+            aria-label={dict.about.close}
+            onClick={() => setActiveSlug(null)}
           >
-            <button
-              type="button"
-              className="absolute right-4 top-4 z-10 inline-flex size-9 items-center justify-center rounded-full bg-white/90 text-muted shadow-sm hover:text-foreground"
-              aria-label={dict.about.close}
-              onClick={() => setActiveSlug(null)}
-            >
-              <X className="size-4" />
-            </button>
+            <X className="size-5" />
+          </button>
 
-            <div className="relative aspect-16/10 w-full overflow-hidden rounded-t-3xl bg-elevated">
+          <div className="min-h-0 flex-1 overflow-y-auto">
+            <div className="relative h-[42dvh] w-full min-h-56 bg-elevated sm:h-[48dvh]">
               <Image
                 src={activeImage}
                 alt={active.title}
                 fill
-                sizes="(max-width: 640px) 100vw, 32rem"
+                sizes="100vw"
                 className="object-cover"
                 priority
               />
             </div>
 
-            <div className="p-6 sm:p-8">
+            <div className="section-inner max-w-3xl py-8 sm:py-10 md:py-12">
               <h3
                 id="service-detail-title"
-                className="font-display text-2xl font-bold uppercase tracking-tight text-foreground"
+                className="font-display text-3xl font-bold uppercase tracking-tight text-foreground sm:text-4xl"
               >
                 {active.title}
               </h3>
-              <p className="mt-4 text-[17px] leading-relaxed text-muted">
+              <p className="mt-5 text-[17px] leading-relaxed text-muted sm:text-[19px]">
                 {active.details || active.description}
               </p>
-              <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+              <div className="mt-10 flex flex-col gap-3 sm:flex-row">
                 <Link href={`/services/${active.slug}`} onClick={() => setActiveSlug(null)}>
                   <Button size="lg" className="w-full sm:w-auto">
                     {dict.services.fullPage}

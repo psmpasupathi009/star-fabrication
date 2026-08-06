@@ -949,7 +949,7 @@ export function AdminDashboardClient({ email }: { email: string }) {
               id="address"
               value={siteForm.address}
               onChange={(e) => setSiteForm({ ...siteForm, address: e.target.value })}
-              placeholder="Mevani, Namakkal District, Tamil Nadu"
+              placeholder="Andhiyur, Mevani, Tamil Nadu"
             />
           </div>
           <div className="grid gap-4 sm:grid-cols-2">

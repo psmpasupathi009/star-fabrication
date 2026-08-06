@@ -2,23 +2,16 @@ export const site = {
   name: "Star Fabrication",
   nameTamil: "ஸ்டார் பேப்ரிக்கேஷன்",
   tagline: "Our Motive Your Satisfaction",
-  location: "Mevani",
-  locationTamil: "மேவாணி",
-  address: "Mevani, Namakkal District, Tamil Nadu",
-  addressTamil: "மேவாணி, நாமக்கல் மாவட்டம், தமிழ்நாடு",
+  location: "Andhiyur, Mevani",
+  locationTamil: "அந்தியூர், மேவாணி",
+  address: "Andhiyur, Mevani, Tamil Nadu",
+  addressTamil: "அந்தியூர், மேவாணி, தமிழ்நாடு",
   pincode: "",
   description:
-    "Custom metal fabrication in Mevani — gates, grills, roofing, doors, and industrial structures built with craftsmanship.",
+    "Custom metal fabrication in Andhiyur, Mevani — gates, grills, roofing, doors, and industrial structures. We serve across Tamil Nadu, Kerala, and Karnataka.",
   mapEmbedUrl:
-    "https://maps.google.com/maps?q=Mevani,+Namakkal,+Tamil+Nadu&z=14&output=embed",
-  serviceAreas: [
-    "Mevani",
-    "Rasipuram",
-    "Namakkal",
-    "Tiruchengode",
-    "Paramathi",
-    "Nearby villages",
-  ],
+    "https://maps.google.com/maps?q=Mevani,+Tamil+Nadu&z=14&output=embed",
+  serviceAreas: ["Tamil Nadu", "Kerala", "Karnataka"],
   googleReviewsUrl: "",
 } as const;
 
@@ -193,7 +186,7 @@ export const services = [
     title: "General Fabrication",
     description: "Custom welding and metalwork — all types done with care.",
     details:
-      "Custom brackets, frames, repairs, and one-off metalwork. Bring a sketch or measurement — we fabricate to site needs across Mevani and nearby areas.",
+      "Custom brackets, frames, repairs, and one-off metalwork. Bring a sketch or measurement — we fabricate to site needs across Tamil Nadu, Kerala, and Karnataka.",
   },
 ] as const;
 
