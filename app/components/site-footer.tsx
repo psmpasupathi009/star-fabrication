@@ -1,12 +1,11 @@
 "use client";
 
-import { Clock, MapPin, Phone } from "lucide-react";
+import { MapPin, Phone } from "lucide-react";
 import Link from "next/link";
 import { LanguageSwitcher } from "@/app/components/language-switcher";
 import { StarLogo } from "@/app/components/star-logo";
 import type { ContactPerson, LocalizedSite } from "@/lib/content";
 import type { Locale } from "@/lib/i18n/config";
-import { formatHoursLines } from "@/lib/hours";
 import { useLocale } from "@/lib/i18n/locale-provider";
 import { navLinks, telHref } from "@/lib/site";
 
@@ -28,11 +27,6 @@ export function SiteFooter({
   isAdmin,
 }: SiteFooterProps) {
   const { dict } = useLocale();
-  const hoursLines = formatHoursLines(site.hours, {
-    weekdays: dict.hours.weekdays,
-    short: dict.hours.short,
-    closed: dict.hours.closed,
-  });
 
   return (
     <footer className="border-t border-black/5 bg-elevated text-[12px] leading-relaxed text-muted">
@@ -81,9 +75,7 @@ export function SiteFooter({
                   className="inline-flex items-center gap-2 hover:text-foreground hover:underline"
                 >
                   <Phone className="size-3 shrink-0 text-gold-dim" />
-                  <span>
-                    {c.name} — {c.phoneDisplay}
-                  </span>
+                  <span>{c.phoneDisplay}</span>
                 </a>
               </li>
             ))}
@@ -94,12 +86,6 @@ export function SiteFooter({
                 {site.pincode ? ` — ${site.pincode}` : ""}
               </span>
             </li>
-            {hoursLines.map((line) => (
-              <li key={line} className="inline-flex items-start gap-2">
-                <Clock className="mt-0.5 size-3 shrink-0 text-gold-dim" />
-                <span>{line}</span>
-              </li>
-            ))}
           </ul>
         </div>
       </div>

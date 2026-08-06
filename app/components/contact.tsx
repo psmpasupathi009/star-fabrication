@@ -2,16 +2,15 @@
 
 import { FormEvent, useState } from "react";
 import Link from "next/link";
-import { Clock, MapPin, MessageCircle, Phone, Send } from "lucide-react";
+import { MessageCircle, Send } from "lucide-react";
 import { SectionHeading } from "@/app/components/section-heading";
 import { Button } from "@/app/components/ui/button";
 import { Input } from "@/app/components/ui/input";
 import { Label } from "@/app/components/ui/label";
 import { Textarea } from "@/app/components/ui/textarea";
 import type { ContactPerson, LocalizedService, LocalizedSite } from "@/lib/content";
-import { formatHoursLines } from "@/lib/hours";
 import { useLocale } from "@/lib/i18n/locale-provider";
-import { buildQuoteMessage, telHref, whatsappUrl } from "@/lib/site";
+import { buildQuoteMessage, whatsappUrl } from "@/lib/site";
 
 type ContactProps = {
   site: LocalizedSite;
@@ -31,14 +30,6 @@ export function Contact({ site, contacts, services }: ContactProps) {
   const [loading, setLoading] = useState(false);
   const primary = contacts[0];
   const waPhone = site.whatsappPhone || primary?.phone;
-  const hoursLines = formatHoursLines(site.hours, {
-    weekdays: dict.hours.weekdays,
-    short: dict.hours.short,
-    closed: dict.hours.closed,
-  });
-  const mapsLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-    site.address + (site.pincode ? ` ${site.pincode}` : "")
-  )}`;
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
@@ -97,71 +88,28 @@ export function Contact({ site, contacts, services }: ContactProps) {
         />
 
         <div className="grid gap-10 md:gap-12 lg:grid-cols-5">
-          <div className="order-2 space-y-4 lg:order-1 lg:col-span-2">
-            {contacts.map((c) => (
-              <a
-                key={c.phone}
-                href={telHref(c.phone)}
-                className="flex items-start gap-3 rounded-2xl bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.04)] ring-1 ring-black/5 hover:shadow-[0_8px_24px_rgba(0,0,0,0.06)] sm:gap-4"
-              >
-                <span className="inline-flex size-10 shrink-0 items-center justify-center rounded-full bg-elevated text-gold-dim sm:size-11">
-                  <Phone className="size-4" />
-                </span>
-                <span className="min-w-0">
-                  <span className="block text-[17px] font-semibold tracking-tight text-foreground">
-                    {c.name}
-                  </span>
-                  <span className="mt-0.5 block text-sm text-gold-dim">{c.title}</span>
-                  <span className="mt-2 block text-[15px] text-muted">{c.phoneDisplay}</span>
-                </span>
-              </a>
-            ))}
-
-            <div className="space-y-3 rounded-2xl bg-white p-5 ring-1 ring-black/5">
-              <div className="flex items-start gap-3">
-                <MapPin className="mt-0.5 size-4 shrink-0 text-gold-dim" />
-                <div>
-                  <p className="text-[15px] font-medium text-foreground sm:text-[17px]">
-                    {site.address}
-                  </p>
-                  {site.pincode ? (
-                    <p className="mt-0.5 text-sm text-muted">PIN {site.pincode}</p>
-                  ) : null}
-                  <a
-                    href={mapsLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="mt-2 inline-block text-sm font-medium text-gold-dim hover:underline"
-                  >
-                    {dict.contact.openMaps}
-                  </a>
-                </div>
-              </div>
-              <div className="flex items-start gap-3 border-t border-black/5 pt-3">
-                <Clock className="mt-0.5 size-4 shrink-0 text-gold-dim" />
-                <ul className="space-y-0.5 text-sm text-muted">
-                  {hoursLines.map((line) => (
-                    <li key={line}>{line}</li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-
-            {site.mapEmbedUrl ? (
-              <div className="overflow-hidden rounded-2xl ring-1 ring-black/5">
+          {site.mapEmbedUrl ? (
+            <div className="order-2 lg:order-1 lg:col-span-2">
+              <div className="overflow-hidden rounded-2xl ring-1 ring-black/5 lg:h-full">
                 <iframe
                   title={`${site.name} location map`}
                   src={site.mapEmbedUrl}
-                  className="aspect-4/3 w-full border-0 bg-elevated"
+                  className="aspect-4/3 w-full border-0 bg-elevated lg:aspect-auto lg:h-full lg:min-h-100"
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
                   allowFullScreen
                 />
               </div>
-            ) : null}
-          </div>
+            </div>
+          ) : null}
 
-          <div className="order-1 lg:order-2 lg:col-span-3">
+          <div
+            className={
+              site.mapEmbedUrl
+                ? "order-1 lg:order-2 lg:col-span-3"
+                : "lg:col-span-5 lg:mx-auto lg:max-w-3xl"
+            }
+          >
             <form
               onSubmit={onSubmit}
               className="space-y-5 rounded-3xl bg-white p-5 shadow-[0_2px_12px_rgba(0,0,0,0.04)] ring-1 ring-black/5 sm:p-7 md:p-8"
