@@ -1,5 +1,14 @@
 import nodemailer from "nodemailer";
 
+function escapeHtml(value: string) {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
 export async function sendMail(options: {
   to: string;
   subject: string;
@@ -31,7 +40,7 @@ export async function sendMail(options: {
     to: options.to,
     subject: options.subject,
     text: options.text,
-    html: options.html ?? options.text.replace(/\n/g, "<br/>"),
+    html: options.html ?? escapeHtml(options.text).replace(/\n/g, "<br/>"),
     replyTo: options.replyTo,
   });
 }

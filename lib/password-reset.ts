@@ -1,6 +1,7 @@
 import { randomInt } from "crypto";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
+import { rateLimit } from "@/lib/security";
 
 const PIN_TTL_MS = 15 * 60 * 1000;
 const PIN_LENGTH = 6;
@@ -25,7 +26,8 @@ export async function saveResetPin(email: string, pin: string): Promise<void> {
 
 /**
  * Verifies PIN against stored hash. Returns true only if valid and not expired.
- * Does not clear the PIN — caller clears after successful password update.
+ * Clears the PIN after too many failures for this email.
+ * Does not clear the PIN on success — caller clears after password update.
  */
 export async function verifyResetPin(
   email: string,
@@ -42,5 +44,16 @@ export async function verifyResetPin(
   if (!user?.resetPinHash || !user.resetPinExpires) return false;
   if (user.resetPinExpires.getTime() < Date.now()) return false;
 
-  return bcrypt.compare(normalized, user.resetPinHash);
+  const ok = await bcrypt.compare(normalized, user.resetPinHash);
+  if (ok) return true;
+
+  // Invalidate after repeated wrong guesses (same process window as rateLimit helper).
+  const limited = rateLimit(`reset-pin-fail:${email.toLowerCase()}`, 5, PIN_TTL_MS);
+  if (!limited.ok) {
+    await prisma.user.update({
+      where: { email: email.toLowerCase() },
+      data: { resetPinHash: null, resetPinExpires: null },
+    });
+  }
+  return false;
 }

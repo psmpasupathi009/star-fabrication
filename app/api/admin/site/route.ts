@@ -3,6 +3,7 @@ import { requireAdmin } from "@/lib/admin-auth";
 import { FALLBACK_SITE, parseServiceAreas, type ContactPerson } from "@/lib/content";
 import { DEFAULT_HOURS, parseHoursJson, type BusinessHours } from "@/lib/hours";
 import { prisma } from "@/lib/prisma";
+import { isAllowedMapEmbedUrl } from "@/lib/security";
 
 function serializeHours(hours: BusinessHours | undefined): string {
   if (!hours) return JSON.stringify(DEFAULT_HOURS);
@@ -93,6 +94,14 @@ export async function PUT(request: NextRequest) {
       contacts[0]?.phone ||
       FALLBACK_SITE.whatsappPhone;
 
+    const mapEmbedUrl = body.mapEmbedUrl?.trim()?.slice(0, 800) || null;
+    if (mapEmbedUrl && !isAllowedMapEmbedUrl(mapEmbedUrl)) {
+      return NextResponse.json(
+        { error: "Map embed URL must be a Google Maps https link" },
+        { status: 400 }
+      );
+    }
+
     const data = {
       name: (body.name?.trim() || FALLBACK_SITE.name).slice(0, 120),
       nameTamil: body.nameTamil?.trim()?.slice(0, 120) || null,
@@ -107,7 +116,7 @@ export async function PUT(request: NextRequest) {
       addressTamil: body.addressTamil?.trim()?.slice(0, 240) || null,
       pincode: body.pincode?.replace(/\D/g, "").slice(0, 10) || null,
       hoursJson,
-      mapEmbedUrl: body.mapEmbedUrl?.trim()?.slice(0, 800) || null,
+      mapEmbedUrl,
       serviceAreasJson: JSON.stringify(
         serviceAreas.length ? serviceAreas : FALLBACK_SITE.serviceAreas
       ),

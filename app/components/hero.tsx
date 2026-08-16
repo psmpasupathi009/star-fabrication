@@ -28,10 +28,34 @@ export function Hero({
   const [videoPlaying, setVideoPlaying] = useState(false);
   const videoSrc = hero.videoUrl?.trim() || "/gallery/hero.mp4";
 
-  // Enable video after mount (respect reduced-motion)
+  // Enable video after idle (respect reduced-motion) — keeps LCP on the poster image
   useEffect(() => {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    setAllowVideo(!reduce);
+    if (reduce) return;
+
+    let cancelled = false;
+    const enable = () => {
+      if (!cancelled) setAllowVideo(true);
+    };
+
+    const w = window as Window & {
+      requestIdleCallback?: (cb: () => void, opts?: { timeout: number }) => number;
+      cancelIdleCallback?: (id: number) => void;
+    };
+
+    if (typeof w.requestIdleCallback === "function") {
+      const id = w.requestIdleCallback(enable, { timeout: 1800 });
+      return () => {
+        cancelled = true;
+        w.cancelIdleCallback?.(id);
+      };
+    }
+
+    const t = window.setTimeout(enable, 600);
+    return () => {
+      cancelled = true;
+      window.clearTimeout(t);
+    };
   }, []);
 
   // Keep background video playing; image is only poster/fallback
@@ -75,7 +99,6 @@ export function Hero({
 
   return (
     <section
-      id="top"
       className="relative flex min-h-dvh items-end overflow-hidden pb-20 pt-24 sm:items-center sm:pb-28 sm:pt-28 lg:pb-32"
     >
       <div className="absolute inset-0 bg-[#111]">
@@ -107,7 +130,7 @@ export function Hero({
             muted
             loop
             playsInline
-            preload="auto"
+            preload="metadata"
             poster={hero.imageUrl}
             onPlaying={() => setVideoPlaying(true)}
             onError={() => {

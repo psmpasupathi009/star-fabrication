@@ -26,9 +26,7 @@ export function resolveServiceImage(
   slug: string,
   imageUrl?: string | null
 ): string {
-  const mapped = SERVICE_IMAGE_BY_SLUG[slug];
-  if (mapped) return mapped;
   const custom = imageUrl?.trim();
   if (custom) return custom;
-  return DEFAULT_SERVICE_IMAGE;
+  return SERVICE_IMAGE_BY_SLUG[slug] ?? DEFAULT_SERVICE_IMAGE;
 }

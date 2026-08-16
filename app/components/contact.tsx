@@ -2,15 +2,17 @@
 
 import { FormEvent, useState } from "react";
 import Link from "next/link";
-import { MessageCircle, Send } from "lucide-react";
+import { Clock, MessageCircle, Send } from "lucide-react";
 import { SectionHeading } from "@/app/components/section-heading";
 import { Button } from "@/app/components/ui/button";
 import { Input } from "@/app/components/ui/input";
 import { Label } from "@/app/components/ui/label";
 import { Textarea } from "@/app/components/ui/textarea";
 import type { ContactPerson, LocalizedService, LocalizedSite } from "@/lib/content";
+import { formatHoursLines } from "@/lib/hours";
 import { useLocale } from "@/lib/i18n/locale-provider";
 import { buildQuoteMessage, whatsappUrl } from "@/lib/site";
+import { isAllowedMapEmbedUrl } from "@/lib/security";
 
 type ContactProps = {
   site: LocalizedSite;
@@ -30,6 +32,13 @@ export function Contact({ site, contacts, services }: ContactProps) {
   const [loading, setLoading] = useState(false);
   const primary = contacts[0];
   const waPhone = site.whatsappPhone || primary?.phone;
+  const mapSrc =
+    site.mapEmbedUrl && isAllowedMapEmbedUrl(site.mapEmbedUrl) ? site.mapEmbedUrl : null;
+  const hoursLines = formatHoursLines(site.hours, {
+    weekdays: dict.hours.weekdays,
+    short: dict.hours.short,
+    closed: dict.hours.closed,
+  });
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
@@ -88,24 +97,59 @@ export function Contact({ site, contacts, services }: ContactProps) {
         />
 
         <div className="grid gap-10 md:gap-12 lg:grid-cols-5">
-          {site.mapEmbedUrl ? (
-            <div className="order-2 lg:order-1 lg:col-span-2">
-              <div className="overflow-hidden rounded-2xl ring-1 ring-black/5 lg:h-full">
+          {mapSrc ? (
+            <div className="order-2 space-y-6 lg:order-1 lg:col-span-2">
+              <div className="overflow-hidden rounded-2xl ring-1 ring-black/5 lg:min-h-0">
                 <iframe
                   title={`${site.name} location map`}
-                  src={site.mapEmbedUrl}
-                  className="aspect-4/3 w-full border-0 bg-elevated lg:aspect-auto lg:h-full lg:min-h-100"
+                  src={mapSrc}
+                  className="aspect-4/3 w-full border-0 bg-elevated lg:aspect-auto lg:h-72 lg:min-h-72"
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
                   allowFullScreen
                 />
+              </div>
+              <a
+                href={mapSrc.replace("&output=embed", "").replace("?output=embed", "")}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block text-sm font-medium text-gold-dim hover:underline"
+              >
+                {dict.contact.openMaps}
+              </a>
+              {hoursLines.length > 0 ? (
+                <div className="rounded-2xl bg-white p-5 ring-1 ring-black/5">
+                  <p className="flex items-center gap-2 text-sm font-semibold text-foreground">
+                    <Clock className="size-4 text-gold-dim" aria-hidden />
+                    {dict.hours.title}
+                  </p>
+                  <ul className="mt-3 space-y-1.5 text-[14px] text-muted">
+                    {hoursLines.map((line) => (
+                      <li key={line}>{line}</li>
+                    ))}
+                  </ul>
+                </div>
+              ) : null}
+            </div>
+          ) : hoursLines.length > 0 ? (
+            <div className="order-2 lg:order-1 lg:col-span-2">
+              <div className="rounded-2xl bg-white p-5 ring-1 ring-black/5">
+                <p className="flex items-center gap-2 text-sm font-semibold text-foreground">
+                  <Clock className="size-4 text-gold-dim" aria-hidden />
+                  {dict.hours.title}
+                </p>
+                <ul className="mt-3 space-y-1.5 text-[14px] text-muted">
+                  {hoursLines.map((line) => (
+                    <li key={line}>{line}</li>
+                  ))}
+                </ul>
               </div>
             </div>
           ) : null}
 
           <div
             className={
-              site.mapEmbedUrl
+              mapSrc || hoursLines.length > 0
                 ? "order-1 lg:order-2 lg:col-span-3"
                 : "lg:col-span-5 lg:mx-auto lg:max-w-3xl"
             }

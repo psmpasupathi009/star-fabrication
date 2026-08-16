@@ -190,11 +190,19 @@ export const services = [
   },
 ] as const;
 
+/** Normalize to a 10-digit local number when a leading 91/0 country prefix is present. */
+export function normalizeIndianPhone(phone: string): string {
+  const digits = phone.replace(/\D/g, "");
+  if (digits.startsWith("91") && digits.length >= 12) return digits.slice(-10);
+  if (digits.startsWith("0") && digits.length === 11) return digits.slice(1);
+  return digits;
+}
+
 export function telHref(phone: string) {
-  return `tel:+91${phone}`;
+  return `tel:+91${normalizeIndianPhone(phone)}`;
 }
 
 export function whatsappUrl(message: string, phone: string = primaryContact.phone) {
   const text = encodeURIComponent(message);
-  return `https://wa.me/91${phone}?text=${text}`;
+  return `https://wa.me/91${normalizeIndianPhone(phone)}?text=${text}`;
 }

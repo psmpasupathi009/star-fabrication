@@ -20,6 +20,7 @@ type GalleryItem = {
   url: string;
   type: string;
   caption: string | null;
+  captionTamil?: string | null;
   alt: string | null;
   order: number;
 };
@@ -136,6 +137,7 @@ export function AdminDashboardClient({ email }: { email: string }) {
   const [gallery, setGallery] = useState<GalleryItem[]>([]);
   const [galleryFile, setGalleryFile] = useState<File | null>(null);
   const [galleryCaption, setGalleryCaption] = useState("");
+  const [galleryCaptionTamil, setGalleryCaptionTamil] = useState("");
   const [saving, setSaving] = useState(false);
 
   const loadAll = useCallback(async () => {
@@ -484,12 +486,15 @@ export function AdminDashboardClient({ email }: { email: string }) {
           url,
           type: galleryFile.type.startsWith("video/") ? "video" : "image",
           caption: galleryCaption || null,
+          captionTamil: galleryCaptionTamil || null,
           alt: galleryCaption || galleryFile.name,
+          altTamil: galleryCaptionTamil || null,
         }),
       });
       if (!res.ok) throw new Error("Failed to save gallery item");
       setGalleryFile(null);
       setGalleryCaption("");
+      setGalleryCaptionTamil("");
       setStatus("Gallery item added");
       await loadAll();
     } catch (err) {
@@ -1322,9 +1327,14 @@ export function AdminDashboardClient({ email }: { email: string }) {
               onChange={(e) => setGalleryFile(e.target.files?.[0] ?? null)}
             />
             <Input
-              placeholder="Caption"
+              placeholder="Caption (English)"
               value={galleryCaption}
               onChange={(e) => setGalleryCaption(e.target.value)}
+            />
+            <Input
+              placeholder="Caption (Tamil)"
+              value={galleryCaptionTamil}
+              onChange={(e) => setGalleryCaptionTamil(e.target.value)}
             />
             <Button type="submit" disabled={saving}>
               <Upload className="size-4" />
@@ -1355,6 +1365,9 @@ export function AdminDashboardClient({ email }: { email: string }) {
                   <p className="truncate text-sm font-semibold text-foreground">
                     {item.caption || "Untitled"}
                   </p>
+                  {item.captionTamil ? (
+                    <p className="mt-0.5 truncate text-xs text-muted">{item.captionTamil}</p>
+                  ) : null}
                   <p className="mt-1 truncate text-xs text-muted">{item.url}</p>
                 </div>
                 <Button

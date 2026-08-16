@@ -25,20 +25,18 @@ import {
   localizeSite,
 } from "@/lib/content";
 import { getLocale } from "@/lib/i18n/get-locale";
-import { getServerSession } from "@/lib/session";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 export default async function Home() {
   const locale = await getLocale();
-  const [siteRaw, heroRaw, aboutRaw, servicesRaw, galleryRaw, session] =
+  const [siteRaw, heroRaw, aboutRaw, servicesRaw, galleryRaw] =
     await Promise.all([
       getSiteData(),
       getHeroData(),
       getAboutData(),
       getServicesData(),
       getGalleryData(),
-      getServerSession(),
     ]);
 
   const siteData = localizeSite(siteRaw, locale);
@@ -47,7 +45,6 @@ export default async function Home() {
   const services = servicesRaw.map((s) => localizeService(s, locale));
   const galleryItems = galleryRaw.map((g) => localizeGalleryItem(g, locale));
 
-  const isAdmin = session?.role?.toUpperCase() === "ADMIN";
   const primaryPhone = siteData.contacts[0]?.phone ?? "8807920508";
   const waPhone = siteData.whatsappPhone || primaryPhone;
 
@@ -84,7 +81,7 @@ export default async function Home() {
       <SiteFooter
         site={siteData}
         contacts={siteData.contacts}
-        isAdmin={isAdmin}
+        isAdmin={false}
         nameEn={siteRaw.name}
         nameTamil={siteRaw.nameTamil}
         locale={locale}

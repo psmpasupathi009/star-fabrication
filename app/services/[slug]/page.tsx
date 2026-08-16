@@ -17,7 +17,6 @@ import {
 import { getDictionary } from "@/lib/i18n/dictionary";
 import { getLocale } from "@/lib/i18n/get-locale";
 import { resolveServiceImage } from "@/lib/service-images";
-import { getServerSession } from "@/lib/session";
 import { getSiteUrl, telHref, whatsappUrl } from "@/lib/site";
 import { cn } from "@/lib/utils/cn";
 
@@ -47,17 +46,16 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   };
 }
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 export default async function ServicePage({ params }: PageProps) {
   const { slug } = await params;
   const locale = await getLocale();
   const dict = getDictionary(locale);
-  const [serviceRaw, servicesRaw, siteRaw, session] = await Promise.all([
+  const [serviceRaw, servicesRaw, siteRaw] = await Promise.all([
     getServiceBySlug(slug),
     getServicesData(),
     getSiteData(),
-    getServerSession(),
   ]);
 
   if (!serviceRaw) notFound();
@@ -66,7 +64,7 @@ export default async function ServicePage({ params }: PageProps) {
   const services = servicesRaw.map((s) => localizeService(s, locale));
   const siteData = localizeSite(siteRaw, locale);
 
-  const isAdmin = session?.role?.toUpperCase() === "ADMIN";
+  const isAdmin = false;
   const imageSrc = resolveServiceImage(service.slug, service.imageUrl);
   const primary = siteData.contacts[0];
   const wa = siteData.whatsappPhone || primary?.phone;

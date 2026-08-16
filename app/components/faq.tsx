@@ -21,12 +21,16 @@ export function Faq() {
         <ul className="mx-auto max-w-3xl divide-y divide-black/8 border-y border-black/8">
           {dict.faq.items.map((item, i) => {
             const isOpen = open === i;
+            const panelId = `faq-panel-${i}`;
+            const buttonId = `faq-button-${i}`;
             return (
               <li key={item.question}>
                 <button
                   type="button"
+                  id={buttonId}
                   className="flex w-full items-start justify-between gap-4 py-5 text-left sm:py-6"
                   aria-expanded={isOpen}
+                  aria-controls={panelId}
                   onClick={() => setOpen(isOpen ? null : i)}
                 >
                   <span className="text-[17px] font-semibold tracking-tight text-foreground">
@@ -39,11 +43,18 @@ export function Faq() {
                     )}
                   />
                 </button>
-                {isOpen ? (
-                  <p className="pb-5 pr-8 text-[15px] leading-relaxed text-muted sm:pb-6 sm:text-[17px]">
-                    {item.answer}
-                  </p>
-                ) : null}
+                <div
+                  id={panelId}
+                  role="region"
+                  aria-labelledby={buttonId}
+                  hidden={!isOpen}
+                >
+                  {isOpen ? (
+                    <p className="pb-5 pr-8 text-[15px] leading-relaxed text-muted sm:pb-6 sm:text-[17px]">
+                      {item.answer}
+                    </p>
+                  ) : null}
+                </div>
               </li>
             );
           })}

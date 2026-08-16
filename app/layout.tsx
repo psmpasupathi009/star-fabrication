@@ -23,6 +23,7 @@ const notoTamil = Noto_Sans_Tamil({
   subsets: ["tamil"],
   weight: ["400", "500", "600", "700"],
   display: "swap",
+  preload: false,
 });
 
 export const metadata: Metadata = {

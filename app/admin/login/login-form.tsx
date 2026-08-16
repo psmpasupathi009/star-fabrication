@@ -6,6 +6,7 @@ import { Button } from "@/app/components/ui/button";
 import { Input } from "@/app/components/ui/input";
 import { Label } from "@/app/components/ui/label";
 import { StarLogo } from "@/app/components/star-logo";
+import { isSafeAdminCallback } from "@/lib/security";
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -32,13 +33,7 @@ export default function AdminLoginPage() {
         return;
       }
       const callback = searchParams.get("callbackUrl");
-      const target =
-        callback &&
-        callback.startsWith("/admin") &&
-        !callback.startsWith("//") &&
-        !callback.includes("\\")
-          ? callback
-          : "/admin/dashboard";
+      const target = isSafeAdminCallback(callback) ? callback! : "/admin/dashboard";
       router.replace(target);
       router.refresh();
     } catch {

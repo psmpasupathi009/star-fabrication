@@ -8,7 +8,6 @@ import { WhatsAppFab } from "@/app/components/whatsapp-fab";
 import { getSiteData, localizeSite } from "@/lib/content";
 import { getDictionary } from "@/lib/i18n/dictionary";
 import { getLocale } from "@/lib/i18n/get-locale";
-import { getServerSession } from "@/lib/session";
 import { site as siteDefaults } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -16,14 +15,14 @@ export const metadata: Metadata = {
   description: `How ${siteDefaults.name} collects and uses contact details from quote requests.`,
 };
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
 
 export default async function PrivacyPage() {
   const locale = await getLocale();
   const dict = getDictionary(locale);
-  const [siteRaw, session] = await Promise.all([getSiteData(), getServerSession()]);
+  const siteRaw = await getSiteData();
   const siteData = localizeSite(siteRaw, locale);
-  const isAdmin = session?.role?.toUpperCase() === "ADMIN";
+  const isAdmin = false;
   const waPhone =
     siteData.whatsappPhone || siteData.contacts[0]?.phone || "8807920508";
   const phoneLabel = siteData.contacts[0]?.phoneDisplay || "us";

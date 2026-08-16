@@ -54,8 +54,19 @@ export function StarLogo({
     <div className="flex items-center gap-2 sm:gap-3">
       <StarIcon className={sizes.icon} />
       <span className={cn("font-display font-bold uppercase leading-none", sizes.word)}>
-        <span className="text-gold">Star</span>{" "}
-        <span className={wordColor}>Fabrication</span>
+        {(() => {
+          const parts = nameEn.trim().split(/\s+/);
+          if (parts.length >= 2) {
+            const [first, ...rest] = parts;
+            return (
+              <>
+                <span className="text-gold">{first}</span>{" "}
+                <span className={wordColor}>{rest.join(" ")}</span>
+              </>
+            );
+          }
+          return <span className={wordColor}>{nameEn}</span>;
+        })()}
       </span>
       <StarIcon className={cn(sizes.icon, "hidden sm:block")} />
     </div>

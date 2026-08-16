@@ -124,6 +124,7 @@ export type Dictionary = {
     backHome: string;
   };
   hours: {
+    title: string;
     closed: string;
     weekdays: Record<
       | "monday"
@@ -336,6 +337,7 @@ const en: Dictionary = {
     backHome: "Back to home",
   },
   hours: {
+    title: "Hours",
     closed: "Closed",
     weekdays: {
       monday: "Monday",
@@ -547,6 +549,7 @@ const ta: Dictionary = {
     backHome: "முகப்புக்குத் திரும்ப",
   },
   hours: {
+    title: "நேரம்",
     closed: "விடுமுறை",
     weekdays: {
       monday: "திங்கள்",

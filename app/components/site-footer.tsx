@@ -1,10 +1,11 @@
 "use client";
 
-import { MapPin, Phone } from "lucide-react";
+import { Clock, MapPin, Phone } from "lucide-react";
 import Link from "next/link";
 import { LanguageSwitcher } from "@/app/components/language-switcher";
 import { StarLogo } from "@/app/components/star-logo";
 import type { ContactPerson, LocalizedSite } from "@/lib/content";
+import { formatHoursLines } from "@/lib/hours";
 import type { Locale } from "@/lib/i18n/config";
 import { useLocale } from "@/lib/i18n/locale-provider";
 import { navLinks, telHref } from "@/lib/site";
@@ -27,10 +28,15 @@ export function SiteFooter({
   isAdmin,
 }: SiteFooterProps) {
   const { dict } = useLocale();
+  const hoursLines = formatHoursLines(site.hours, {
+    weekdays: dict.hours.weekdays,
+    short: dict.hours.short,
+    closed: dict.hours.closed,
+  });
 
   return (
     <footer className="border-t border-black/5 bg-elevated text-[12px] leading-relaxed text-muted">
-      <div className="section-inner grid gap-8 py-10 sm:gap-10 sm:py-12 md:grid-cols-2 lg:grid-cols-3 lg:py-14">
+      <div className="section-inner grid gap-8 py-10 sm:gap-10 sm:py-12 md:grid-cols-2 lg:grid-cols-4 lg:py-14">
         <div className="md:col-span-2 lg:col-span-1">
           <StarLogo
             nameEn={nameEn}
@@ -86,6 +92,18 @@ export function SiteFooter({
                 {site.pincode ? ` — ${site.pincode}` : ""}
               </span>
             </li>
+          </ul>
+        </div>
+
+        <div>
+          <p className="mb-3 font-semibold text-foreground">{dict.hours.title}</p>
+          <ul className="space-y-2">
+            {hoursLines.map((line) => (
+              <li key={line} className="inline-flex items-start gap-2">
+                <Clock className="mt-0.5 size-3 shrink-0 text-gold-dim" aria-hidden />
+                <span>{line}</span>
+              </li>
+            ))}
           </ul>
         </div>
       </div>

@@ -46,6 +46,37 @@ export function isAllowedImageUrl(url: string | null | undefined): boolean {
   }
 }
 
+/** Allow only Google Maps embed URLs in iframes. */
+export function isAllowedMapEmbedUrl(url: string | null | undefined): boolean {
+  if (!url) return true;
+  const trimmed = url.trim();
+  if (!trimmed) return true;
+  try {
+    const parsed = new URL(trimmed);
+    if (parsed.protocol !== "https:") return false;
+    const host = parsed.hostname.toLowerCase();
+    if (host === "www.google.com" || host === "google.com") {
+      return parsed.pathname.startsWith("/maps");
+    }
+    return (
+      host === "maps.google.com" ||
+      host === "maps.google.co.in" ||
+      /^maps\.google\.[a-z.]+$/.test(host)
+    );
+  } catch {
+    return false;
+  }
+}
+
+export function sanitizeServiceSlug(slug: string): string {
+  return slug
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 80);
+}
+
 export function validateUploadFile(file: File): string | null {
   if (!(file instanceof File) || file.size === 0) {
     return "No file provided";
@@ -63,12 +94,20 @@ export function validateUploadFile(file: File): string | null {
 /** Simple in-memory rate limit (per process). */
 const attempts = new Map<string, { count: number; resetAt: number }>();
 
+function pruneRateLimits(now: number) {
+  if (attempts.size < 200) return;
+  for (const [key, entry] of attempts) {
+    if (now > entry.resetAt) attempts.delete(key);
+  }
+}
+
 export function rateLimit(
   key: string,
   limit = 8,
   windowMs = 15 * 60 * 1000
 ): { ok: boolean; retryAfterSec?: number } {
   const now = Date.now();
+  pruneRateLimits(now);
   const entry = attempts.get(key);
   if (!entry || now > entry.resetAt) {
     attempts.set(key, { count: 1, resetAt: now + windowMs });
